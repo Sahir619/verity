@@ -1,0 +1,582 @@
+/* /bench as a chat workspace (plan bench-chat-shell, after the Claude desktop layout): a sidebar, a centred chat, and a
+   right panel (live progress while a run goes, the result when it is done). Quiet: warm dark ground, panel surfaces, hairlines, lots of
+   space. Amber is earned: Send and Run (the primary actions), pass and proven squares, focus. Running is pale amber.
+   Fail is a hollow square plus the word, never red. Tokens only, no raw colours. Scoped under .vs.bench, which keeps the
+   studio's fonts, status squares and versions table. */
+
+/* ---------- Frame: sidebar | chat | panel (a run is in view and the panel is open) ---------- */
+.vs.bench { height: 100dvh; display: grid; grid-template-columns: 252px minmax(0, 1fr); overflow: hidden; background: var(--rk-ground); color: var(--rk-ink); font-family: var(--font-body); }
+/* The panel is clamped so the chat keeps about 520px or more from 1100px up (at 1280px: 644px). */
+.vs.bench[data-panel="open"] { grid-template-columns: 252px minmax(0, 1fr) clamp(340px, 30vw, 440px); }
+@media (min-width: 900px) and (max-width: 1099.98px) {
+  .vs.bench[data-panel="open"] { grid-template-columns: 220px minmax(0, 1fr) 340px; }
+}
+/* Sidebar closed (900px and up): the chat takes its column, and the top bar shows the button that brings it back. */
+@media (min-width: 900px) {
+  .vs.bench[data-side="shut"] { grid-template-columns: minmax(0, 1fr); }
+  .vs.bench[data-side="shut"][data-panel="open"] { grid-template-columns: minmax(0, 1fr) clamp(340px, 30vw, 440px); }
+  .vs.bench[data-side="shut"] .b-side { display: none; }
+  .vs.bench[data-side="shut"] .b-top { display: flex; padding-left: 12px; }
+  .vs.bench[data-side="shut"] .b-top .b-menu { display: inline-grid; }
+  .vs.bench[data-side="shut"] .b-main[data-empty] .b-top { border-bottom-color: transparent; }
+}
+@media (min-width: 900px) and (max-width: 1099.98px) {
+  .vs.bench[data-side="shut"][data-panel="open"] { grid-template-columns: minmax(0, 1fr) 340px; }
+}
+
+/* ---------- Sidebar ---------- */
+.vs .b-side { display: flex; flex-direction: column; gap: 2px; min-height: 0; overflow-y: auto; padding: 16px 12px 12px; background: var(--rk-panel); border-right: 1px solid var(--rk-rule); scrollbar-width: thin; }
+.vs .b-side-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 12px; }
+.vs .b-brand { display: flex; align-items: center; gap: 9px; padding: 4px 10px; color: var(--rk-ink); text-decoration: none; }
+.vs .b-brand .logo-sym { display: block; width: auto; height: 22px; color: var(--rk-a); }
+.vs .b-brand .logo-word { display: block; width: auto; height: 14px; }
+.vs .b-nav { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+.vs .b-nav :is(a, button) { display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 10px; border: 0; border-radius: 8px; background: none; color: var(--rk-ink-2); font: 500 14px/1.2 var(--font-body); text-align: left; text-decoration: none; cursor: pointer; transition: background-color .15s, color .15s; }
+.vs .b-nav :is(a, button):hover { background: var(--rk-panel-2); color: var(--rk-ink); }
+.vs .b-nav li:first-child button { color: var(--rk-ink); }
+.vs .b-nav a[aria-current="page"] { background: var(--rk-panel-2); color: var(--rk-ink); }
+.vs .b-nav svg { width: 16px; height: 16px; flex: none; stroke-width: 1.75; }
+.vs .b-side-h { margin: 20px 10px 6px; font: 500 12.5px/1.2 var(--font-body); color: var(--rk-ink-3); }
+.vs .b-side-empty { margin: 0 10px; font-size: 13px; line-height: 1.45; color: var(--rk-ink-3); }
+.vs .b-runs { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1px; }
+.vs .b-runs a { display: flex; flex-direction: column; gap: 3px; padding: 7px 10px; border-radius: 8px; color: var(--rk-ink-2); text-decoration: none; transition: background-color .15s, color .15s; }
+.vs .b-runs a:hover, .vs .b-runs a[aria-current="page"] { background: var(--rk-panel-2); color: var(--rk-ink); }
+.vs .b-runs-t { font-size: 13.5px; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.vs .b-runs-d { font: 400 10.5px/1.2 var(--font-data); color: var(--rk-ink-3); }
+.vs .b-health { margin-top: auto; padding: 12px 10px 4px; border-top: 1px solid var(--rk-rule); font-size: 12.5px; line-height: 1.45; color: var(--rk-ink-3); }
+.vs .b-side > .b-runs, .vs .b-side > .b-side-empty { margin-bottom: 16px; }
+.vs .b-health p { margin: 0; }
+.vs .b-health p:first-child { color: var(--rk-ink-2); }
+/* The signed-in account at the sidebar foot: its email (cut with an ellipsis) and Sign out. */
+.vs .b-acct { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--rk-rule); }
+.vs .b-acct p { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--rk-ink-2); }
+.vs .b-acct .b-link { flex: none; align-self: auto; }
+
+/* ---------- Chat column ---------- */
+.vs .b-main { position: relative; display: flex; flex-direction: column; min-width: 0; min-height: 0; height: 100dvh; }
+.vs .b-top { flex: none; display: flex; align-items: center; gap: 8px; min-height: 52px; padding: 8px 12px 8px 24px; border-bottom: 1px solid var(--rk-rule); }
+.vs .b-top:not([data-title]) { display: none; }
+.vs .b-top .b-menu { display: none; }
+.vs .b-top .b-top-end { margin-left: auto; }
+.vs .b-top-t { margin: 0; min-width: 0; font: 600 14.5px/1.3 var(--font-body); color: var(--rk-ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.vs .b-scroll { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-gutter: stable both-edges; }
+.vs .b-thread { width: min(100%, 760px); margin: 0 auto; padding: 32px 24px 28px; display: flex; flex-direction: column; gap: 20px; }
+.vs .b-dock { flex: none; width: min(100%, 760px); margin: 0 auto; padding: 0 24px 20px; }
+
+/* Empty: the welcome, the chat box and the examples sit together a little above the middle. */
+.vs .b-main[data-empty] .b-hello { margin-top: auto; }
+.vs .b-main[data-empty] .b-dock { margin-bottom: auto; padding-bottom: 12vh; }
+.vs .b-hello { width: min(100%, 760px); margin: 0 auto; padding: 0 24px 26px; text-align: center; }
+.vs .b-hello h1 { margin: 0 0 12px; font: 800 clamp(36px, 3.4vw, 46px)/1.02 var(--font-display); letter-spacing: .005em; color: var(--rk-ink); }
+.vs .b-hello p { margin: 0 auto; max-width: 48ch; font-size: 16px; line-height: 1.55; color: var(--rk-ink-2); }
+
+/* ---------- Composer and examples ---------- */
+.vs .b-comp { display: flex; flex-direction: column; gap: 6px; padding: 12px 12px 10px 16px; background: var(--rk-panel); border: 1px solid var(--rk-rule-2); border-radius: 16px; transition: border-color .15s; }
+.vs .b-comp:focus-within { border-color: var(--rk-a3); }
+.vs .b-comp[data-locked] { background: var(--rk-inset); border-color: var(--rk-rule); }
+.vs .b-comp-in { display: block; width: 100%; min-height: 48px; max-height: 200px; field-sizing: content; resize: none; padding: 2px 0; background: none; border: 0; outline: none; color: var(--rk-ink); font: 400 15.5px/1.5 var(--font-body); caret-color: var(--rk-a); }
+.vs .b-comp-in:focus-visible { outline: none; }
+.vs .b-comp-in::placeholder { color: var(--rk-ink-3); }
+.vs .b-comp-in:disabled { cursor: not-allowed; }
+.vs .b-comp-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.vs .b-comp-hint { font-size: 12px; color: var(--rk-ink-3); }
+.vs .b-comp-row .bx { margin-left: auto; }
+.vs .b-count { font-size: 11px; color: var(--rk-ink-2); }
+.vs .b-ex { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 16px; }
+.vs .b-ex-list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.vs .b-chip { padding: 8px 13px; border: 1px solid var(--rk-rule); border-radius: 10px; background: none; color: var(--rk-ink-2); font: 400 13.5px/1.2 var(--font-body); cursor: pointer; transition: background-color .15s, border-color .15s, color .15s; }
+.vs .b-chip:hover { background: var(--rk-panel); border-color: var(--rk-rule-2); color: var(--rk-ink); }
+
+/* ---------- Buttons ---------- */
+.vs .bx { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 36px; padding: 8px 14px; border: 1px solid var(--rk-rule-2); border-radius: 9px; background: transparent; color: var(--rk-ink); font: 600 14px/1 var(--font-body); text-decoration: none; white-space: nowrap; cursor: pointer; transition: background-color .15s, border-color .15s, color .15s; }
+.vs .bx:hover:not(:disabled) { background: var(--rk-panel-2); border-color: var(--rk-ink-3); }
+.vs .bx.pri { background: var(--rk-a); border-color: var(--rk-a); color: var(--rk-on-a); }
+.vs .bx.pri:hover:not(:disabled) { background: var(--rk-run); border-color: var(--rk-run); }
+.vs .bx:disabled { opacity: .5; cursor: default; }
+.vs .bx.pri:disabled { opacity: 1; background: var(--rk-seg-off); border-color: var(--rk-seg-off-b); color: var(--rk-ink-3); }
+.vs .bx.sm { min-height: 30px; padding: 6px 11px; font-size: 13px; }
+.vs .bx .ico { width: 15px; height: 15px; }
+.vs .b-ib { display: inline-grid; place-items: center; flex: none; width: 36px; height: 36px; padding: 0; border: 0; border-radius: 9px; background: none; color: var(--rk-ink-2); cursor: pointer; }
+.vs .b-ib:hover { background: var(--rk-panel-2); color: var(--rk-ink); }
+.vs .b-ib svg { width: 18px; height: 18px; stroke-width: 1.75; }
+/* The open and close buttons draw a panel from 900px and a menu or an X on a phone. */
+.vs .b-ib .b-ico-n { display: none; }
+.vs .b-link { align-self: flex-start; padding: 4px 0; border: 0; background: none; color: var(--rk-ink-2); font: 500 13.5px/1.3 var(--font-body); text-decoration: underline; text-decoration-color: var(--rk-rule-2); text-underline-offset: 3px; cursor: pointer; }
+.vs .b-ex .b-link { align-self: center; }
+.vs .b-link:hover { color: var(--rk-ink); text-decoration-color: var(--rk-ink-3); }
+.vs .b-acts { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* ---------- Messages ---------- */
+.vs .b-me { align-self: flex-end; max-width: min(80%, 560px); padding: 10px 15px; background: var(--rk-panel-2); border: 1px solid var(--rk-rule); border-radius: 16px; color: var(--rk-ink); font-size: 15.5px; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; }
+.vs .b-ai { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; min-width: 0; color: var(--rk-ink-2); font-size: 15.5px; line-height: 1.55; }
+.vs .b-ai > p { margin: 0; max-width: 65ch; overflow-wrap: anywhere; }
+.vs .b-ai b { color: var(--rk-ink); font-weight: 650; }
+.vs .b-wait { display: flex; flex-direction: row; align-items: center; gap: 10px; margin: 0; color: var(--rk-ink-3); }
+.vs .b-dim { color: var(--rk-ink-3); font-size: 14px; }
+.vs .b-note { margin: 0; font-size: 13.5px; line-height: 1.5; color: var(--rk-ink-2); overflow-wrap: anywhere; }
+.vs .b-note .rkq { margin-right: 4px; }
+.vs .b-note.b-dim { font-size: 13px; color: var(--rk-ink-3); }
+
+/* ---------- Fact check: the verdict line, the research under it, the sources, and the answers to questions ---------- */
+/* The verdict is a shape and a word, never colour alone: hollow, half or filled square in ink. Amber stays for pass, Send and Run. */
+.vs .b-verdict { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 9px; color: var(--rk-ink); font-size: 15.5px; line-height: 1.3; }
+.vs .b-verdict .bx { margin-left: 6px; }
+.vs .b-vsq { display: inline-block; flex: none; width: 11px; height: 11px; border: 1.5px solid var(--rk-ink); }
+.vs .b-vsq[data-shape="half"] { background: linear-gradient(90deg, var(--rk-ink) 50%, transparent 50%); }
+.vs .b-vsq[data-shape="full"] { background: var(--rk-ink); }
+.vs .b-vsq[data-shape="dot"] { background: linear-gradient(var(--rk-ink), var(--rk-ink)) center / 5px 5px no-repeat; }
+.vs .b-vsq[data-shape="dashed"] { border-style: dashed; }
+.vs .b-vsq[data-shape="plus"] {
+  background:
+    linear-gradient(var(--rk-ink), var(--rk-ink)) center / 7px 1.5px no-repeat,
+    linear-gradient(var(--rk-ink), var(--rk-ink)) center / 1.5px 7px no-repeat;
+}
+.vs .b-research { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; width: 100%; min-width: 0; }
+.vs .b-research > p { margin: 0; max-width: 65ch; overflow-wrap: anywhere; }
+/* A sentence and, under it, its citation chips as a row of their own: S1 S2 never sit glued to the last word. */
+.vs .b-sent { display: flex; flex-direction: column; align-items: flex-start; gap: 5px; max-width: 65ch; }
+.vs .b-sent > p { margin: 0; overflow-wrap: anywhere; }
+.vs .b-cites { display: flex; flex-wrap: wrap; gap: 6px; }
+.vs .b-cite { display: inline-block; padding: 0 6px; border: 1px solid var(--rk-rule-2); border-radius: 4px; color: var(--rk-ink); font: 500 11px/1.55 var(--font-data); text-decoration: none; }
+.vs a.b-cite:hover { border-color: var(--rk-ink-3); background: var(--rk-panel-2); }
+.vs :is(a.b-cite, .b-sb a):focus-visible { outline: 2px solid var(--rk-a); outline-offset: 1px; }
+.vs .b-srcs { list-style: none; margin: 2px 0; padding: 0; display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 65ch; }
+.vs .b-srcs li { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 0 6px; padding-left: 10px; border-left: 2px solid var(--rk-rule-2); }
+.vs .b-sn { padding-top: 2px; font-size: 11px; color: var(--rk-ink-2); }
+.vs .b-sb { display: flex; flex-direction: column; gap: 1px; min-width: 0; font-size: 14px; line-height: 1.4; color: var(--rk-ink); overflow-wrap: anywhere; }
+.vs .b-sb a { color: var(--rk-ink); text-decoration: underline; text-decoration-color: var(--rk-rule-2); text-underline-offset: 3px; }
+.vs .b-sb a:hover { text-decoration-color: var(--rk-ink-3); }
+.vs .b-sb small { font-size: 12.5px; color: var(--rk-ink-3); }
+.vs .b-bul { margin: 0; padding: 0; list-style: none; max-width: 65ch; }
+.vs .b-bul li { position: relative; padding: 3px 0 3px 18px; overflow-wrap: anywhere; }
+.vs .b-bul li::before { content: ""; position: absolute; left: 2px; top: .8em; width: 6px; height: 6px; border: 1.5px solid var(--rk-ink-3); }
+.vs .b-card .b-rows { margin-top: -4px; }
+
+/* ---------- Chip card: the compact grid, everything at once, the full width of the chat column ---------- */
+.vs .b-card { container-type: inline-size; display: flex; flex-direction: column; gap: 14px; width: 100%; padding: 16px 18px; background: var(--rk-panel); border: 1px solid var(--rk-rule-2); border-radius: 14px; }
+.vs .b-card[data-quiet] { gap: 3px; padding: 11px 16px; background: none; border-color: var(--rk-rule); }
+.vs .b-card-top { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; }
+.vs .b-card-top .b-link { flex: none; padding: 0; font-size: 13px; }
+.vs .b-card-t { margin: 0; font: 650 16px/1.35 var(--font-body); color: var(--rk-ink); overflow-wrap: anywhere; }
+.vs .b-card[data-quiet] .b-card-t { font-size: 14.5px; }
+.vs .b-card-s { margin: 0; font-size: 13.5px; line-height: 1.45; color: var(--rk-ink-3); }
+.vs .b-card-stop { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.vs .b-card[data-busy] :is(.b-pills, .b-kind-s, .b-knobs, .b-seg) { opacity: .55; }
+.vs .b-lab { display: block; margin: 0 0 8px; padding: 0; font: 500 12.5px/1.2 var(--font-body); color: var(--rk-ink-3); }
+.vs :is(.b-kind, .b-goal) > .b-lab { margin: 0; }
+
+/* Kind: one row of pills, with the picked kind's plain line under it. */
+.vs .b-kind { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 0 12px; align-items: start; }
+.vs .b-kind > .b-lab { padding-top: 9px; }
+.vs .b-kind-b { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.vs .b-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.vs .b-pill { position: relative; cursor: pointer; }
+.vs .b-pill input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.vs .b-pill span { display: block; padding: 7px 13px; border: 1px solid var(--rk-rule-2); border-radius: 999px; font: 500 13.5px/1 var(--font-body); color: var(--rk-ink-2); white-space: nowrap; transition: background-color .15s, border-color .15s, color .15s; }
+.vs .b-pill span:hover { border-color: var(--rk-ink-3); color: var(--rk-ink); }
+.vs .b-pill input:checked + span { background: var(--rk-panel-2); border-color: var(--rk-ink-3); color: var(--rk-ink); }
+.vs .b-pill input:focus-visible + span { outline: 2px solid var(--rk-a); outline-offset: 1px; }
+.vs .b-pill input:disabled + span { cursor: default; }
+.vs .b-kind-s { margin: 0; font-size: 13px; line-height: 1.4; color: var(--rk-ink-3); }
+
+/* The picked kind's knobs, side by side; they wrap when the card is narrow. */
+.vs .b-knobs { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px 24px; }
+
+/* Goal and Run share one line. */
+.vs .b-goal { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.vs .b-goal > .b-lab { width: 44px; }
+.vs .b-goal .b-seg { flex: 0 1 auto; }
+.vs .b-goal .b-seg span { padding: 8px 14px; white-space: nowrap; }
+.vs .b-goal .bx.pri { margin-left: auto; min-width: 96px; }
+
+/* The last line: the dropdown, with the cost note on the same line at the right while there is room. */
+.vs .b-card-foot { position: relative; }
+.vs .b-cost { position: absolute; top: 6px; right: 0; }
+
+/* A narrow card (a phone, or the chat squeezed by the panel) stacks: the label above the pills, Goal and Run in a column. */
+@container (max-width: 440px) {
+  .vs .b-kind { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  .vs .b-kind > .b-lab { padding-top: 0; }
+  .vs .b-goal > .b-lab { width: 100%; }
+  .vs .b-goal .b-seg { flex: 1 1 100%; }
+  .vs .b-goal .b-seg span { padding: 8px 6px; white-space: normal; }
+  .vs .b-goal .bx.pri { flex: 1 1 100%; margin-left: 0; }
+}
+@container (max-width: 520px) {
+  .vs .b-cost { position: static; }
+}
+
+.vs .b-rows { margin: 0; display: flex; flex-direction: column; }
+.vs .b-rows > div { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding: 8px 0; border-bottom: 1px solid var(--rk-rule); font-size: 14px; }
+.vs .b-rows > div:last-child { border-bottom: 0; }
+.vs .b-rows dt { color: var(--rk-ink-2); }
+.vs .b-rows dd { margin: 0; color: var(--rk-ink); text-align: right; }
+.vs .b-rows dd.m, .vs .b-rows dd .m { font-size: 13px; }
+.vs .b-rows dd small { display: block; margin-top: 3px; font-size: 11px; color: var(--rk-ink-3); }
+.vs .b-seg { display: flex; gap: 3px; padding: 3px; background: var(--rk-inset); border: 1px solid var(--rk-rule); border-radius: 10px; }
+.vs .b-seg label { flex: 1; }
+.vs .b-seg input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.vs .b-seg span { display: block; padding: 8px 6px; border-radius: 7px; font: 500 13.5px/1 var(--font-body); color: var(--rk-ink-2); text-align: center; cursor: pointer; transition: background-color .15s, color .15s; }
+.vs .b-seg span:hover { color: var(--rk-ink); }
+.vs .b-seg input:checked + span { background: var(--rk-panel-2); color: var(--rk-ink); box-shadow: inset 0 0 0 1px var(--rk-rule-2); }
+.vs .b-seg input:focus-visible + span { outline: 2px solid var(--rk-a); outline-offset: 1px; }
+
+/* One knob, compact: label and value on one line, then the slider, then a small min and max. Rendered from the FAMILIES table. */
+.vs .b-knob { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.vs .b-knob-h { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; font-size: 13.5px; color: var(--rk-ink-2); }
+.vs .b-knob-h label { color: var(--rk-ink); }
+.vs .b-knob-h output { font-size: 13px; color: var(--rk-ink); }
+.vs .b-knob-h output span, .vs .b-knob-u { font-size: 11px; color: var(--rk-ink-3); }
+.vs .b-knob-r { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--rk-ink-3); }
+.vs .b-knob input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 22px; margin: 0; background: transparent; cursor: pointer; }
+.vs .b-knob input[type="range"]::-webkit-slider-runnable-track { height: 4px; border-radius: 2px; background: linear-gradient(to right, var(--rk-ink-2) var(--p), var(--rk-rule-2) var(--p)); }
+.vs .b-knob input[type="range"]::-moz-range-track { height: 4px; border-radius: 2px; background: linear-gradient(to right, var(--rk-ink-2) var(--p), var(--rk-rule-2) var(--p)); }
+.vs .b-knob input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; margin-top: -6px; border: 0; border-radius: 50%; background: var(--rk-ink); }
+.vs .b-knob input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; border: 0; border-radius: 50%; background: var(--rk-ink); }
+.vs .b-knob input[type="range"]:disabled { cursor: default; }
+.vs .b-knob-bool { align-items: flex-start; gap: 6px; }
+.vs .b-knob-l { font-size: 13.5px; color: var(--rk-ink); }
+.vs .b-switch { display: inline-flex; align-items: center; gap: 8px; padding: 6px 11px; border: 1px solid var(--rk-rule-2); border-radius: 8px; background: none; color: var(--rk-ink); font: 500 13px/1 var(--font-body); cursor: pointer; }
+.vs .b-switch:hover:not(:disabled) { border-color: var(--rk-ink-3); }
+.vs .b-switch:disabled { opacity: .55; cursor: default; }
+.vs .b-switch .rkq { border: 1.5px solid var(--rk-ink-3); border-radius: 2px; }
+.vs .b-switch .rkq[data-on] { background: var(--rk-ink); border-color: var(--rk-ink); }
+.vs .b-bits { width: 100%; padding: 7px 10px; background: var(--rk-inset); color: var(--rk-ink); border: 1px solid var(--rk-rule-2); border-radius: 8px; font: 400 15px/1.2 var(--font-data); letter-spacing: .12em; }
+.vs .b-bits:hover:not(:disabled) { border-color: var(--rk-ink-3); }
+.vs .b-bits:focus-visible { outline: none; border-color: var(--rk-a); box-shadow: inset 0 0 0 1px var(--rk-a); }
+.vs .b-bits[aria-invalid="true"] { border-color: var(--rk-ink); border-style: dashed; }
+.vs .b-bits:disabled { opacity: .55; }
+
+/* Access code (inside a card or a reply) */
+.vs .b-code { display: flex; flex-direction: column; gap: 6px; width: 100%; max-width: 560px; }
+.vs .b-h { display: block; margin: 0; font: 600 14px/1.3 var(--font-body); color: var(--rk-ink); }
+.vs .b-code-row { display: flex; gap: 8px; margin-top: 4px; }
+.vs .b-code-row .b-bits { flex: 1; min-width: 0; letter-spacing: .04em; }
+.vs.bench .b-code .btn { padding: 9px 14px; border-radius: 9px; font-size: 14px; }
+
+/* ---------- Dropdowns: the detail behind the plain default text ---------- */
+.vs .b-more { font-size: 14px; color: var(--rk-ink-2); }
+.vs .b-more > summary { display: inline-flex; align-items: center; gap: 8px; padding: 5px 0; list-style: none; color: var(--rk-ink-2); font-weight: 500; cursor: pointer; }
+.vs .b-more > summary::-webkit-details-marker { display: none; }
+.vs .b-more > summary::after { content: ""; width: 6px; height: 6px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: translateY(-2px) rotate(45deg); transition: transform .15s; }
+.vs .b-more[open] > summary::after { transform: translateY(1px) rotate(-135deg); }
+.vs .b-more > summary:hover { color: var(--rk-ink); }
+.vs .b-more p { margin: 6px 0 8px; max-width: 65ch; font-size: 13.5px; line-height: 1.55; color: var(--rk-ink-2); }
+.vs .b-more-list { margin: 6px 0 8px; padding: 0; list-style: none; font-size: 13.5px; line-height: 1.5; }
+.vs .b-more-list li { position: relative; padding: 3px 0 3px 18px; }
+.vs .b-more-list li::before { content: ""; position: absolute; left: 2px; top: .72em; width: 6px; height: 6px; border: 1.5px solid var(--rk-ink-3); }
+.vs .b-more-dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 8px 16px; margin: 8px 0 10px; font-size: 13.5px; line-height: 1.5; }
+.vs .b-more-dl dt { color: var(--rk-ink); font-weight: 600; }
+.vs .b-more-dl dd { margin: 0; color: var(--rk-ink-2); }
+.vs .b-explain { display: flex; flex-direction: column; gap: 2px; }
+/* Details: the one dropdown behind a reply's plain words (research, sources, cost, how it was checked). Ink only; it opens flush under its label. */
+.vs .b-det { width: 100%; }
+.vs .b-det-body { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; margin: 4px 0 2px; padding-left: 12px; border-left: 2px solid var(--rk-rule-2); }
+.vs .b-det-body :is(.b-research, .b-sent) > p, .vs .b-det-body > p { margin: 0; }
+/* The tool line above a reply: "Used 3 tools" and a chevron, dimmer and smaller than Details. */
+.vs .b-toold { font-size: 12.5px; color: var(--rk-ink-3); }
+.vs .b-toold > summary { padding: 2px 0; color: var(--rk-ink-3); font-weight: 400; }
+.vs .b-toold > summary:hover { color: var(--rk-ink-2); }
+.vs .b-toold .b-tools { margin: 3px 0 2px; }
+
+/* ---------- Progress tab: the steps tick off as the run moves ---------- */
+.vs .b-prog { display: flex; flex-direction: column; gap: 14px; }
+.vs .b-prog-h { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.vs .b-state { display: inline-flex; align-items: center; gap: 7px; flex: none; font-size: 13px; color: var(--rk-ink-2); }
+.vs .b-bar { height: 3px; border-radius: 2px; background: var(--rk-seg-off); overflow: hidden; }
+.vs .b-bar i { display: block; height: 100%; background: var(--rk-run-2); transform-origin: 0 50%; transition: transform .32s cubic-bezier(.16, 1, .3, 1); }
+.vs .b-prog[data-ended] .b-bar i { background: var(--rk-ink-3); }
+.vs .b-live:empty { display: none; }
+.vs .b-steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; font-size: 14px; line-height: 1.35; }
+.vs .b-steps li { display: flex; align-items: center; gap: 10px; color: var(--rk-ink); }
+.vs .b-steps li[data-kind="run"] { color: var(--rk-run); }
+.vs .b-steps li[data-kind="wait"], .vs .b-steps li[data-kind="drop"] { color: var(--rk-ink-3); }
+.vs .b-cap { margin: 0; padding: 10px 12px; background: var(--rk-inset); border-radius: 10px; font-size: 13.5px; line-height: 1.5; color: var(--rk-ink-2); overflow-wrap: anywhere; }
+.vs .b-lost { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; border: 1px dashed var(--rk-ink-2); border-radius: 10px; font-size: 13.5px; color: var(--rk-ink); }
+.vs .b-lost p { margin: 0; }
+.vs .b-prog-f { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 30px; }
+.vs .b-credits { font-size: 13px; font-variant-numeric: tabular-nums; color: var(--rk-ink-2); }
+.vs .b-prog .b-explain { padding-top: 8px; border-top: 1px solid var(--rk-rule); }
+
+/* The one line in the chat while a run goes. */
+.vs .b-ai[data-running] > p { color: var(--rk-ink); }
+
+/* The result card: reopens the panel after Close. */
+.vs .b-outcard { display: flex; align-items: center; justify-content: space-between; gap: 16px; width: 100%; max-width: 560px; padding: 14px 16px; background: var(--rk-panel); border: 1px solid var(--rk-rule-2); border-radius: 14px; color: var(--rk-ink); font: inherit; text-align: left; cursor: pointer; transition: background-color .15s, border-color .15s; }
+.vs .b-outcard:hover { background: var(--rk-panel-2); border-color: var(--rk-ink-3); }
+.vs .b-outcard-t { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.vs .b-outcard-t b { font-size: 15px; font-weight: 650; overflow-wrap: anywhere; }
+.vs .b-outcard-t small { font-size: 13px; color: var(--rk-ink-3); }
+.vs .b-outcard-a { flex: none; padding: 7px 12px; border: 1px solid var(--rk-rule-2); border-radius: 9px; font: 600 13px/1 var(--font-body); }
+.vs .b-outcard[aria-expanded="true"] .b-outcard-a { color: var(--rk-ink-3); }
+
+/* ---------- Right panel ---------- */
+.vs .b-panel { display: flex; flex-direction: column; min-width: 0; min-height: 0; height: 100dvh; background: var(--rk-panel); border-left: 1px solid var(--rk-rule); animation: b-panel-in .32s cubic-bezier(.16, 1, .3, 1); }
+@keyframes b-panel-in { from { opacity: 0; transform: translateX(16px); } }
+.vs .b-panel-h { flex: none; display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 52px; padding: 8px 12px 8px 20px; border-bottom: 1px solid var(--rk-rule); }
+.vs .b-panel-t { margin: 0; min-width: 0; font: 650 15px/1.3 var(--font-body); color: var(--rk-ink); overflow-wrap: anywhere; }
+.vs .b-panel-t:focus { outline: none; }
+.vs .b-panel-acts { display: flex; align-items: center; gap: 4px; flex: none; }
+.vs .b-panel-err { padding: 8px 20px 0; }
+.vs .b-tabs { flex: none; display: flex; gap: 22px; padding: 0 20px; border-bottom: 1px solid var(--rk-rule); }
+.vs .b-tabs [role="tab"] { position: relative; padding: 13px 0 12px; border: 0; background: none; color: var(--rk-ink-3); font: 500 14px/1 var(--font-body); cursor: pointer; transition: color .15s; }
+.vs .b-tabs [role="tab"]:hover, .vs .b-tabs [aria-selected="true"] { color: var(--rk-ink); }
+.vs .b-tabs [aria-selected="true"]::after { content: ""; position: absolute; right: 0; bottom: -1px; left: 0; height: 2px; border-radius: 1px; background: var(--rk-ink); }
+.vs .b-panel-b { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; padding: 20px 20px 32px; }
+.vs .b-panel-b:focus-visible { outline: 2px solid var(--rk-a); outline-offset: -2px; }
+
+/* Result tab */
+.vs .b-result { display: flex; flex-direction: column; }
+.vs .b-sec { display: flex; flex-direction: column; gap: 10px; padding: 0 0 18px; }
+.vs .b-sec + .b-sec { padding-top: 16px; border-top: 1px solid var(--rk-rule); }
+.vs .b-sec-h { margin: 0; font: 600 14px/1.3 var(--font-body); color: var(--rk-ink); }
+.vs .b-win { margin: -6px 0 0; font: 900 60px/.95 var(--font-display); color: var(--rk-ink); }
+.vs .b-proof { margin: 0; display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--rk-ink); }
+.vs .b-result .b-explain { gap: 0; }
+.vs .b-empty { margin: 0; padding: 12px 0; font-size: 14px; line-height: 1.5; color: var(--rk-ink-3); }
+.vs .b-score { width: 100%; border-collapse: collapse; font-size: 13px; }
+.vs .b-score :is(th, td) { padding: 7px 6px; border-bottom: 1px solid var(--rk-rule); text-align: left; vertical-align: top; overflow-wrap: anywhere; }
+.vs .b-score thead th { font: 500 12px/1.3 var(--font-body); color: var(--rk-ink-3); }
+.vs .b-score tbody th { font-weight: 500; color: var(--rk-ink); }
+.vs .b-score td { font-size: 12px; color: var(--rk-ink-2); }
+.vs .b-disc { margin: 8px 0 0; padding: 0; list-style: none; }
+.vs .b-disc li { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--rk-rule); font-size: 13px; line-height: 1.45; color: var(--rk-ink-2); overflow-wrap: anywhere; }
+.vs .b-disc li:last-child { border-bottom: 0; }
+.vs .b-disc-v { display: inline-flex; align-items: center; gap: 7px; font: 600 14px/1.2 var(--font-body); color: var(--rk-ink); }
+
+/* Versions tab: the studio's versions table without its rack frame. */
+.vs .b-versions { display: flex; flex-direction: column; gap: 12px; }
+.vs .b-versions .mod { padding: 0; background: none; border: 0; }
+.vs .b-versions :is(.ear, .eng) { display: none; }
+.vs .b-versions .mh { height: auto; margin: 0 0 6px; padding: 0 0 6px; justify-content: flex-end; }
+.vs .b-versions .t1-scroll { overflow-x: auto; }
+/* Tight cells so all six columns, Status included, fit the 343px the panel leaves at 1280 wide; the scroll stays as the fallback. */
+.vs .b-versions .t1-tbl { min-width: 0; }
+.vs .b-versions .t1-tbl :is(td, th) { padding-inline: 3px; }
+.vs .b-versions .t1-tbl thead th { white-space: normal; line-height: 1.3; letter-spacing: .04em; }
+.vs .b-versions .t1-tbl tbody td { font-size: 10.5px; }
+.vs .b-versions .t1-tbl .t1-ver { font-size: 22px; }
+.vs .b-versions .t1-tbl .st .word { letter-spacing: .06em; }
+.vs .b-versions .eqy-s { display: none; } /* the Result tab states the proof in plain words */
+.vs .b-versions :is(.vtools, .t1-by) { display: none; } /* tool names and operator tags: the Result tab's dropdown names the tools */
+.vs .b-versions[data-nobase] .vnote { display: none; } /* "Versions appear as the agent writes them" means nothing once the run has ended */
+/* A run that has ended: the rows it left half done read "Not finished", not as live work. */
+.vs .b-versions[data-ended] .t1-tbl tr[data-live] :is(td, th) { background: none; }
+.vs .b-versions[data-ended] .t1-tbl tr[data-live] .rkq.run { border: 1px solid var(--rk-grey); }
+.vs .b-versions[data-ended] .t1-tbl tr[data-live] .rkq.run::after { display: none; }
+.vs .b-versions[data-ended] .t1-tbl tr[data-live] .word { display: none; }
+.vs .b-versions[data-ended] .t1-tbl tr[data-live] .st::after { content: "Not finished"; color: var(--rk-ink-3); }
+.vs .b-versions[data-ended] .t1-tbl tr[data-live] .t1-wait { font-size: 0; visibility: hidden; }
+.vs .b-versions[data-ended] .t1-tbl tr[data-live] .t1-wait::after { content: "Not measured"; font-size: 11px; visibility: visible; }
+
+/* Verilog tab */
+.vs .b-verilog { display: flex; flex-direction: column; gap: 14px; }
+.vs .b-pick { display: inline-flex; align-items: center; gap: 10px; font-size: 13.5px; color: var(--rk-ink-2); }
+.vs .b-pick select { padding: 6px 10px; background: var(--rk-inset); color: var(--rk-ink); border: 1px solid var(--rk-rule-2); border-radius: 8px; font: 400 13px/1.2 var(--font-data); }
+.vs .b-pick select:disabled { color: var(--rk-ink-2); cursor: not-allowed; }
+.vs .b-rtl { display: flex; flex-direction: column; gap: 12px; }
+.vs .b-rtl-why { margin: 0; font-size: 14px; line-height: 1.5; color: var(--rk-ink-2); overflow-wrap: anywhere; }
+.vs .b-rtl-why b { color: var(--rk-ink); }
+.vs .b-rtl-why .rkq { margin-right: 3px; }
+.vs .b-rtl .codebox { border-radius: 10px; overflow: hidden; }
+
+/* ---------- Narrow: the sidebar is a drawer, the panel a full-screen sheet ---------- */
+.vs .b-scrim { position: fixed; inset: 0; z-index: 30; background: var(--rk-ground); opacity: .72; }
+@media (max-width: 899.98px) {
+  .vs.bench, .vs.bench[data-panel="open"] { grid-template-columns: minmax(0, 1fr); }
+  .vs .b-side { position: fixed; inset: 0 auto 0 0; z-index: 40; width: min(84vw, 300px); transform: translateX(-100%); visibility: hidden; transition: transform .32s cubic-bezier(.16, 1, .3, 1), visibility 0s linear .32s; }
+  .vs .b-side[data-open] { transform: none; visibility: visible; box-shadow: var(--shadow-overlay); transition: transform .32s cubic-bezier(.16, 1, .3, 1); }
+  .vs .b-top, .vs .b-top:not([data-title]) { display: flex; padding: 8px 12px; }
+  .vs .b-main[data-empty] .b-top { border-bottom-color: transparent; }
+  .vs .b-top .b-menu { display: inline-grid; }
+  .vs .b-ib .b-ico-w { display: none; }
+  .vs .b-ib .b-ico-n { display: block; }
+  .vs .b-panel { position: fixed; inset: 0; z-index: 50; border-left: 0; animation-name: b-sheet-in; }
+  .vs .b-thread { padding: 20px 16px 24px; gap: 18px; }
+  .vs .b-dock { padding: 0 12px 12px; }
+  .vs .b-main[data-empty] .b-dock { padding-bottom: 8vh; }
+  .vs .b-hello { padding: 0 20px 20px; }
+  .vs .b-comp-hint { display: none; }
+  .vs .b-me { max-width: 88%; }
+  .vs .b-card { padding: 14px 14px 12px; }
+  .vs .b-more-dl { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .vs .b-more-dl dd { margin-bottom: 8px; }
+}
+@keyframes b-sheet-in { from { opacity: 0; transform: translateY(24px); } }
+
+/* Touch: every bench control reaches 44px. */
+@media (pointer: coarse) {
+  .vs.bench :is(.bx, .b-chip, .b-pill span, .b-switch, .b-seg span, .b-nav a, .b-nav button, .b-runs a, .b-tabs [role="tab"], .b-det > summary, .b-toold > summary) { min-height: 44px; }
+  .vs.bench .b-ib { width: 44px; height: 44px; }
+  .vs.bench a.b-cite { padding: 6px 10px; }
+  .vs.bench .b-knob input[type="range"] { height: 44px; }
+  .vs.bench :is(.b-seg span, .b-pill span) { display: grid; place-items: center; }
+}
+
+/* ---------- Picked version: the chip on the chat box, the name on a question, and names in answers ---------- */
+/* Neutral, never amber: it is context, not a result. The chip stays visible at 390 wide; its X reaches 44px on touch. */
+.vs .b-ctx { display: flex; flex-wrap: wrap; gap: 6px; }
+.vs .b-ctx-chip { display: inline-flex; align-items: center; gap: 2px; padding: 2px 2px 2px 10px; background: var(--rk-panel-2); border: 1px solid var(--rk-rule-2); border-radius: 8px; color: var(--rk-ink); font-size: 13px; line-height: 1.2; }
+.vs .b-ctx-x { display: inline-grid; place-items: center; width: 26px; height: 26px; padding: 0; border: 0; border-radius: 6px; background: none; color: var(--rk-ink-2); cursor: pointer; }
+.vs .b-ctx-x:hover { background: var(--rk-seg-off); color: var(--rk-ink); }
+.vs .b-ctx-x:focus-visible { outline: 2px solid var(--rk-a); outline-offset: 1px; }
+.vs .b-ctx-x svg { width: 14px; height: 14px; stroke-width: 2; }
+.vs .b-me-v { display: inline-block; margin-right: 8px; padding: 1px 7px; border: 1px solid var(--rk-rule-2); border-radius: 6px; font-size: 12px; color: var(--rk-ink-2); vertical-align: 1px; }
+.vs .b-vlink { display: inline; padding: 0 2px; border: 0; border-radius: 3px; background: none; color: var(--rk-ink); font: inherit; font-weight: 600; text-decoration: underline; text-decoration-color: var(--rk-ink-3); text-underline-offset: 3px; cursor: pointer; }
+.vs .b-vlink:hover { background: var(--rk-panel-2); text-decoration-color: var(--rk-ink); }
+.vs .b-vlink:focus-visible { outline: 2px solid var(--rk-a); outline-offset: 1px; }
+.vs .b-tag { display: inline-flex; align-items: center; gap: 6px; padding: 4px 9px; border: 1px solid var(--rk-rule-2); border-radius: 7px; color: var(--rk-ink-2); font-size: 12.5px; line-height: 1.3; }
+.vs .b-assume { display: flex; flex-wrap: wrap; gap: 6px; }
+.vs .b-walkin { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.vs .b-walk-l { margin: 4px 0 6px; padding-left: 20px; list-style: decimal; font-size: 13.5px; line-height: 1.5; color: var(--rk-ink-2); }
+
+/* The agent's tool steps above a reply: small and dim, one line each, a check mark when the tool worked and a plain mark when it did not. Ink only; amber stays for pass, Send and Run. */
+.vs .b-tools { display: flex; flex-direction: column; gap: 2px; margin: 0; padding: 0 0 0 10px; list-style: none; border-left: 2px solid var(--rk-rule-2); font-size: 12.5px; line-height: 1.45; color: var(--rk-ink-3); }
+.vs .b-tools li { display: flex; gap: 7px; overflow-wrap: anywhere; }
+.vs .b-tk { flex: none; width: 1em; text-align: center; }
+
+/* The tab strip scrolls sideways when six tabs do not fit (the panel is 340 to 440px wide). */
+.vs .b-tabs { gap: 18px; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; }
+.vs .b-tabs::-webkit-scrollbar { display: none; }
+.vs .b-tabs [role="tab"] { flex: none; white-space: nowrap; }
+.vs .b-tabs [role="tab"]:focus-visible { outline: 2px solid var(--rk-a); outline-offset: -2px; }
+
+/* ---------- Version tab ---------- */
+.vs .b-ver { display: flex; flex-direction: column; gap: 14px; }
+.vs .b-ver-h { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 14px; }
+.vs .b-ver-t { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 10px; margin: 0; color: var(--rk-ink-2); font-size: 13.5px; }
+.vs .b-ver-t b { font: 900 34px/1 var(--font-display); color: var(--rk-ink); }
+.vs .b-st { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; color: var(--rk-ink-2); white-space: nowrap; }
+.vs .b-ver-ask { align-self: flex-start; }
+.vs .b-badges { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.vs .b-badges li { display: inline-flex; align-items: center; gap: 7px; padding: 5px 9px; border: 1px solid var(--rk-rule); border-radius: 7px; background: var(--rk-inset); color: var(--rk-ink); font-size: 12.5px; line-height: 1.2; }
+.vs .b-ver-why { margin: 0; font-size: 14px; line-height: 1.55; color: var(--rk-ink-2); overflow-wrap: anywhere; }
+.vs .b-ver .codebox, .vs .b-arch .codebox { border-radius: 10px; overflow: hidden; }
+.vs .b-ver details > .codebox { margin-top: 6px; }
+
+/* ---------- Sign-off sheet ---------- */
+.vs .b-so { display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; background: var(--rk-inset); border: 1px solid var(--rk-rule-2); border-radius: 12px; }
+.vs .b-so-h { margin: 0; font: 600 14px/1.3 var(--font-body); color: var(--rk-ink); }
+.vs .b-so-rows { margin: 0; display: flex; flex-direction: column; }
+.vs .b-so-rows > div { display: grid; grid-template-columns: minmax(96px, 38%) minmax(0, 1fr); gap: 12px; padding: 7px 0; border-bottom: 1px solid var(--rk-rule); font-size: 13.5px; line-height: 1.45; }
+.vs .b-so-rows > div:last-child { border-bottom: 0; }
+.vs .b-so-rows dt { color: var(--rk-ink-2); }
+.vs .b-so-rows dd { margin: 0; color: var(--rk-ink); overflow-wrap: anywhere; }
+.vs .b-so-rows dd .rkq { margin-right: 4px; }
+.vs .b-so-line { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; margin-top: 4px; }
+.vs .b-so-line .b-link { padding: 2px 0; font-size: 13px; }
+
+/* ---------- Waveform: cycles across, signals down; a mismatch is an outline and a word, never a colour ---------- */
+.vs .b-wave { display: flex; flex-direction: column; gap: 8px; margin: 0; min-width: 0; }
+.vs .b-wave-h { display: flex; flex-direction: column; gap: 2px; font-size: 13.5px; line-height: 1.4; color: var(--rk-ink); }
+.vs .b-wave-h .b-dim { font-size: 12px; }
+.vs .b-wave-scroll { overflow-x: auto; border: 1px solid var(--rk-rule); border-radius: 10px; background: var(--rk-ground); scrollbar-width: thin; }
+.vs .b-wave-scroll:focus-visible { outline: 2px solid var(--rk-a); outline-offset: 1px; }
+.vs .b-wave-t { border-collapse: separate; border-spacing: 0; font-size: 12px; }
+.vs .b-wave-t :is(th, td) { padding: 6px 8px; border-bottom: 1px solid var(--rk-rule); text-align: center; white-space: nowrap; }
+.vs .b-wave-t tbody tr:last-child :is(th, td) { border-bottom: 0; }
+.vs .b-wave-t thead th { font-weight: 500; color: var(--rk-ink-3); vertical-align: bottom; }
+.vs .b-wave-t thead th[data-fail] { color: var(--rk-ink); }
+.vs .b-wave-t thead th small { display: block; font: 600 9.5px/1.2 var(--font-body); letter-spacing: .04em; text-transform: uppercase; }
+.vs .b-wave-t th[scope="row"] { position: sticky; left: 0; z-index: 1; padding-right: 12px; background: var(--rk-ground); border-right: 1px solid var(--rk-rule); color: var(--rk-ink-2); font-weight: 500; text-align: left; }
+.vs .b-wave-t th[scope="row"] small { color: var(--rk-ink-3); }
+.vs .b-wave-t thead th:first-child { position: sticky; left: 0; z-index: 1; background: var(--rk-ground); border-right: 1px solid var(--rk-rule); text-align: left; }
+.vs .b-wave-t td { color: var(--rk-ink-2); }
+.vs .b-wave-t tr[data-got] td { color: var(--rk-ink); }
+.vs .b-wave-t td[data-differs] { outline: 1.5px solid var(--rk-ink); outline-offset: -3px; border-radius: 4px; font-weight: 700; }
+
+/* ---------- Architecture tab: the version picker, the circuit, then the engineer's steps ---------- */
+.vs .b-arch { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.vs .b-arch-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; }
+.vs .b-arch-c { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.vs .b-arch-ch { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 12px; }
+.vs .b-arch-c .b-note .rkq { margin-right: 4px; }
+.vs .b-walk { display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; background: var(--rk-inset); border: 1.5px dashed var(--rk-ink-2); border-radius: 12px; }
+.vs .b-walk-n { margin: 0; font-size: 12px; color: var(--rk-ink-3); }
+.vs .b-walk-t { margin: 0; font: 600 14.5px/1.35 var(--font-body); color: var(--rk-ink); }
+.vs .b-walk-x { margin: 0; font-size: 14px; line-height: 1.55; color: var(--rk-ink-2); overflow-wrap: anywhere; }
+.vs .b-walk .b-acts { align-items: center; margin-top: 4px; }
+
+.vs .b-rail { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; border-top: 1px solid var(--rk-rule); }
+.vs .b-rail > li { border-bottom: 1px solid var(--rk-rule); }
+.vs .b-rail-b { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 2px 12px; width: 100%; padding: 10px 8px 10px 12px; border: 0; background: none; color: var(--rk-ink); font: inherit; text-align: left; cursor: pointer; }
+.vs .b-rail-b:hover { background: var(--rk-panel-2); }
+.vs .b-rail-b:focus-visible { outline: 2px solid var(--rk-a); outline-offset: -2px; }
+.vs .b-rail-t { font: 600 14px/1.3 var(--font-body); }
+.vs .b-rail-d { grid-column: 1 / -1; font-size: 12.5px; line-height: 1.4; color: var(--rk-ink-3); overflow-wrap: anywhere; }
+.vs .b-rail-b[aria-expanded="true"] { background: var(--rk-panel-2); }
+.vs .b-rail-here { grid-column: 1 / -1; justify-self: start; margin-top: 4px; border-style: dashed; border-color: var(--rk-ink-2); color: var(--rk-ink); }
+.vs .b-rail > li[data-agent] { box-shadow: inset 3px 0 0 var(--rk-ink); }
+.vs .b-rail > li[data-off] .b-rail-b { color: var(--rk-ink-3); }
+.vs .b-rail > li[data-off] .b-st { color: var(--rk-ink-3); }
+.vs .b-rail-e { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding: 4px 12px 16px; }
+.vs .b-rail-e > * { max-width: 100%; }
+.vs .b-rail-e :is(.b-wave, .b-so, .b-rows, details) { width: 100%; }
+.vs .b-blocks { margin: 0; padding-left: 20px; list-style: decimal; display: flex; flex-direction: column; gap: 6px; font-size: 13.5px; line-height: 1.45; color: var(--rk-ink-2); }
+.vs .b-blocks li b { display: block; color: var(--rk-ink); font-weight: 600; }
+.vs .b-fails { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 4px; font-size: 13px; line-height: 1.45; color: var(--rk-ink-2); overflow-wrap: anywhere; }
+.vs .b-fails b { color: var(--rk-ink); font-weight: 600; }
+.vs .b-vlist { margin: 0; padding: 0; list-style: none; width: 100%; display: flex; flex-direction: column; }
+.vs .b-vlist li { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; align-items: baseline; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--rk-rule); font-size: 13px; line-height: 1.4; color: var(--rk-ink-2); }
+.vs .b-vlist li:last-child { border-bottom: 0; }
+.vs .b-log { max-height: 260px; margin: 6px 0; padding: 10px 12px; overflow: auto; background: var(--rk-ground); border: 1px solid var(--rk-rule); border-radius: 8px; color: var(--rk-ink-2); font: 400 11.5px/1.5 var(--font-data); white-space: pre; }
+
+/* ---------- Circuit (xyflow and dagre): parts differ by outline and word; the walkthrough is dashed, a pick is solid ---------- */
+.vs .c-wrap { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.vs .c-flow { position: relative; height: 420px; background: var(--rk-ground); border: 1px solid var(--rk-rule); border-radius: 12px; overflow: hidden; }
+.vs .c-loading { height: 420px; background: var(--rk-ground); border: 1px solid var(--rk-rule); border-radius: 12px; }
+.vs .c-wrap[data-big] .c-flow { height: clamp(360px, calc(100dvh - 400px), 760px); }
+.vs .c-flow .react-flow { background: transparent; }
+/* The shared datasheet rule caps svg at 100% of its parent; xyflow draws each wire in a zero-width svg, so lift the cap here. */
+.vs .c-flow svg { max-width: none; }
+.vs .c-part { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; color: var(--rk-ink); text-align: center; }
+.vs .c-shape { position: absolute; inset: 0; overflow: visible; }
+.vs .c-shape :is(rect, polygon, polyline) { fill: var(--rk-panel); stroke: var(--rk-ink-3); stroke-width: 1.25; }
+.vs .c-shape polyline { fill: none; }
+.vs .c-part[data-kind="port"] .c-shape :is(rect, polygon) { fill: var(--rk-inset); }
+.vs .c-part[data-kind="reg"] .c-shape rect { stroke-width: 1.75; }
+.vs .c-part[data-agent] .c-shape :is(rect, polygon, polyline) { stroke: var(--rk-ink); stroke-width: 2.5; stroke-dasharray: 5 3; }
+.vs .c-part[data-picked] .c-shape :is(rect, polygon, polyline) { stroke: var(--rk-ink); stroke-width: 2.5; stroke-dasharray: none; }
+.vs .c-part[data-picked] .c-shape :is(rect, polygon) { fill: var(--rk-panel-2); }
+.vs .c-k { position: relative; max-width: 100%; padding: 0 8px; font: 600 11.5px/1.15 var(--font-body); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.vs .c-w { position: relative; font-size: 10px; line-height: 1.1; color: var(--rk-ink-3); }
+.vs .c-part[data-agent] .c-w, .vs .c-part[data-picked] .c-w { color: var(--rk-ink-2); }
+.vs .c-flow .react-flow__handle { width: 1px; height: 1px; min-width: 0; min-height: 0; border: 0; background: transparent; opacity: 0; }
+.vs .c-flow .react-flow__node { cursor: pointer; }
+.vs .c-flow .react-flow__node:focus-visible { outline: 2px solid var(--rk-a); outline-offset: 3px; border-radius: 4px; }
+.vs .c-flow .react-flow__edge-path { stroke: var(--rk-grey); stroke-width: 1; }
+.vs .c-flow .c-bus .react-flow__edge-path { stroke-width: 2.25; }
+.vs .c-flow .c-lit .react-flow__edge-path { stroke: var(--rk-ink); }
+.vs .c-flow .react-flow__attribution { background: transparent; }
+.vs .c-flow .react-flow__attribution a { color: var(--rk-ink-3); }
+.vs .c-flow .react-flow__edge-text { fill: var(--rk-ink-2); font: 500 9.5px var(--font-data); }
+.vs .c-flow .react-flow__edge-textbg { fill: var(--rk-ground); }
+.vs .c-zoom { position: absolute; right: 8px; bottom: 8px; z-index: 5; display: flex; gap: 2px; padding: 2px; background: var(--rk-panel); border: 1px solid var(--rk-rule-2); border-radius: 10px; }
+.vs .c-zoom .b-ib { width: 32px; height: 32px; }
+.vs .c-zoom .b-ib svg { width: 16px; height: 16px; }
+.vs .c-zoom .b-ib:focus-visible { outline: 2px solid var(--rk-a); outline-offset: -2px; }
+.vs .c-pick { min-height: 1.5em; }
+
+/* ---------- Expanded architecture: the main area, with the chat box still under it ---------- */
+.vs .b-big { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; padding: 20px 24px 16px; display: flex; flex-direction: column; gap: 14px; }
+.vs .b-arch[data-big] .b-arch-grid { display: grid; grid-template-columns: minmax(280px, 380px) minmax(0, 1fr); gap: 20px; align-items: start; }
+.vs .b-arch-side { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.vs .b-big-reply { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin: 0; padding: 10px 14px; background: var(--rk-panel); border: 1px solid var(--rk-rule); border-radius: 12px; font-size: 14px; line-height: 1.5; color: var(--rk-ink-2); }
+.vs .b-big-reply p { margin: 0; flex: 1 1 320px; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.vs .b-big-reply b { color: var(--rk-ink); }
+
+@media (max-width: 1099.98px) {
+  .vs .b-arch[data-big] .b-arch-grid { grid-template-columns: minmax(0, 1fr); }
+  .vs .b-arch[data-big] .b-arch-grid > .b-arch-c { order: -1; }
+}
+@media (max-width: 899.98px) {
+  .vs .b-big { padding: 14px 12px 10px; }
+  .vs .c-wrap[data-big] .c-flow { height: 52dvh; }
+  .vs .c-wrap[data-big] .c-zoom { top: 8px; bottom: auto; }
+  .vs .b-so-rows > div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+}
+@media (pointer: coarse) {
+  .vs.bench :is(.b-rail-b, .b-ctx-x, .c-zoom .b-ib) { min-height: 44px; }
+  .vs.bench :is(.b-ctx-x, .c-zoom .b-ib) { width: 44px; height: 44px; }
+  .vs.bench .b-vlink { padding: 6px 4px; }
+}

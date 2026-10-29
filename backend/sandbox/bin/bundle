@@ -1,0 +1,102 @@
+#!/usr/bin/env python3
+"""/verity/bin/bundle <verify|measure|eqy|seeds|strength|wave>: stdin-tar fallback for sandboxes that cannot mount files.
+
+Reads an uncompressed tar from stdin with members `work/dut.v`, optional `work/b.v` or `work/mutants.json`, and
+`pack/<files>`.
+The pack goes to a read-only directory under /tmp/verity/pack, the work files into $VERITY_WORK_DIR (default
+/work, falling back to /tmp/verity/work when that is not writable), then the stage script replaces this process
+(exec), so its stdout and exit code pass straight through.
+
+UNVERIFIED: Nebius Sandboxes file upload, stdin, image import and timeout APIs (CONTRACTS 3.3, M0).
+"""
+
+from __future__ import annotations
+
+import os
+import stat
+import sys
+import tarfile
+from pathlib import Path, PurePosixPath
+
+BIN_DIR = Path(__file__).resolve().parent
+STAGES = ("verify", "measure", "eqy", "seeds", "strength", "wave", "bench")
+MAX_TOTAL_BYTES = 8 * 1024 * 1024
+MAX_MEMBERS = 200
+WORK_FILES = {"dut.v", "b.v", "mutants.json"}
+
+
+def _fail(message: str) -> None:
+    print(f"bundle: {message}", file=sys.stderr)
+    sys.exit(2)
+
+
+def _writable_dir(preferred: Path, fallback: Path) -> Path:
+    try:
+        preferred.mkdir(parents=True, exist_ok=True)
+        probe = preferred / ".probe"
+        probe.write_text("x")
+        probe.unlink()
+        return preferred
+    except OSError:
+        fallback.mkdir(parents=True, exist_ok=True)
+        return fallback
+
+
+def _safe_parts(name: str) -> tuple[str, ...] | None:
+    path = PurePosixPath(name)
+    if path.is_absolute() or ".." in path.parts or not path.parts:
+        return None
+    return path.parts
+
+
+def main() -> None:
+    if len(sys.argv) != 2 or sys.argv[1] not in STAGES:
+        _fail(f"usage: bundle <{'|'.join(STAGES)}>")
+    stage = sys.argv[1]
+
+    work = _writable_dir(Path(os.environ.get("VERITY_WORK_DIR", "/work")), Path("/tmp/verity/work"))
+    pack = Path("/tmp/verity/pack")
+    if pack.exists():
+        _fail("/tmp/verity/pack already exists (one bundle per sandbox)")
+    pack.mkdir(parents=True)
+
+    total = 0
+    count = 0
+    with tarfile.open(fileobj=sys.stdin.buffer, mode="r|") as tar:
+        for member in tar:
+            count += 1
+            parts = _safe_parts(member.name)
+            if count > MAX_MEMBERS or parts is None:
+                _fail(f"rejected member {member.name!r}")
+            if member.isdir():
+                continue
+            if not member.isreg():
+                _fail(f"rejected non-regular member {member.name!r}")
+            root, rel = parts[0], parts[1:]
+            if root == "work" and len(rel) == 1 and rel[0] in WORK_FILES:
+                target = work / rel[0]
+            elif root == "pack" and rel:
+                target = pack.joinpath(*rel)
+            else:
+                _fail(f"rejected member {member.name!r}")
+            total += member.size
+            if total > MAX_TOTAL_BYTES:
+                _fail("bundle too large")
+            data = tar.extractfile(member)
+            assert data is not None
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(data.read())
+
+    for path in [*pack.rglob("*"), pack]:
+        mode = path.stat().st_mode
+        path.chmod(mode & ~(stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH))
+
+    env = dict(os.environ)
+    env["VERITY_PACK_DIR"] = str(pack)
+    env["VERITY_WORK_DIR"] = str(work)
+    script = str(BIN_DIR / stage)
+    os.execve(script, [script], env)
+
+
+if __name__ == "__main__":
+    main()

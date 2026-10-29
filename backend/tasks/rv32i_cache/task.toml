@@ -1,0 +1,108 @@
+schema = "verity.task/1"
+id = "rv32i_cache"
+title = "RV32I 16-word cache"
+summary = "a direct mapped read allocate cache with write through and IO bypass"
+spec_text = "A synchronous 16-line, one-word direct mapped cache. Index is cpu_addr[5:2], tag is cpu_addr[31:6]. Addresses with bit 31 set never cache. A valid matching cacheable read hits immediately. A miss or write passes to memory. Acknowledged cacheable reads fill the line. Acknowledged writes invalidate only a matching valid line and never allocate. Reset clears every valid bit, not tags or data."
+top = "rv32i_cache"
+family = "cpu"
+element_type = "none"
+latency_cycles = 1
+max_lines = 160
+test_count = 8
+default_priority = "area"
+priorities = ["area", "speed", "power"]
+target_clock_ns = 10.0
+max_plan_blocks = 6
+eval_only = true
+is_custom = false
+coding_rules = [
+  "One rising-edge clock clk. Active-low synchronous rst_n clears only the 16 valid bits. Tags and data are not reset.",
+  "index = cpu_addr[5:2], tag = cpu_addr[31:6], cacheable = !cpu_addr[31]. Each line holds valid, a 26-bit tag and a 32-bit word.",
+  "hit = cpu_valid & cacheable & (cpu_wstrb == 0) & valid[index] & (tag[index] == cpu_addr[31:6]).",
+  "Combinational: cpu_ready = hit | mem_ready; cpu_rdata = hit ? data[index] : mem_rdata; mem_valid = cpu_valid & !hit. mem_addr, mem_wdata and mem_wstrb always pass cpu_addr, cpu_wdata and cpu_wstrb unchanged.",
+  "At a rising edge without reset, mem_valid & mem_ready & cacheable fills the indexed line on a read, or invalidates a matching valid line on a write. No write allocate. A write to another tag preserves the resident line.",
+  "The shared testbench samples outputs after the rising edge with the same inputs held. Compute outputs from the updated state.",
+]
+
+[clock]
+name = "clk"
+[reset]
+name = "rst_n"
+active_low = true
+synchronous = true
+[sim]
+seed = 1
+max_cycles_per_case = 4096
+[eqy]
+enabled = true
+depth = 16
+
+[[ports]]
+name = "clk"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "rst_n"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "cpu_valid"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "cpu_addr"
+dir = "in"
+width = 32
+
+[[ports]]
+name = "cpu_wdata"
+dir = "in"
+width = 32
+
+[[ports]]
+name = "cpu_wstrb"
+dir = "in"
+width = 4
+
+[[ports]]
+name = "mem_ready"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "mem_rdata"
+dir = "in"
+width = 32
+
+[[ports]]
+name = "cpu_ready"
+dir = "out"
+width = 1
+
+[[ports]]
+name = "cpu_rdata"
+dir = "out"
+width = 32
+
+[[ports]]
+name = "mem_valid"
+dir = "out"
+width = 1
+
+[[ports]]
+name = "mem_addr"
+dir = "out"
+width = 32
+
+[[ports]]
+name = "mem_wdata"
+dir = "out"
+width = 32
+
+[[ports]]
+name = "mem_wstrb"
+dir = "out"
+width = 4

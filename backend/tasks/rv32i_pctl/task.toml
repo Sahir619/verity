@@ -1,0 +1,141 @@
+schema = "verity.task/1"
+id = "rv32i_pctl"
+title = "RV32I pipeline control"
+summary = "EX valid, redirect, trap and halt for a 2-stage pipeline"
+spec_text = "A clocked controller for a 2-stage RV32I pipeline. State is two registers, ex_valid and halted, both cleared to 0 when rst_n is low on a rising edge of clk. Reset wins over the next-state equations. The test samples every output after the rising edge with the inputs still held, so the outputs describe the state just entered, using those inputs. They do not describe the state that was left. From the state just entered: trap_now is 1 only when ex_valid is 1, halted is 0, and (trap is 1 or ((is_load or is_store) and misaligned)). redirect is 1 only when ex_valid is 1, halted is 0, trap_now is 0, and (is_jal or is_jalr or (is_branch and taken)). rf_wen is 1 only when ex_valid is 1, halted is 0 and trap_now is 0. dmem_valid is 1 only when that same condition holds and (is_load or is_store). dmem_we is 1 only when dmem_valid and is_store are both 1. retire is 1 when ex_valid is 1 and halted is 0, including a cycle where trap_now is 1. advance is 1 when halted is 0 and trap_now is 0. dbg_stall is 3 when halted is 1, else 0 when ex_valid is 1, else 1. The rising edge loads halted with (halted or trap_now) and loads ex_valid with 1 only when halted, trap_now and redirect are all 0, using the trap_now and redirect of the state being left. After a redirect or a trap becomes visible, the next edge clears ex_valid. A trap also sets halted, and halted stays 1 until reset."
+top = "rv32i_pctl"
+family = "cpu"
+element_type = "none"
+latency_cycles = 1
+max_lines = 160
+test_count = 17
+default_priority = "area"
+priorities = ["area", "speed", "power"]
+target_clock_ns = 10.0
+max_plan_blocks = 6
+eval_only = true
+is_custom = false
+coding_rules = [
+  "One clock, clk, rising edge. rst_n is active low and synchronous. Reset clears ex_valid and halted to 0 and wins over the next-state equations.",
+  "The test samples outputs after the rising edge with the inputs still held. Every output describes the state just entered, using those inputs. It does not describe the state that was left.",
+  "trap_now is 1 only when ex_valid is 1, halted is 0, and (trap is 1 or ((is_load or is_store) and misaligned)). redirect is 1 only when ex_valid is 1, halted is 0, trap_now is 0, and (is_jal or is_jalr or (is_branch and taken)).",
+  "rf_wen is 1 only when ex_valid is 1, halted is 0 and trap_now is 0. dmem_valid is that condition and (is_load or is_store). dmem_we is dmem_valid and is_store. retire is 1 when ex_valid is 1 and halted is 0.",
+  "advance is 1 when halted is 0 and trap_now is 0. dbg_stall is 3 when halted is 1, else 0 when ex_valid is 1, else 1.",
+  "The edge loads halted with (halted or trap_now) and loads ex_valid with 1 only when halted, trap_now and redirect are all 0. Those trap_now and redirect values belong to the state being left. Halted stays 1 until reset.",
+]
+
+[clock]
+name = "clk"
+
+[reset]
+name = "rst_n"
+active_low = true
+synchronous = true
+
+[sim]
+seed = 1
+max_cycles_per_case = 4096
+
+[eqy]
+enabled = true
+depth = 16
+
+[[ports]]
+name = "clk"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "rst_n"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "is_load"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "is_store"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "is_branch"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "is_jal"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "is_jalr"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "trap"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "taken"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "misaligned"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "ex_valid"
+dir = "out"
+width = 1
+
+[[ports]]
+name = "halted"
+dir = "out"
+width = 1
+
+[[ports]]
+name = "advance"
+dir = "out"
+width = 1
+
+[[ports]]
+name = "redirect"
+dir = "out"
+width = 1
+
+[[ports]]
+name = "rf_wen"
+dir = "out"
+width = 1
+
+[[ports]]
+name = "dmem_valid"
+dir = "out"
+width = 1
+
+[[ports]]
+name = "dmem_we"
+dir = "out"
+width = 1
+
+[[ports]]
+name = "retire"
+dir = "out"
+width = 1
+
+[[ports]]
+name = "trap_now"
+dir = "out"
+width = 1
+
+[[ports]]
+name = "dbg_stall"
+dir = "out"
+width = 2

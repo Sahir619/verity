@@ -1,0 +1,4289 @@
+{
+  "cases": [
+    {
+      "name": "f0_a0_t0",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 0,
+            "rdata": 90,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 90,
+            "wstrb": 1,
+            "sdata": 3570717908,
+            "misaligned": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "f0_a0_t1",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 0,
+            "rdata": 218,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 4294967258,
+            "wstrb": 1,
+            "sdata": 3570717908,
+            "misaligned": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "f0_a1_t0",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 0,
+            "rdata": 23040,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 90,
+            "wstrb": 2,
+            "sdata": 3570717908,
+            "misaligned": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "f0_a1_t1",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 0,
+            "rdata": 55808,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 4294967258,
+            "wstrb": 2,
+            "sdata": 3570717908,
+            "misaligned": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "f0_a2_t0",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 0,
+            "rdata": 5898240,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 90,
+            "wstrb": 4,
+            "sdata": 3570717908,
+            "misaligned": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "f0_a2_t1",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 0,
+            "rdata": 14286848,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 4294967258,
+            "wstrb": 4,
+            "sdata": 3570717908,
+            "misaligned": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "f0_a3_t0",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 0,
+            "rdata": 1509949440,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 90,
+            "wstrb": 8,
+            "sdata": 3570717908,
+            "misaligned": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "f0_a3_t1",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 0,
+            "rdata": 3657433088,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 4294967258,
+            "wstrb": 8,
+            "sdata": 3570717908,
+            "misaligned": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "f1_a0_t0",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 1,
+            "rdata": 15450,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 15450,
+            "wstrb": 3,
+            "sdata": 3285500884,
+            "misaligned": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "f1_a0_t1",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 1,
+            "rdata": 48218,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 4294949978,
+            "wstrb": 3,
+            "sdata": 3285500884,
+            "misaligned": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "f1_a1_t0",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 1,
+            "rdata": 3955200,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 3285500884,
+            "misaligned": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "f1_a1_t1",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 1,
+            "rdata": 12343808,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 3285500884,
+            "misaligned": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "f1_a2_t0",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 1,
+            "rdata": 1012531200,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 15450,
+            "wstrb": 12,
+            "sdata": 3285500884,
+            "misaligned": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "f1_a2_t1",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 1,
+            "rdata": 3160014848,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 4294949978,
+            "wstrb": 12,
+            "sdata": 3285500884,
+            "misaligned": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "f1_a3_t0",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 1,
+            "rdata": 1509949440,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 3285500884,
+            "misaligned": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "f1_a3_t1",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 1,
+            "rdata": 1509949440,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 3285500884,
+            "misaligned": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "f2_a0_t0",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 2,
+            "rdata": 324508639,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 324508639,
+            "wstrb": 15,
+            "sdata": 2712847316,
+            "misaligned": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "f2_a0_t1",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 2,
+            "rdata": 2471992287,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 2471992287,
+            "wstrb": 15,
+            "sdata": 2712847316,
+            "misaligned": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "f2_a1_t0",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 2,
+            "rdata": 324508639,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 2712847316,
+            "misaligned": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "f2_a1_t1",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 2,
+            "rdata": 2471992287,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 2712847316,
+            "misaligned": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "f2_a2_t0",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 2,
+            "rdata": 324508639,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 2712847316,
+            "misaligned": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "f2_a2_t1",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 2,
+            "rdata": 2471992287,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 2712847316,
+            "misaligned": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "f2_a3_t0",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 2,
+            "rdata": 324508639,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 2712847316,
+            "misaligned": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "f2_a3_t1",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 2,
+            "rdata": 2471992287,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 2712847316,
+            "misaligned": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "f3_a0_t0",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 3,
+            "rdata": 0,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "f3_a0_t1",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 3,
+            "rdata": 4294967295,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "f3_a1_t0",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 3,
+            "rdata": 0,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "f3_a1_t1",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 3,
+            "rdata": 4294967295,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "f3_a2_t0",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 3,
+            "rdata": 0,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "f3_a2_t1",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 3,
+            "rdata": 4294967295,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "f3_a3_t0",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 3,
+            "rdata": 0,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "f3_a3_t1",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 3,
+            "rdata": 4294967295,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "f4_a0_t0",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 4,
+            "rdata": 90,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 90,
+            "wstrb": 0,
+            "sdata": 3570717908,
+            "misaligned": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "f4_a0_t1",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 4,
+            "rdata": 218,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 218,
+            "wstrb": 0,
+            "sdata": 3570717908,
+            "misaligned": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "f4_a1_t0",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 4,
+            "rdata": 23040,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 90,
+            "wstrb": 0,
+            "sdata": 3570717908,
+            "misaligned": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "f4_a1_t1",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 4,
+            "rdata": 55808,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 218,
+            "wstrb": 0,
+            "sdata": 3570717908,
+            "misaligned": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "f4_a2_t0",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 4,
+            "rdata": 5898240,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 90,
+            "wstrb": 0,
+            "sdata": 3570717908,
+            "misaligned": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "f4_a2_t1",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 4,
+            "rdata": 14286848,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 218,
+            "wstrb": 0,
+            "sdata": 3570717908,
+            "misaligned": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "f4_a3_t0",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 4,
+            "rdata": 1509949440,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 90,
+            "wstrb": 0,
+            "sdata": 3570717908,
+            "misaligned": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "f4_a3_t1",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 4,
+            "rdata": 3657433088,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 218,
+            "wstrb": 0,
+            "sdata": 3570717908,
+            "misaligned": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "f5_a0_t0",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 5,
+            "rdata": 15450,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 15450,
+            "wstrb": 0,
+            "sdata": 3285500884,
+            "misaligned": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "f5_a0_t1",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 5,
+            "rdata": 48218,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 48218,
+            "wstrb": 0,
+            "sdata": 3285500884,
+            "misaligned": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "f5_a1_t0",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 5,
+            "rdata": 3955200,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 3285500884,
+            "misaligned": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "f5_a1_t1",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 5,
+            "rdata": 12343808,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 3285500884,
+            "misaligned": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "f5_a2_t0",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 5,
+            "rdata": 1012531200,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 15450,
+            "wstrb": 0,
+            "sdata": 3285500884,
+            "misaligned": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "f5_a2_t1",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 5,
+            "rdata": 3160014848,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 48218,
+            "wstrb": 0,
+            "sdata": 3285500884,
+            "misaligned": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "f5_a3_t0",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 5,
+            "rdata": 1509949440,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 3285500884,
+            "misaligned": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "f5_a3_t1",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 5,
+            "rdata": 1509949440,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 3285500884,
+            "misaligned": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "f6_a0_t0",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 6,
+            "rdata": 324508639,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 2712847316,
+            "misaligned": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "f6_a0_t1",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 6,
+            "rdata": 2471992287,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 2712847316,
+            "misaligned": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "f6_a1_t0",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 6,
+            "rdata": 324508639,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 2712847316,
+            "misaligned": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "f6_a1_t1",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 6,
+            "rdata": 2471992287,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 2712847316,
+            "misaligned": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "f6_a2_t0",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 6,
+            "rdata": 324508639,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 2712847316,
+            "misaligned": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "f6_a2_t1",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 6,
+            "rdata": 2471992287,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 2712847316,
+            "misaligned": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "f6_a3_t0",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 6,
+            "rdata": 324508639,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 2712847316,
+            "misaligned": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "f6_a3_t1",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 6,
+            "rdata": 2471992287,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 2712847316,
+            "misaligned": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "f7_a0_t0",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 7,
+            "rdata": 0,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "f7_a0_t1",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 7,
+            "rdata": 4294967295,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "f7_a1_t0",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 7,
+            "rdata": 0,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "f7_a1_t1",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 7,
+            "rdata": 4294967295,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "f7_a2_t0",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 7,
+            "rdata": 0,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "f7_a2_t1",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 7,
+            "rdata": 4294967295,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "f7_a3_t0",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 7,
+            "rdata": 0,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "f7_a3_t1",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 7,
+            "rdata": 4294967295,
+            "wdata": 2712847316
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "random_steps",
+      "steps": [
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 6,
+            "rdata": 1841048373,
+            "wdata": 3000879688
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 3000879688,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 5,
+            "rdata": 3415999764,
+            "wdata": 3457948547
+          },
+          "rst": false,
+          "expected": {
+            "ld": 52124,
+            "wstrb": 0,
+            "sdata": 461577091,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 3,
+            "rdata": 781142615,
+            "wdata": 4024324500
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 1,
+            "rdata": 814713625,
+            "wdata": 3686712493
+          },
+          "rst": false,
+          "expected": {
+            "ld": 12431,
+            "wstrb": 12,
+            "sdata": 3299722413,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 4,
+            "rdata": 2559146100,
+            "wdata": 3424904383
+          },
+          "rst": false,
+          "expected": {
+            "ld": 137,
+            "wstrb": 0,
+            "sdata": 3217014719,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 5,
+            "rdata": 380621663,
+            "wdata": 3765270869
+          },
+          "rst": false,
+          "expected": {
+            "ld": 54111,
+            "wstrb": 0,
+            "sdata": 2035644757,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 2,
+            "rdata": 1160574888,
+            "wdata": 3408863000
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 3408863000,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 3,
+            "rdata": 3855523509,
+            "wdata": 2155130613
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 2,
+            "rdata": 3398534260,
+            "wdata": 2117048085
+          },
+          "rst": false,
+          "expected": {
+            "ld": 3398534260,
+            "wstrb": 15,
+            "sdata": 2117048085,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 5,
+            "rdata": 1024105517,
+            "wdata": 812975354
+          },
+          "rst": false,
+          "expected": {
+            "ld": 15626,
+            "wstrb": 0,
+            "sdata": 83494138,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 2,
+            "rdata": 1761012787,
+            "wdata": 3720389937
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 3720389937,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 4,
+            "rdata": 1082612292,
+            "wdata": 3619404600
+          },
+          "rst": false,
+          "expected": {
+            "ld": 64,
+            "wstrb": 0,
+            "sdata": 943208504,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 7,
+            "rdata": 3632985463,
+            "wdata": 990377331
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 4,
+            "rdata": 2095646346,
+            "wdata": 2052043509
+          },
+          "rst": false,
+          "expected": {
+            "ld": 124,
+            "wstrb": 0,
+            "sdata": 4126537205,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 4,
+            "rdata": 2679146744,
+            "wdata": 2200332708
+          },
+          "rst": false,
+          "expected": {
+            "ld": 176,
+            "wstrb": 0,
+            "sdata": 2762253476,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 1,
+            "rdata": 4096490421,
+            "wdata": 456418696
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 1703437704,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 2,
+            "rdata": 558673005,
+            "wdata": 3654696394
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 3654696394,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 3,
+            "rdata": 4162460238,
+            "wdata": 2449693654
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 5,
+            "rdata": 3603436488,
+            "wdata": 3662512157
+          },
+          "rst": false,
+          "expected": {
+            "ld": 5064,
+            "wstrb": 0,
+            "sdata": 2149416989,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 7,
+            "rdata": 102406724,
+            "wdata": 1689436279
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 6,
+            "rdata": 44718167,
+            "wdata": 1927475170
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 1927475170,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 5,
+            "rdata": 1576503659,
+            "wdata": 690318078
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 1795058430,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 7,
+            "rdata": 3568156104,
+            "wdata": 3466202970
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 7,
+            "rdata": 2036676583,
+            "wdata": 3098890609
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 6,
+            "rdata": 2330096791,
+            "wdata": 50615647
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 50615647,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 5,
+            "rdata": 3952852298,
+            "wdata": 3315619209
+          },
+          "rst": false,
+          "expected": {
+            "ld": 60315,
+            "wstrb": 0,
+            "sdata": 1435063689,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 4,
+            "rdata": 2229254719,
+            "wdata": 383259850
+          },
+          "rst": false,
+          "expected": {
+            "ld": 186,
+            "wstrb": 0,
+            "sdata": 3402287818,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 4,
+            "rdata": 2738663052,
+            "wdata": 2132849777
+          },
+          "rst": false,
+          "expected": {
+            "ld": 60,
+            "wstrb": 0,
+            "sdata": 1903260017,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 2,
+            "rdata": 995264408,
+            "wdata": 1060663936
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 1060663936,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 5,
+            "rdata": 2741645871,
+            "wdata": 3351264084
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 995375956,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 4,
+            "rdata": 1034505944,
+            "wdata": 3105285378
+          },
+          "rst": false,
+          "expected": {
+            "ld": 216,
+            "wstrb": 0,
+            "sdata": 33686018,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 0,
+            "rdata": 3526144251,
+            "wdata": 4069387828
+          },
+          "rst": false,
+          "expected": {
+            "ld": 4294967250,
+            "wstrb": 8,
+            "sdata": 875836468,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 3,
+            "rdata": 271720839,
+            "wdata": 3439762282
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 4,
+            "rdata": 463756691,
+            "wdata": 314925137
+          },
+          "rst": false,
+          "expected": {
+            "ld": 93,
+            "wstrb": 0,
+            "sdata": 1364283729,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 4,
+            "rdata": 2447567989,
+            "wdata": 594489031
+          },
+          "rst": false,
+          "expected": {
+            "ld": 117,
+            "wstrb": 0,
+            "sdata": 3351758791,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 5,
+            "rdata": 2168564202,
+            "wdata": 3249400726
+          },
+          "rst": false,
+          "expected": {
+            "ld": 33089,
+            "wstrb": 0,
+            "sdata": 3952536470,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 5,
+            "rdata": 2240492037,
+            "wdata": 2315621637
+          },
+          "rst": false,
+          "expected": {
+            "ld": 12805,
+            "wstrb": 0,
+            "sdata": 2500171013,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 1,
+            "rdata": 1138863055,
+            "wdata": 2248552311
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 796340087,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 2,
+            "rdata": 2411422824,
+            "wdata": 3224791368
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 3224791368,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 6,
+            "rdata": 2386668213,
+            "wdata": 4047838606
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 4047838606,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 1,
+            "rdata": 3474473476,
+            "wdata": 2294865730
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 3745701698,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 0,
+            "rdata": 4228033510,
+            "wdata": 188978782
+          },
+          "rst": false,
+          "expected": {
+            "ld": 4294967270,
+            "wstrb": 1,
+            "sdata": 1583242846,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 3,
+            "rdata": 1917536897,
+            "wdata": 946273961
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 7,
+            "rdata": 1682467543,
+            "wdata": 922588616
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 4,
+            "rdata": 4155610725,
+            "wdata": 1895353979
+          },
+          "rst": false,
+          "expected": {
+            "ld": 177,
+            "wstrb": 0,
+            "sdata": 2071690107,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 2,
+            "rdata": 3737071715,
+            "wdata": 3274818855
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 3274818855,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 7,
+            "rdata": 3063090325,
+            "wdata": 1349452562
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 2,
+            "rdata": 2038136731,
+            "wdata": 4018592484
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 4018592484,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 0,
+            "rdata": 31117769,
+            "wdata": 683608065
+          },
+          "rst": false,
+          "expected": {
+            "ld": 4294967258,
+            "wstrb": 4,
+            "sdata": 16843009,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 5,
+            "rdata": 2463388244,
+            "wdata": 3265148409
+          },
+          "rst": false,
+          "expected": {
+            "ld": 21076,
+            "wstrb": 0,
+            "sdata": 905524729,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 1,
+            "rdata": 751609510,
+            "wdata": 2598934668
+          },
+          "rst": false,
+          "expected": {
+            "ld": 11468,
+            "wstrb": 12,
+            "sdata": 2559350924,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 1,
+            "rdata": 1929351452,
+            "wdata": 1911461521
+          },
+          "rst": false,
+          "expected": {
+            "ld": 29439,
+            "wstrb": 12,
+            "sdata": 2526123665,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 1,
+            "rdata": 1619574405,
+            "wdata": 3113900257
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 1491163361,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 3,
+            "rdata": 1565349106,
+            "wdata": 1469305055
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 3,
+            "rdata": 2829726343,
+            "wdata": 3123029747
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 1,
+            "rdata": 2901020757,
+            "wdata": 3802121877
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 3331704469,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 4,
+            "rdata": 1859177567,
+            "wdata": 3481748690
+          },
+          "rst": false,
+          "expected": {
+            "ld": 95,
+            "wstrb": 0,
+            "sdata": 3537031890,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 3,
+            "rdata": 2260447656,
+            "wdata": 463851676
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 6,
+            "rdata": 3381213232,
+            "wdata": 1876715951
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 1876715951,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 7,
+            "rdata": 3304784462,
+            "wdata": 210356338
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 7,
+            "rdata": 3321234497,
+            "wdata": 1125901582
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 6,
+            "rdata": 3658665499,
+            "wdata": 769229109
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 769229109,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 7,
+            "rdata": 1409307724,
+            "wdata": 426190996
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 7,
+            "rdata": 127490675,
+            "wdata": 467956195
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 6,
+            "rdata": 1078416526,
+            "wdata": 2528561762
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 2528561762,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 4,
+            "rdata": 1244444583,
+            "wdata": 1992700156
+          },
+          "rst": false,
+          "expected": {
+            "ld": 44,
+            "wstrb": 0,
+            "sdata": 4244438268,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 6,
+            "rdata": 4244322853,
+            "wdata": 2051731198
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 2051731198,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 7,
+            "rdata": 3589034544,
+            "wdata": 662271635
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 1,
+            "rdata": 818315956,
+            "wdata": 893327930
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 440015418,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 2,
+            "rdata": 475102978,
+            "wdata": 2021338968
+          },
+          "rst": false,
+          "expected": {
+            "ld": 475102978,
+            "wstrb": 15,
+            "sdata": 2021338968,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 1,
+            "rdata": 4108437432,
+            "wdata": 2159627182
+          },
+          "rst": false,
+          "expected": {
+            "ld": 4294952888,
+            "wstrb": 3,
+            "sdata": 1269713838,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 7,
+            "rdata": 1604142834,
+            "wdata": 4002459341
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 2,
+            "rdata": 1767243603,
+            "wdata": 4105032809
+          },
+          "rst": false,
+          "expected": {
+            "ld": 1767243603,
+            "wstrb": 15,
+            "sdata": 4105032809,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 4,
+            "rdata": 1832270014,
+            "wdata": 631066274
+          },
+          "rst": false,
+          "expected": {
+            "ld": 190,
+            "wstrb": 0,
+            "sdata": 2728567458,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 5,
+            "rdata": 2751665579,
+            "wdata": 891018461
+          },
+          "rst": false,
+          "expected": {
+            "ld": 5547,
+            "wstrb": 0,
+            "sdata": 3705527517,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 4,
+            "rdata": 1369360432,
+            "wdata": 3315746620
+          },
+          "rst": false,
+          "expected": {
+            "ld": 200,
+            "wstrb": 0,
+            "sdata": 1010580540,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 4,
+            "rdata": 4215917171,
+            "wdata": 11112599
+          },
+          "rst": false,
+          "expected": {
+            "ld": 202,
+            "wstrb": 0,
+            "sdata": 2543294359,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 3,
+            "rdata": 366584362,
+            "wdata": 702383052
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 2,
+            "rdata": 1407847621,
+            "wdata": 3535399902
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 3535399902,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 7,
+            "rdata": 1411738602,
+            "wdata": 433309934
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 4,
+            "rdata": 1560929381,
+            "wdata": 2280009763
+          },
+          "rst": false,
+          "expected": {
+            "ld": 9,
+            "wstrb": 0,
+            "sdata": 589505315,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 1,
+            "rdata": 1715702792,
+            "wdata": 2219017199
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 2213512175,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 0,
+            "rdata": 725142477,
+            "wdata": 3308215867
+          },
+          "rst": false,
+          "expected": {
+            "ld": 4294967243,
+            "wstrb": 2,
+            "sdata": 993737531,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 5,
+            "rdata": 4199038855,
+            "wdata": 2708474029
+          },
+          "rst": false,
+          "expected": {
+            "ld": 16263,
+            "wstrb": 0,
+            "sdata": 145557677,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 2,
+            "rdata": 4021117866,
+            "wdata": 3652999186
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 3652999186,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 7,
+            "rdata": 3038395906,
+            "wdata": 3525137759
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 2,
+            "rdata": 3003974933,
+            "wdata": 2693683700
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 2693683700,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 5,
+            "rdata": 2014501503,
+            "wdata": 2940700708
+          },
+          "rst": false,
+          "expected": {
+            "ld": 55935,
+            "wstrb": 0,
+            "sdata": 2284095524,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 5,
+            "rdata": 2353076729,
+            "wdata": 3019214015
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 2361363647,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 5,
+            "rdata": 795037860,
+            "wdata": 3632236599
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 2285340727,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 3,
+            "rdata": 334166830,
+            "wdata": 4194248300
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 4,
+            "rdata": 1079384799,
+            "wdata": 2880975795
+          },
+          "rst": false,
+          "expected": {
+            "ld": 64,
+            "wstrb": 0,
+            "sdata": 3014898611,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 0,
+            "rdata": 4228906499,
+            "wdata": 2668736673
+          },
+          "rst": false,
+          "expected": {
+            "ld": 4294967294,
+            "wstrb": 2,
+            "sdata": 2711724449,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 2,
+            "rdata": 331474470,
+            "wdata": 3261348626
+          },
+          "rst": false,
+          "expected": {
+            "ld": 331474470,
+            "wstrb": 15,
+            "sdata": 3261348626,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 4,
+            "rdata": 3440024185,
+            "wdata": 833061920
+          },
+          "rst": false,
+          "expected": {
+            "ld": 121,
+            "wstrb": 0,
+            "sdata": 538976288,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 1,
+            "rdata": 3039668989,
+            "wdata": 585713662
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 1207846910,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 0,
+            "rdata": 179126702,
+            "wdata": 3656560590
+          },
+          "rst": false,
+          "expected": {
+            "ld": 65,
+            "wstrb": 2,
+            "sdata": 3469659854,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 5,
+            "rdata": 1165767681,
+            "wdata": 1991494035
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 3381905811,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 1,
+            "rdata": 724860244,
+            "wdata": 3808014877
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 2988290589,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 5,
+            "rdata": 45647535,
+            "wdata": 1113004604
+          },
+          "rst": false,
+          "expected": {
+            "ld": 696,
+            "wstrb": 0,
+            "sdata": 440146492,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 5,
+            "rdata": 2691914458,
+            "wdata": 2266647847
+          },
+          "rst": false,
+          "expected": {
+            "ld": 23258,
+            "wstrb": 0,
+            "sdata": 1294421287,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 0,
+            "rdata": 501496664,
+            "wdata": 2652519235
+          },
+          "rst": false,
+          "expected": {
+            "ld": 4294967268,
+            "wstrb": 4,
+            "sdata": 1128481603,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 0,
+            "rdata": 752458185,
+            "wdata": 3133426011
+          },
+          "rst": false,
+          "expected": {
+            "ld": 4294967193,
+            "wstrb": 2,
+            "sdata": 1532713819,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 0,
+            "rdata": 1368421,
+            "wdata": 1836740821
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 8,
+            "sdata": 3587560917,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 4,
+            "rdata": 861171738,
+            "wdata": 4196767294
+          },
+          "rst": false,
+          "expected": {
+            "ld": 84,
+            "wstrb": 0,
+            "sdata": 1044266558,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 6,
+            "rdata": 1887563735,
+            "wdata": 85131928
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 85131928,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 0,
+            "rdata": 1302711233,
+            "wdata": 1850381242
+          },
+          "rst": false,
+          "expected": {
+            "ld": 4294967205,
+            "wstrb": 4,
+            "sdata": 3132799674,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 1,
+            "rdata": 2308943732,
+            "wdata": 1302425503
+          },
+          "rst": false,
+          "expected": {
+            "ld": 4294936991,
+            "wstrb": 12,
+            "sdata": 1872719775,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 6,
+            "rdata": 1435766013,
+            "wdata": 882617868
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 882617868,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 7,
+            "rdata": 3704292844,
+            "wdata": 2383916253
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 3,
+            "rdata": 3772635407,
+            "wdata": 845171877
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 4,
+            "rdata": 1165520007,
+            "wdata": 535201486
+          },
+          "rst": false,
+          "expected": {
+            "ld": 69,
+            "wstrb": 0,
+            "sdata": 3469659854,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 6,
+            "rdata": 2933298226,
+            "wdata": 2198807511
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 2198807511,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 3,
+            "rdata": 2476550900,
+            "wdata": 2431038154
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 3,
+            "rdata": 1299349241,
+            "wdata": 1651998848
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 3,
+            "rdata": 2786999822,
+            "wdata": 1732891893
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 6,
+            "rdata": 884917041,
+            "wdata": 3545842482
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 3545842482,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 4,
+            "rdata": 859438466,
+            "wdata": 3591738642
+          },
+          "rst": false,
+          "expected": {
+            "ld": 57,
+            "wstrb": 0,
+            "sdata": 303174162,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 0,
+            "rdata": 3351556923,
+            "wdata": 477025488
+          },
+          "rst": false,
+          "expected": {
+            "ld": 4294967219,
+            "wstrb": 2,
+            "sdata": 3503345872,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 0,
+            "rdata": 621731047,
+            "wdata": 1727669714
+          },
+          "rst": false,
+          "expected": {
+            "ld": 14,
+            "wstrb": 4,
+            "sdata": 3537031890,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 1,
+            "rdata": 3446656176,
+            "wdata": 3262234585
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 3218718681,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 1,
+            "rdata": 1672981226,
+            "wdata": 4229667256
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 2579012024,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 3,
+            "rdata": 684699506,
+            "wdata": 1606219742
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 1,
+            "rdata": 905662027,
+            "wdata": 3299068277
+          },
+          "rst": false,
+          "expected": {
+            "ld": 20043,
+            "wstrb": 3,
+            "sdata": 3379939701,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 4,
+            "rdata": 2282542374,
+            "wdata": 1448551180
+          },
+          "rst": false,
+          "expected": {
+            "ld": 136,
+            "wstrb": 0,
+            "sdata": 202116108,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 7,
+            "rdata": 3417171468,
+            "wdata": 2677146450
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 5,
+            "rdata": 2610676091,
+            "wdata": 634019045
+          },
+          "rst": false,
+          "expected": {
+            "ld": 49531,
+            "wstrb": 0,
+            "sdata": 1558535397,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 0,
+            "rdata": 559324989,
+            "wdata": 2150562365
+          },
+          "rst": false,
+          "expected": {
+            "ld": 86,
+            "wstrb": 4,
+            "sdata": 1027423549,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 4,
+            "rdata": 1332099490,
+            "wdata": 40111042
+          },
+          "rst": false,
+          "expected": {
+            "ld": 162,
+            "wstrb": 0,
+            "sdata": 3267543746,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 7,
+            "rdata": 2831094181,
+            "wdata": 2318127039
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 2,
+            "rdata": 2627011049,
+            "wdata": 2997441826
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 2997441826,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 3,
+            "rdata": 4045986901,
+            "wdata": 3495852058
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 5,
+            "rdata": 766628188,
+            "wdata": 3733146502
+          },
+          "rst": false,
+          "expected": {
+            "ld": 53596,
+            "wstrb": 0,
+            "sdata": 1267092358,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 7,
+            "rdata": 4190298367,
+            "wdata": 1514351746
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 6,
+            "rdata": 3798447655,
+            "wdata": 1133837742
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 1133837742,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 2,
+            "rdata": 3958067487,
+            "wdata": 54941809
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 54941809,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 0,
+            "rdata": 2021576387,
+            "wdata": 1533761619
+          },
+          "rst": false,
+          "expected": {
+            "ld": 126,
+            "wstrb": 4,
+            "sdata": 1397969747,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 4,
+            "rdata": 4283571734,
+            "wdata": 2157383726
+          },
+          "rst": false,
+          "expected": {
+            "ld": 30,
+            "wstrb": 0,
+            "sdata": 774778414,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 5,
+            "rdata": 2491520272,
+            "wdata": 2586496304
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 3442527536,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 7,
+            "rdata": 3443933846,
+            "wdata": 1832704249
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 2,
+            "rdata": 2921878065,
+            "wdata": 3151062827
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 3151062827,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 3,
+            "rdata": 733445465,
+            "wdata": 729532454
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 3,
+            "rdata": 1427695487,
+            "wdata": 3814848968
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 5,
+            "rdata": 1482195291,
+            "wdata": 4247109729
+          },
+          "rst": false,
+          "expected": {
+            "ld": 22616,
+            "wstrb": 0,
+            "sdata": 3227631713,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 4,
+            "rdata": 716203714,
+            "wdata": 572289359
+          },
+          "rst": false,
+          "expected": {
+            "ld": 176,
+            "wstrb": 0,
+            "sdata": 1330597711,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 1,
+            "rdata": 4159882170,
+            "wdata": 2141734819
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 1201883043,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 1,
+            "rdata": 3651107017,
+            "wdata": 3728944692
+          },
+          "rst": false,
+          "expected": {
+            "ld": 30921,
+            "wstrb": 3,
+            "sdata": 775171636,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 5,
+            "rdata": 3074829066,
+            "wdata": 4289855022
+          },
+          "rst": false,
+          "expected": {
+            "ld": 11018,
+            "wstrb": 0,
+            "sdata": 4264492590,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 7,
+            "rdata": 2163617785,
+            "wdata": 2910734066
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 6,
+            "rdata": 3057113857,
+            "wdata": 3389407236
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 3389407236,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 7,
+            "rdata": 2796503419,
+            "wdata": 3814701454
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 1,
+            "rdata": 1971750832,
+            "wdata": 865349030
+          },
+          "rst": false,
+          "expected": {
+            "ld": 4294936496,
+            "wstrb": 3,
+            "sdata": 765865382,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 5,
+            "rdata": 2063658360,
+            "wdata": 127346746
+          },
+          "rst": false,
+          "expected": {
+            "ld": 60792,
+            "wstrb": 0,
+            "sdata": 674900026,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 0,
+            "rdata": 2605571362,
+            "wdata": 2086785654
+          },
+          "rst": false,
+          "expected": {
+            "ld": 77,
+            "wstrb": 4,
+            "sdata": 1987475062,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 6,
+            "rdata": 1624868960,
+            "wdata": 2957029322
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 2957029322,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 1,
+            "rdata": 3982206952,
+            "wdata": 4117178890
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 705309194,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 4,
+            "rdata": 2023321847,
+            "wdata": 1410551277
+          },
+          "rst": false,
+          "expected": {
+            "ld": 247,
+            "wstrb": 0,
+            "sdata": 3991793133,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 4,
+            "rdata": 1525281155,
+            "wdata": 1425433991
+          },
+          "rst": false,
+          "expected": {
+            "ld": 131,
+            "wstrb": 0,
+            "sdata": 2273806215,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 3,
+            "rdata": 553383465,
+            "wdata": 2373067285
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 1,
+            "rdata": 3427579687,
+            "wdata": 206765593
+          },
+          "rst": false,
+          "expected": {
+            "ld": 4294954060,
+            "wstrb": 12,
+            "sdata": 4263116313,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 5,
+            "rdata": 4210407789,
+            "wdata": 1863950713
+          },
+          "rst": false,
+          "expected": {
+            "ld": 47469,
+            "wstrb": 0,
+            "sdata": 2709102969,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 2,
+            "rdata": 2893567045,
+            "wdata": 506995418
+          },
+          "rst": false,
+          "expected": {
+            "ld": 2893567045,
+            "wstrb": 15,
+            "sdata": 506995418,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 5,
+            "rdata": 2561202620,
+            "wdata": 2644988869
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 1405440965,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 7,
+            "rdata": 273101061,
+            "wdata": 3430097575
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 3,
+            "rdata": 2317903229,
+            "wdata": 1734574732
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 6,
+            "rdata": 1314228208,
+            "wdata": 3725134972
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 3725134972,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 7,
+            "rdata": 493230496,
+            "wdata": 4210099492
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 1,
+            "rdata": 1196811877,
+            "wdata": 3730969587
+          },
+          "rst": false,
+          "expected": {
+            "ld": 18261,
+            "wstrb": 12,
+            "sdata": 334697459,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 5,
+            "rdata": 3538409921,
+            "wdata": 20364809
+          },
+          "rst": false,
+          "expected": {
+            "ld": 55745,
+            "wstrb": 0,
+            "sdata": 3188309513,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 7,
+            "rdata": 3994954044,
+            "wdata": 3865526887
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 5,
+            "rdata": 3184637742,
+            "wdata": 3449039245
+          },
+          "rst": false,
+          "expected": {
+            "ld": 46894,
+            "wstrb": 0,
+            "sdata": 697117069,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 1,
+            "rdata": 2966998991,
+            "wdata": 3734324909
+          },
+          "rst": false,
+          "expected": {
+            "ld": 4294947032,
+            "wstrb": 12,
+            "sdata": 1185760941,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 4,
+            "rdata": 647025950,
+            "wdata": 3369814311
+          },
+          "rst": false,
+          "expected": {
+            "ld": 213,
+            "wstrb": 0,
+            "sdata": 656877351,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 4,
+            "rdata": 3629788595,
+            "wdata": 1306811474
+          },
+          "rst": false,
+          "expected": {
+            "ld": 216,
+            "wstrb": 0,
+            "sdata": 1381126738,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 1,
+            "rdata": 3992558577,
+            "wdata": 2004495961
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 777596505,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 4,
+            "rdata": 1548563037,
+            "wdata": 2808801776
+          },
+          "rst": false,
+          "expected": {
+            "ld": 50,
+            "wstrb": 0,
+            "sdata": 4042322160,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 6,
+            "rdata": 1102878659,
+            "wdata": 3260050533
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 3260050533,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 5,
+            "rdata": 345511812,
+            "wdata": 495224958
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 2289993854,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 5,
+            "rdata": 819476630,
+            "wdata": 4104647760
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 4098946128,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 1,
+            "rdata": 2147516247,
+            "wdata": 302716839
+          },
+          "rst": false,
+          "expected": {
+            "ld": 32599,
+            "wstrb": 3,
+            "sdata": 396826535,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 4,
+            "rdata": 119322266,
+            "wdata": 243197424
+          },
+          "rst": false,
+          "expected": {
+            "ld": 7,
+            "wstrb": 0,
+            "sdata": 4042322160,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 7,
+            "rdata": 452572597,
+            "wdata": 1118080037
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 3,
+            "rdata": 52926578,
+            "wdata": 256938039
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 3,
+            "rdata": 3613304844,
+            "wdata": 2707764479
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 3,
+            "rdata": 394344906,
+            "wdata": 47563605
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 0,
+            "rdata": 1726567805,
+            "wdata": 3925898440
+          },
+          "rst": false,
+          "expected": {
+            "ld": 102,
+            "wstrb": 8,
+            "sdata": 3368601800,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 5,
+            "rdata": 1681764393,
+            "wdata": 2398765517
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 1103970765,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 4,
+            "rdata": 1404866652,
+            "wdata": 1757960737
+          },
+          "rst": false,
+          "expected": {
+            "ld": 83,
+            "wstrb": 0,
+            "sdata": 555819297,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 3,
+            "rdata": 255287928,
+            "wdata": 1601015086
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 2,
+            "funct3": 4,
+            "rdata": 3823828775,
+            "wdata": 1101146584
+          },
+          "rst": false,
+          "expected": {
+            "ld": 234,
+            "wstrb": 0,
+            "sdata": 3638089944,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 2,
+            "rdata": 2599096016,
+            "wdata": 3115651811
+          },
+          "rst": false,
+          "expected": {
+            "ld": 2599096016,
+            "wstrb": 15,
+            "sdata": 3115651811,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 3,
+            "rdata": 3979849799,
+            "wdata": 1506468031
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 6,
+            "rdata": 35165622,
+            "wdata": 3838065944
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 3838065944,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 5,
+            "rdata": 2514179724,
+            "wdata": 4210533124
+          },
+          "rst": false,
+          "expected": {
+            "ld": 22156,
+            "wstrb": 0,
+            "sdata": 2734990084,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 3,
+            "rdata": 3562151308,
+            "wdata": 1782325520
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 2,
+            "rdata": 3754304858,
+            "wdata": 3990020164
+          },
+          "rst": false,
+          "expected": {
+            "ld": 3754304858,
+            "wstrb": 15,
+            "sdata": 3990020164,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 1,
+            "funct3": 3,
+            "rdata": 3387924315,
+            "wdata": 4056735094
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 3,
+            "rdata": 3781854539,
+            "wdata": 4022793268
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 0,
+            "funct3": 0,
+            "rdata": 2791721674,
+            "wdata": 2092850061
+          },
+          "rst": false,
+          "expected": {
+            "ld": 4294967242,
+            "wstrb": 1,
+            "sdata": 2374864269,
+            "misaligned": 0
+          }
+        },
+        {
+          "inputs": {
+            "addr_lo": 3,
+            "funct3": 3,
+            "rdata": 342559760,
+            "wdata": 1196043006
+          },
+          "rst": false,
+          "expected": {
+            "ld": 0,
+            "wstrb": 0,
+            "sdata": 0,
+            "misaligned": 1
+          }
+        }
+      ]
+    }
+  ]
+}

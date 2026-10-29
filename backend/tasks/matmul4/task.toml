@@ -1,0 +1,76 @@
+schema = "verity.task/1"
+id = "matmul4"                      # == folder name == web presetId (presets.ts)
+title = "4x4 matrix multiply, 8-bit"
+summary = "a 4x4 matrix multiply of unsigned 8-bit values over 24 cycles"
+spec_text = "A 4x4 matrix multiplier. It reads two matrices of unsigned 8-bit values, one row of each per cycle, and computes the 16 dot products of the result matrix. After 24 cycles it raises done and holds the 20-bit results until reset. Smallest area matters most."
+top = "matmul4"
+family = "matmul"
+element_type = "uint8"
+latency_cycles = 24                 # edges from the start edge until done is visible
+max_lines = 300
+test_count = 20
+default_priority = "area"
+priorities = ["area", "speed", "power"]
+target_clock_ns = 10.0
+max_plan_blocks = 8
+eval_only = false
+coding_rules = [
+  "Protocol: pulse start high for one clock edge while idle. That edge is edge 0: it starts the run, and a_row and b_row on edge 0 are ignored.",
+  "Edges 1 to 4 load one row of each matrix: at edge r + 1, a_row holds row r of matrix A and b_row holds row r of matrix B (r = 0 to 3). Lane k of a_row is A[r][k] and lane k of b_row is B[r][k]. Inputs on later edges are ignored.",
+  "The result is C = A x B with unsigned arithmetic: C[i][j] is the sum over k of A[i][k] * B[k][j], and it is lane i*4+j of c (20 bits per lane, lane l is c[l*20 +: 20]).",
+  "done must be 0 until edge 24 and 1 right after edge 24. After edge 24, c holds all 16 results and done stays 1 until reset; start is ignored while a run is in progress or done is 1. After reset, c and done are 0.",
+]
+
+[clock]
+name = "clk"
+
+[reset]
+name = "rst_n"
+active_low = true
+synchronous = true
+
+[sim]
+seed = 1
+max_cycles_per_case = 64
+
+[eqy]
+enabled = true
+depth = 30
+
+[[ports]]
+name = "clk"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "rst_n"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "start"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "a_row"
+dir = "in"
+width = 8
+count = 4
+
+[[ports]]
+name = "b_row"
+dir = "in"
+width = 8
+count = 4
+
+[[ports]]
+name = "c"
+dir = "out"
+width = 20
+count = 16
+
+[[ports]]
+name = "done"
+dir = "out"
+width = 1

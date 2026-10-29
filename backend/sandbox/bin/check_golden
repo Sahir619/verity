@@ -1,0 +1,125 @@
+#!/usr/bin/env python3
+"""/verity/bin/check_golden: self-check of a GLM-drafted custom-block golden model (CE3), before any Verilog
+exists. Pure Python, no cocotb, no Verilog tools.
+
+Contract: stdout is one JSON object, schema verity.golden_check/1. Input: the draft at
+$VERITY_WORK_DIR/golden.py, the worked examples and generated edge cases at $VERITY_WORK_DIR/cases.json. There is
+no pack mount for this call (a draft has not been written to a pack directory yet): everything comes from
+$VERITY_WORK_DIR, fixed paths only, no model text in any argument or shell command.
+
+golden.py must define `golden_step(state: dict, inputs: dict, rst: bool) -> tuple[dict, dict]`: `state` is the
+block's own registered values by name (empty dict for a combinational block), `inputs` this cycle's input port
+values by name, `rst` whether reset is asserted this cycle; it returns `(next_state, outputs)`, `outputs` covering
+every output port by name. cases.json: {"cases": [{"name": str, "steps": [{"inputs": {...}, "rst": bool,
+"expected": {...}}, ...]}]}. State is `{}` at the start of each case; each step's `inputs`/`rst` go into
+`golden_step` with the running state, and `outputs` is checked against that step's `expected`.
+"""
+
+from __future__ import annotations
+
+import importlib.util
+import json
+import sys
+import time
+import traceback
+from pathlib import Path
+from typing import Any
+
+LIB_DIR = Path(__file__).resolve().parent.parent / "lib"
+sys.path.insert(0, str(LIB_DIR))
+import verity_common as vc  # noqa: E402
+
+MAX_FAILURES = 5
+STEP_TIMEOUT_S = 2.0
+
+
+def load_golden(path: Path) -> Any:
+    """Imports golden.py from $VERITY_WORK_DIR by file path, never by adding it to sys.path (no other module on
+    this machine is named `golden`, and this avoids ever importing a stale one)."""
+    spec = importlib.util.spec_from_file_location("golden", path)
+    if spec is None or spec.loader is None:
+        raise vc.InputError(f"cannot load {path} as a module")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    if not hasattr(module, "golden_step"):
+        raise vc.InputError(f"{path}: must define golden_step(state, inputs, rst)")
+    return module
+
+
+def load_cases(path: Path) -> list[dict[str, Any]]:
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        raise vc.InputError(f"cannot read {path}: {exc}") from exc
+    cases = data.get("cases")
+    if not isinstance(cases, list) or not cases:
+        raise vc.InputError(f"{path}: 'cases' must be a non-empty list")
+    return cases
+
+
+def run_case(golden_step: Any, case: dict[str, Any]) -> tuple[bool, str, str, int | None]:
+    """Runs one case's steps with a fresh state. Returns (ok, expected, got, step_number): the first step name
+    mismatch, or an exception, ends the case early (it already failed; later steps would compound the error)."""
+    state: dict[str, Any] = {}
+    for n, step in enumerate(case.get("steps", []), start=1):
+        inputs = step.get("inputs", {})
+        rst = bool(step.get("rst", False))
+        expected = step.get("expected", {})
+        try:
+            state, outputs = golden_step(state, inputs, rst)
+        except Exception as exc:  # noqa: BLE001  (a draft that raises is a failed case, not a crashed run)
+            return False, "golden_step runs without raising", f"{type(exc).__name__}: {exc}"[:200], n
+        if not isinstance(outputs, dict):
+            return False, "a dict of outputs", f"{type(outputs).__name__}", n
+        mismatches = {k: outputs.get(k) for k in expected if outputs.get(k) != expected[k]}
+        if mismatches:
+            return False, json.dumps(expected, sort_keys=True), json.dumps(outputs, sort_keys=True), n
+    return True, "", "", None
+
+
+def main() -> None:
+    started = time.monotonic()
+    result: dict[str, Any] = {
+        "schema": "verity.golden_check/1",
+        "status": "internal_error",
+        "total": 0,
+        "passed": 0,
+        "failure_count": 0,
+        "failures": [],
+        "message": "",
+        "duration_ms": 0,
+    }
+    code = vc.EXIT_OK
+    try:
+        golden_path = vc.require_file(vc.work_dir() / "golden.py")
+        cases_path = vc.require_file(vc.work_dir() / "cases.json")
+        module = load_golden(golden_path)
+        cases = load_cases(cases_path)
+        failures: list[dict[str, Any]] = []
+        passed = 0
+        for case in cases:
+            ok, expected, got, step = run_case(module.golden_step, case)
+            if ok:
+                passed += 1
+            elif len(failures) < MAX_FAILURES:
+                failures.append({"name": case.get("name", ""), "expected": expected, "got": got, "step": step})
+        total = len(cases)
+        result.update(
+            status="pass" if passed == total else "fail",
+            total=total,
+            passed=passed,
+            failure_count=total - passed,
+            failures=failures,
+        )
+    except vc.InputError as exc:
+        result.update(status="input_error", message=str(exc))
+        code = vc.EXIT_INPUT
+    except Exception as exc:  # noqa: BLE001  (a draft that fails to import is a failed draft, not a crashed run)
+        traceback.print_exc(file=sys.stderr)
+        result.update(status="fail", message=f"{type(exc).__name__}: {exc}"[:300])
+    result["duration_ms"] = int((time.monotonic() - started) * 1000)
+    vc.emit(result, code)
+
+
+if __name__ == "__main__":
+    main()

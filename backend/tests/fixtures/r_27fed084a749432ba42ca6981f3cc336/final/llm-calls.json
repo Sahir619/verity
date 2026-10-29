@@ -1,0 +1,124 @@
+[
+  {
+    "seq": 1,
+    "role": "planner",
+    "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+    "temperature": 0.2,
+    "topP": null,
+    "inputTokens": 1181,
+    "outputTokens": 1011,
+    "reasoningTokens": 705,
+    "maxOutputTokens": 12000,
+    "finishReason": "stop",
+    "latencyMs": 13655,
+    "usd": 0.004214,
+    "tags": {
+      "attempt": "1"
+    }
+  },
+  {
+    "seq": 4,
+    "role": "rtl_gen",
+    "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+    "temperature": 1.0,
+    "topP": 0.95,
+    "inputTokens": 1305,
+    "outputTokens": 372,
+    "reasoningTokens": 221,
+    "maxOutputTokens": 24000,
+    "finishReason": "stop",
+    "latencyMs": 3910,
+    "usd": 0.002421,
+    "tags": {
+      "attempt": "1"
+    }
+  },
+  {
+    "seq": 4,
+    "role": "rtl_gen",
+    "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+    "temperature": 1.0,
+    "topP": 0.95,
+    "inputTokens": 1305,
+    "outputTokens": 515,
+    "reasoningTokens": 372,
+    "maxOutputTokens": 24000,
+    "finishReason": "stop",
+    "latencyMs": 6068,
+    "usd": 0.00285,
+    "tags": {
+      "attempt": "1"
+    }
+  },
+  {
+    "seq": 4,
+    "role": "rtl_gen",
+    "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+    "temperature": 1.0,
+    "topP": 0.95,
+    "inputTokens": 1305,
+    "outputTokens": 486,
+    "reasoningTokens": 346,
+    "maxOutputTokens": 24000,
+    "finishReason": "stop",
+    "latencyMs": 6180,
+    "usd": 0.002763,
+    "tags": {
+      "attempt": "1"
+    }
+  },
+  {
+    "seq": 7,
+    "role": "optimizer",
+    "model": "nvidia/nemotron-3-super-120b-a12b",
+    "temperature": 0.6,
+    "topP": null,
+    "inputTokens": 1227,
+    "outputTokens": 1086,
+    "reasoningTokens": 973,
+    "maxOutputTokens": 24000,
+    "finishReason": "stop",
+    "latencyMs": 12952,
+    "usd": 0.001345,
+    "tags": {
+      "strategy": "SIMPLIFY",
+      "attempt": "1"
+    }
+  },
+  {
+    "seq": 7,
+    "role": "optimizer",
+    "model": "nvidia/nemotron-3-super-120b-a12b",
+    "temperature": 0.6,
+    "topP": null,
+    "inputTokens": 1230,
+    "outputTokens": 1427,
+    "reasoningTokens": 1302,
+    "maxOutputTokens": 24000,
+    "finishReason": "stop",
+    "latencyMs": 14249,
+    "usd": 0.001653,
+    "tags": {
+      "strategy": "EXPLORE",
+      "attempt": "1"
+    }
+  },
+  {
+    "seq": 7,
+    "role": "optimizer",
+    "model": "nvidia/nemotron-3-super-120b-a12b",
+    "temperature": 0.6,
+    "topP": null,
+    "inputTokens": 1246,
+    "outputTokens": 2630,
+    "reasoningTokens": 2517,
+    "maxOutputTokens": 24000,
+    "finishReason": "stop",
+    "latencyMs": 24357,
+    "usd": 0.002741,
+    "tags": {
+      "strategy": "OPTIMIZE",
+      "attempt": "1"
+    }
+  }
+]

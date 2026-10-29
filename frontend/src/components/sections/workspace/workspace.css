@@ -1,0 +1,114 @@
+/* /workspace: the page behind the sidebar's Home. Same frame as the bench (a sidebar and a centred column), so this file only
+   styles the column. Quiet: warm dark ground, panel surfaces, hairlines. Tokens only, no raw colours. Amber is earned:
+   the pass square on a card, the one primary action (New chip when there are no runs), and focus. Chart bars and every
+   other mark are neutral inks, never amber. Scoped under .vs. */
+
+.vs .w-page { width: min(100%, 1040px); margin: 0 auto; padding: 24px 24px 32px; display: flex; flex-direction: column; gap: 18px; }
+.vs .w-head h1 { margin: 0 0 6px; font: 800 clamp(28px, 2.4vw, 34px)/1.05 var(--font-display); letter-spacing: .005em; color: var(--rk-ink); }
+.vs .w-head p { margin: 0; max-width: 65ch; font-size: 15px; line-height: 1.5; color: var(--rk-ink-2); }
+.vs .w-h2 { margin: 0 0 10px; font: 650 17px/1.3 var(--font-body); color: var(--rk-ink); }
+.vs .w-fig .w-h2, .vs .w-combine .w-h2 { margin: 0; }
+
+.vs .w-status { margin: 0; font-size: 14px; line-height: 1.5; color: var(--rk-ink-3); }
+.vs .w-banner { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; margin: 0; padding: 10px 14px; background: var(--rk-panel); border: 1px solid var(--rk-rule-2); border-radius: 10px; font-size: 14px; line-height: 1.45; color: var(--rk-ink-2); }
+.vs .w-banner .b-link { align-self: auto; padding: 0; }
+.vs .w-empty { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; padding: 26px 22px; border: 1px solid var(--rk-rule); border-radius: 14px; font-size: 15px; color: var(--rk-ink-2); }
+.vs .w-empty p { margin: 0; }
+
+/* Filter on the left, totals on the right: one row above everything they scope. */
+.vs .w-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 24px; }
+.vs .w-filter { display: flex; flex-wrap: wrap; gap: 6px; }
+.vs .w-chip { padding: 7px 13px; border: 1px solid var(--rk-rule-2); border-radius: 999px; background: none; color: var(--rk-ink-2); font: 500 13.5px/1 var(--font-body); cursor: pointer; transition: background-color .15s, border-color .15s, color .15s; }
+.vs .w-chip:hover { border-color: var(--rk-ink-3); color: var(--rk-ink); }
+.vs .w-chip[aria-pressed="true"] { background: var(--rk-panel-2); border-color: var(--rk-ink-3); color: var(--rk-ink); }
+
+/* Totals. The label comes first in the markup (a definition list), the figure shows before it on the same line. */
+.vs .w-stats { display: flex; flex-wrap: wrap; gap: 6px 20px; margin: 0; }
+.vs .w-stat { display: flex; flex-direction: row-reverse; justify-content: flex-end; align-items: baseline; gap: 6px; }
+.vs .w-stat dd { margin: 0; font: 700 18px/1.2 var(--font-body); color: var(--rk-ink); }
+.vs .w-stat dt { font-size: 13px; line-height: 1.35; color: var(--rk-ink-3); }
+
+/* Run cards. The name is the link; its ::after stretches over the card, so the whole card opens the run. */
+.vs .w-cards { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.vs .w-card { position: relative; display: flex; flex-direction: column; gap: 4px; min-width: 0; padding: 12px 16px; background: var(--rk-panel); border: 1px solid var(--rk-rule-2); border-radius: 12px; transition: border-color .15s, background-color .15s; }
+/* Name on the left (it wraps), status pinned top right. On a phone the status goes under the name on every card. */
+.vs .w-card-top { display: flex; align-items: baseline; justify-content: space-between; gap: 4px 12px; }
+.vs .w-card-top .w-card-s { flex: none; }
+.vs .w-card:hover { border-color: var(--rk-ink-3); background: var(--rk-panel-2); }
+.vs .w-card:has(.w-card-t:focus-visible) { outline: 2px solid var(--rk-a); outline-offset: 2px; }
+.vs .w-card-t { color: var(--rk-ink); font: 650 15.5px/1.35 var(--font-body); text-decoration: none; overflow-wrap: anywhere; }
+.vs .w-card-t:focus-visible { outline: none; }
+.vs .w-card-t::after { content: ""; position: absolute; inset: 0; border-radius: 12px; }
+.vs .w-card-s { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 13.5px; line-height: 1.35; color: var(--rk-ink); }
+.vs .w-card-d { margin: 0; font-size: 13px; line-height: 1.45; color: var(--rk-ink-2); }
+.vs .w-card-d b { color: var(--rk-ink); font-weight: 600; }
+/* Pinned to the bottom, so the footers of a row line up whatever the cards above them hold. */
+.vs .w-card-f { margin: auto 0 0; padding-top: 4px; font: 400 11px/1.3 var(--font-data); color: var(--rk-ink-3); }
+
+/* Charts. Marks are thin, the grid is a recessive solid hairline, text wears text inks. */
+.vs .w-charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr)); gap: 12px; }
+/* The caption and the legend share one line; everything else spans the figure. */
+.vs .w-fig { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-content: start; gap: 4px 16px; min-width: 0; margin: 0; padding: 14px 16px 10px; background: var(--rk-panel); border: 1px solid var(--rk-rule-2); border-radius: 14px; }
+.vs .w-fig > * { grid-column: 1 / -1; }
+.vs .w-fig > .w-cap { grid-column: 1; }
+.vs .w-fig > .w-legend { grid-column: 2; align-self: center; margin: 0; }
+.vs .w-fig-top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.vs .w-fig-top .b-link { align-self: auto; flex: none; padding: 0; font-size: 13px; }
+.vs .w-cap { max-width: 65ch; font-size: 13px; line-height: 1.45; color: var(--rk-ink-3); }
+.vs .w-legend { list-style: none; display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 2px 0 0; padding: 0; font-size: 12.5px; color: var(--rk-ink-2); }
+.vs .w-legend li { display: flex; align-items: center; }
+.vs .w-key { display: inline-block; width: 12px; height: 8px; margin-right: 7px; border-radius: 1px; flex: none; }
+.vs .w-tip .w-key { width: 10px; height: 6px; margin-right: 0; }
+.vs .w-s-area { fill: var(--rk-ink-2); background-color: var(--rk-ink-2); }
+.vs .w-s-clock { fill: var(--rk-ink-3); background-color: var(--rk-ink-3); }
+.vs .w-s-spend { fill: var(--rk-ink-2); background-color: var(--rk-ink-2); }
+
+.vs .w-plot { position: relative; margin-top: 4px; }
+.vs .w-plot svg { display: block; max-width: 100%; overflow: visible; }
+.vs .w-plot svg text { font-family: var(--font-data); font-size: 11px; }
+.vs .w-grid text { fill: var(--rk-ink-3); }
+.vs .w-grid line { stroke: var(--rk-rule); stroke-width: 1; }
+.vs .w-grid line.w-zero { stroke: var(--rk-ink-3); }
+/* The name is drawn over the grid: a halo in the surface colour keeps a gridline from running through the letters. */
+.vs .w-plot svg .w-name { font-family: var(--font-body); font-size: 12.5px; fill: var(--rk-ink-2); paint-order: stroke; stroke: var(--rk-panel); stroke-width: 5px; stroke-linejoin: round; }
+.vs .w-row:hover .w-name, .vs .w-row[data-on] .w-name, .vs .w-row:focus-visible .w-name { stroke: var(--rk-panel-2); }
+.vs .w-val { fill: var(--rk-ink); }
+.vs .w-row { outline: none; }
+.vs .w-hit { fill: transparent; stroke: none; }
+.vs .w-row:hover .w-hit, .vs .w-row[data-on] .w-hit { fill: var(--rk-panel-2); }
+.vs .w-row:focus-visible .w-hit { fill: var(--rk-panel-2); stroke: var(--rk-a); stroke-width: 2; }
+.vs .w-tip { position: absolute; z-index: 5; width: max-content; max-width: 220px; padding: 8px 10px; background: var(--rk-panel-2); border: 1px solid var(--rk-rule-2); border-radius: 8px; pointer-events: none; }
+.vs .w-tip p { margin: 0; font-size: 12.5px; line-height: 1.45; }
+.vs .w-tip-t { color: var(--rk-ink-2); margin-bottom: 3px !important; overflow-wrap: anywhere; }
+.vs .w-tip-v { display: flex; align-items: center; gap: 7px; color: var(--rk-ink-3); }
+.vs .w-tip-v b { color: var(--rk-ink); font-weight: 650; }
+
+.vs .w-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.vs .w-table th, .vs .w-table td { padding: 7px 8px; border-bottom: 1px solid var(--rk-rule); text-align: left; vertical-align: top; }
+.vs .w-table thead th { font: 500 12px/1.3 var(--font-body); color: var(--rk-ink-3); }
+.vs .w-table tbody th { font-weight: 500; color: var(--rk-ink); overflow-wrap: anywhere; }
+.vs .w-table td { color: var(--rk-ink-2); white-space: nowrap; }
+
+/* Combine: a picture of an idea, dashed so it does not read as a working control. Text, diagram and button share a row
+   while they fit; the button wraps to the right of the next line when they do not. */
+.vs .w-combine { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; padding: 14px 18px; border: 1px dashed var(--rk-rule-2); border-radius: 14px; }
+.vs .w-combine-txt { display: flex; flex-direction: column; gap: 4px; }
+.vs .w-combine-top { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+.vs .w-combine .bx { margin-left: auto; }
+.vs .w-note-p { margin: 0; max-width: 65ch; font-size: 14px; line-height: 1.45; color: var(--rk-ink-2); }
+.vs .w-flow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+.vs .w-flow svg { width: 16px; height: 16px; flex: none; color: var(--rk-ink-3); stroke-width: 1.75; }
+.vs .w-blk { padding: 6px 10px; background: var(--rk-panel-2); border: 1px solid var(--rk-rule-2); border-radius: 9px; font-size: 13px; line-height: 1.2; color: var(--rk-ink-2); }
+.vs .w-blk-big { border-style: dashed; color: var(--rk-ink); }
+.vs .w-makes { font-size: 12.5px; color: var(--rk-ink-3); }
+
+@media (max-width: 899.98px) {
+  .vs .w-page { padding: 20px 16px 32px; gap: 16px; }
+}
+@media (max-width: 639.98px) {
+  .vs .w-cards { grid-template-columns: minmax(0, 1fr); }
+  .vs .w-card-top { flex-direction: column; }
+  .vs .w-card-top .w-card-s { flex: initial; }
+  .vs .w-fig { padding: 14px 14px 10px; }
+  .vs .w-fig > .w-legend { grid-column: 1 / -1; }
+}

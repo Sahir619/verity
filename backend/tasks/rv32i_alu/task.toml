@@ -1,0 +1,58 @@
+schema = "verity.task/1"
+id = "rv32i_alu"
+title = "RV32I ALU"
+summary = "32-bit arithmetic, logic, comparisons and masked shifts"
+spec_text = "Compute y from 32-bit a and b and 4-bit op using CPU_CONTRACT section 2 ALU codes. Arithmetic wraps modulo 2^32."
+top = "rv32i_alu"
+family = "cpu"
+element_type = "none"
+latency_cycles = 0
+max_lines = 150
+test_count = 33
+default_priority = "area"
+priorities = ["area", "speed", "power"]
+target_clock_ns = 10.0
+max_plan_blocks = 8
+eval_only = true
+is_custom = false
+coding_rules = [
+  "Purely combinational, no clock and no reset. All ports are unsigned logic. Outputs settle in the same step as inputs.",
+  "Operation codes: 0 ADD, 1 SUB, 2 SLL, 3 SLT, 4 SLTU, 5 XOR, 6 SRL, 7 SRA, 8 OR, 9 AND. Codes 10 through 15 produce zero.",
+  "Shift amount is only the low five bits of b. SRA fills with the sign bit of a; SRL fills with zero. SLT compares signed two's-complement values, SLTU compares unsigned values; both return 0 or 1.",
+]
+
+[clock]
+name = ""
+
+[reset]
+name = ""
+active_low = true
+synchronous = true
+
+[sim]
+seed = 1
+max_cycles_per_case = 512
+
+[eqy]
+enabled = true
+depth = 4
+
+[[ports]]
+name = "a"
+dir = "in"
+width = 32
+
+[[ports]]
+name = "b"
+dir = "in"
+width = 32
+
+[[ports]]
+name = "op"
+dir = "in"
+width = 4
+
+[[ports]]
+name = "y"
+dir = "out"
+width = 32

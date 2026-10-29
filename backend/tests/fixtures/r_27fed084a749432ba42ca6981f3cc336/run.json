@@ -1,0 +1,54 @@
+{
+  "id": "r_27fed084a749432ba42ca6981f3cc336",
+  "session_id": "fixture-owner",
+  "preset_id": "cnt8",
+  "priority": "speed",
+  "mode": "full",
+  "status": "done",
+  "created_at": "2026-10-22T17:58:26.072965+00:00",
+  "started_at": "2026-10-22T17:58:26.164260+00:00",
+  "ended_at": "2026-10-22T18:00:26.506194+00:00",
+  "heartbeat_at": "2026-10-22T18:00:26.450830+00:00",
+  "budget": {
+    "max_llm_calls": 20,
+    "max_input_tokens": 150000,
+    "max_output_tokens": 200000,
+    "max_usd": 0.5,
+    "max_candidates": 6,
+    "max_repairs_baseline": 2,
+    "max_repairs_child": 1,
+    "max_rounds": 2,
+    "max_wall_s": 900
+  },
+  "spent": {
+    "llm_calls": 7,
+    "input_tokens": 8799,
+    "output_tokens": 7527,
+    "usd": 0.0179876,
+    "candidates": 4,
+    "repairs": 0,
+    "rounds": 1,
+    "wall_s": 120.4
+  },
+  "task_pack_sha256": "88117b73e7b30cfeb70356fa38b89325a5a8c1bf229281698fc1ca323975139c",
+  "tool_image_digest": "sha256:fc4d73950518b222bd8192185fd3b12b0a70d88603568ba548944c0e490af5cb",
+  "models": {
+    "optimizer": "nvidia/nemotron-3-super-120b-a12b",
+    "planner": "nvidia/Nemotron-3-Ultra-550b-a55b",
+    "repair": "nvidia/Nemotron-3-Ultra-550b-a55b",
+    "rtl_gen": "nvidia/Nemotron-3-Ultra-550b-a55b"
+  },
+  "prompt_versions": {
+    "optimizer": "optimize.v2.md@17b769983f92",
+    "planner": "planner.v2.md@5583e7cd420f",
+    "rtl_gen": "rtl_gen.v2.md@88333ca55a86"
+  },
+  "error_reason": null,
+  "winner_id": "c1",
+  "git_sha": "ebb07fb",
+  "params": {
+    "enable": false,
+    "width": 10
+  },
+  "title": "10-bit free-running counter"
+}

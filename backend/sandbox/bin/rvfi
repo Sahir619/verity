@@ -1,0 +1,193 @@
+#!/usr/bin/env python3
+"""/verity/bin/rvfi: riscv-formal BMC on /work/dut.v (the core top plus blocks.v).
+
+Reads the pack's formal/checks.cfg and formal/wrapper.sv. The riscv-formal tree is
+/opt/riscv-formal, or $RISCV_FORMAL when the image does not contain it yet.
+One JSON object on stdout, schema verity.rvfi/1. A failing design is a result, not an exception.
+"""
+
+from __future__ import annotations
+
+import os
+import shutil
+import sys
+import time
+import traceback
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from pathlib import Path
+from typing import Any
+
+LIB_DIR = Path(__file__).resolve().parent.parent / "lib"
+sys.path.insert(0, str(LIB_DIR))
+import verity_common as vc  # noqa: E402
+
+SCHEMA = "verity.rvfi/1"
+MESSAGE_CAP = 240
+
+
+def env_int(name: str, default: int) -> int:
+    try:
+        return int(os.environ.get(name, str(default)))
+    except ValueError:
+        return default
+
+
+def formal_root() -> Path:
+    root = Path(os.environ.get("RISCV_FORMAL", "/opt/riscv-formal"))
+    if not (root / "checks" / "genchecks.py").is_file():
+        raise vc.InputError(f"riscv-formal is not at {root}")
+    if not (root / "insns" / "isa_rv32i.txt").is_file():
+        raise vc.InputError(f"riscv-formal at {root} has no insns/isa_rv32i.txt")
+    return root
+
+
+def stage_core(root: Path, dut: Path) -> Path:
+    """Writable core directory whose grandparent holds insns/ and checks/."""
+    stage = vc.fresh_dir(vc.scratch_dir() / "rf-stage")
+    (stage / "insns").symlink_to(root / "insns")
+    (stage / "checks").symlink_to(root / "checks")
+    core = stage / "cores" / "rv32i_core"
+    core.mkdir(parents=True)
+    pack = vc.pack_dir() / "formal"
+    shutil.copyfile(vc.require_file(pack / "checks.cfg"), core / "checks.cfg")
+    shutil.copyfile(vc.require_file(pack / "wrapper.sv"), core / "wrapper.sv")
+    shutil.copyfile(dut, core / "dut.v")
+    return core
+
+
+def generate(core: Path, root: Path) -> Path:
+    script = root / "checks" / "genchecks.py"
+    proc = vc.run([sys.executable, str(script), "checks"], timeout_s=60, cwd=core)
+    out = core / "checks"
+    if proc.timed_out or proc.rc != 0 or not any(out.glob("*.sby")):
+        detail = vc.first_line_matching(proc.output, r"error|assert|Error", "genchecks produced no checks")
+        raise vc.InputError(detail[:MESSAGE_CAP])
+    return out
+
+
+def wanted(name: str, only: list[str]) -> bool:
+    if not only:
+        return True
+    return any(token in name for token in only)
+
+
+def excerpt(text: str) -> str:
+    line = vc.first_line_matching(text, r"Assert|assert|ERROR|Error|failed|TIMEOUT|counterexample")
+    return " ".join(line.split())[:MESSAGE_CAP]
+
+
+def read_marker(workdir: Path, output: str) -> str:
+    status = workdir / "status"
+    if status.is_file():
+        token = status.read_text(encoding="utf-8", errors="replace").strip().split()
+        if token:
+            word = token[0].upper()
+            mapped = {"PASS": "pass", "FAIL": "fail", "TIMEOUT": "timeout", "ERROR": "error", "UNKNOWN": "error"}
+            if word in mapped:
+                return mapped[word]
+    for label, status_name in (("PASS", "pass"), ("FAIL", "fail"), ("TIMEOUT", "timeout"), ("ERROR", "error"), ("UNKNOWN", "error")):
+        if f"DONE ({label}" in output:
+            return status_name
+    return "error"
+
+
+def copy_trace(name: str, workdir: Path) -> str:
+    found = next(workdir.rglob("trace.vcd"), None)
+    if found is None or not found.is_file():
+        return ""
+    dest = vc.work_dir() / "rvfi" / name
+    dest.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(found, dest / "trace.vcd")
+    return f"rvfi/{name}/trace.vcd"
+
+
+def run_check(sby: Path, timeout_s: float) -> dict[str, Any]:
+    name = sby.stem
+    vc.log(f"rvfi {name}")
+    proc = vc.run(["sby", "-f", "-d", name, sby.name], timeout_s=timeout_s, cwd=sby.parent)
+    row: dict[str, Any] = {"name": name, "status": "error", "seconds": round(proc.seconds, 3), "trace": "", "message": ""}
+    if proc.timed_out:
+        row["status"] = "timeout"
+        row["message"] = f"timed out after {timeout_s:.0f} s"
+        return row
+    status = read_marker(sby.parent / name, proc.output)
+    row["status"] = status
+    if status == "fail":
+        row["trace"] = copy_trace(name, sby.parent / name)
+        row["message"] = excerpt(proc.output) or "counterexample"
+    elif status != "pass":
+        row["message"] = excerpt(proc.output) or status
+    return row
+
+
+def rollup(rows: list[dict[str, Any]]) -> str:
+    statuses = [row["status"] for row in rows]
+    if any(status == "fail" for status in statuses):
+        return "fail"
+    if any(status == "timeout" for status in statuses):
+        return "timeout"
+    if not rows or any(status == "error" for status in statuses):
+        return "error"
+    return "ok"
+
+
+def summary(status: str, rows: list[dict[str, Any]]) -> str:
+    passed = sum(row["status"] == "pass" for row in rows)
+    if status == "ok":
+        return f"{passed} checks passed"
+    bad = next(row for row in rows if row["status"] != "pass")
+    return f"{bad['name']}: {bad['message'] or bad['status']}"
+
+
+def main() -> None:
+    started = time.monotonic()
+    result: dict[str, Any] = {
+        "schema": SCHEMA,
+        "status": "error",
+        "passed": 0,
+        "total": 0,
+        "duration_ms": 0,
+        "message": "",
+        "checks": [],
+        "tool_versions": {},
+    }
+    code = vc.EXIT_OK
+    try:
+        result["tool_versions"] = vc.tool_versions(("yosys",))
+        dut = vc.require_file(vc.work_dir() / "dut.v")
+        root = formal_root()
+        core = stage_core(root, dut)
+        checks_dir = generate(core, root)
+        only = [part.strip() for part in os.environ.get("VERITY_RVFI_ONLY", "").split(",") if part.strip()]
+        selected = sorted(path for path in checks_dir.glob("*.sby") if wanted(path.stem, only))
+        if not selected:
+            raise vc.InputError("no riscv-formal checks matched")
+        timeout_s = max(1.0, vc.env_float("VERITY_RVFI_CHECK_TIMEOUT_S", 180))
+        jobs = max(1, env_int("VERITY_RVFI_JOBS", 2))
+        rows: list[dict[str, Any]] = []
+        with ThreadPoolExecutor(max_workers=jobs) as pool:
+            futures = [pool.submit(run_check, path, timeout_s) for path in selected]
+            for future in as_completed(futures):
+                rows.append(future.result())
+        rows.sort(key=lambda row: row["name"])
+        status = rollup(rows)
+        result.update(
+            status=status,
+            passed=sum(row["status"] == "pass" for row in rows),
+            total=len(rows),
+            checks=rows,
+            message=summary(status, rows),
+        )
+    except vc.InputError as exc:
+        result.update(status="error", message=str(exc)[:MESSAGE_CAP])
+        code = vc.EXIT_INPUT
+    except Exception as exc:  # noqa: BLE001  (tool missing or crash: reported as error, exit 3)
+        traceback.print_exc(file=sys.stderr)
+        result.update(status="error", message=f"{type(exc).__name__}: {exc}"[:MESSAGE_CAP])
+        code = vc.EXIT_INTERNAL
+    result["duration_ms"] = int((time.monotonic() - started) * 1000)
+    vc.emit(result, code)
+
+
+if __name__ == "__main__":
+    main()

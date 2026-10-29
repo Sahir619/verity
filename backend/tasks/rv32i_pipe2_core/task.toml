@@ -1,0 +1,301 @@
+schema = "verity.task/1"
+id = "rv32i_pipe2_core"
+title = "RV32I 2-stage pipelined core"
+summary = "a 2-stage pipelined RV32I core that runs real programs against a locked model"
+spec_text = "A 2-stage pipelined RV32I core. Fetch and execute overlap. It wires six provided blocks plus rv32i_pctl and runs real programs. Writes to x0 are dropped. FENCE retires as a nop. ECALL, EBREAK, illegal encodings, misaligned loads or stores, and a taken branch, JAL or JALR whose target is not a multiple of 4 retire once as a trap and then halt the core. One clock, synchronous active-low reset, and the PC starts at 0."
+top = "rv32i_pipe2_core"
+family = "cpu"
+latency_cycles = 1
+max_lines = 300
+test_count = 18
+default_priority = "area"
+priorities = ["area", "speed", "power"]
+target_clock_ns = 10.0
+max_plan_blocks = 8
+eval_only = true
+is_custom = false
+coding_rules = [
+  "The seven block modules are provided; instantiate each exactly once; never define or copy them. rv32i_ctl is not used.",
+  "The top holds pc, ir and ex_pc. Reset clears pc, ir, ex_pc and rvfi_order to 0. rv32i_pctl clears its own valid and halt bits.",
+  "Every cycle imem_addr is pc. When pctl.advance is 1, the rising edge does ir <= imem_rdata, ex_pc <= pc, and pc <= the next fetch address.",
+  "The next fetch address is the redirect target when pctl.redirect is 1, and pc+4 otherwise. A JALR target is the ALU result with bit 0 cleared. Any other redirect target is the ALU result.",
+  "pctl.redirect kills the instruction fetched in that cycle: pctl drives ex_valid to 0 for the next cycle. Do not retire, write a register, or start a data access while ex_valid is 0.",
+  "ex_pc is the PC of the instruction in EX. ALU a_sel 1 uses ex_pc. The fetch pc has already moved on, so do not use it for AUIPC, a branch, or JAL.",
+  "The link value is ex_pc+4. rf.wd follows wb_sel: 0 is alu.y, 1 is lsu.ld, 2 is the link value, 3 is zero. rf.we is pctl.rf_wen AND dec.rf_we. rf.ra1 is ir[19:15], rf.ra2 is ir[24:20], rf.wa is ir[11:7].",
+  "imm.instr and dec.instr are ir. alu.b follows b_sel: 0 is rf.rd2, 1 is imm. alu.op is dec.alu_op. alu.a follows a_sel: 0 is rf.rd1, 1 is ex_pc, 2 and 3 are zero.",
+  "br.a is rf.rd1, br.b is rf.rd2, br.funct3 is ir[14:12].",
+  "lsu.addr_lo is alu.y[1:0]. lsu.funct3 is ir[14:12]. lsu.rdata is dmem_rdata. lsu.wdata is rf.rd2. pctl.misaligned is lsu.misaligned.",
+  "pctl.is_load, is_store, is_branch, is_jal and is_jalr come from the decoder. pctl.taken comes from the branch block.",
+  "pctl.trap is the decoder's trap OR target_misaligned, where target_misaligned = (is_jal OR is_jalr OR (is_branch AND br.taken)) AND alu.y[1]. alu.y is the jump or branch target, and RV32I without compressed instructions traps when that target is not a multiple of 4.",
+  "dmem_valid and dmem_we come from pctl. dmem_addr is alu.y with bits [1:0] cleared. dmem_wdata is lsu.sdata. dmem_wstrb is lsu.wstrb when dmem_we is 1, otherwise 0.",
+  "halted and dbg_stall are pctl's outputs. Do not recompute them. dbg_stall is 3 when halted, 1 when EX is empty, and 0 when EX holds an instruction.",
+  "rvfi_valid is pctl.retire, which is 1 for a normal retire and for the one trap record. It is 0 in a bubble and after the trap. rvfi_order counts rvfi_valid pulses from 0 after reset.",
+  "rvfi_insn is ir. rvfi_pc_rdata is ex_pc. rvfi_pc_wdata is the redirect target when redirect is 1, ex_pc+4 otherwise, and ex_pc on the trap cycle.",
+  "rvfi_trap and rvfi_halt are 1 only on the trap cycle (pctl.trap_now). rvfi_intr is 0. rvfi_mode is 3. rvfi_ixl is 1. After the trap cycle the core is halted and rvfi_valid stays 0.",
+  "rvfi_rs1_addr is ir[19:15] and rvfi_rs2_addr is ir[24:20]. rvfi_rs1_rdata is rf.rd1 and rvfi_rs2_rdata is rf.rd2. x0 reads as 0.",
+  "rvfi_rd_addr is ir[11:7] when the register file writes that register, otherwise 0. On the trap cycle it is 0. rvfi_rd_wdata is the write data when rvfi_rd_addr is not 0, otherwise 0.",
+  "On a load retire, rvfi_mem_addr is alu.y with bits [1:0] cleared, rvfi_mem_rmask is the byte mask of the access size at alu.y[1:0] (1, 2 or 4 bytes; LBU and LHU use the same mask as LB and LH), rvfi_mem_rdata is dmem_rdata, and the write mask and write data are 0. On a store retire, rvfi_mem_wmask is lsu.wstrb, rvfi_mem_wdata is lsu.sdata, and the read mask and read data are 0. Every other retire, including the trap cycle, drives both masks to 0.",
+  "FENCE retires and writes nothing. ECALL, EBREAK, an illegal encoding, a misaligned load or store, or a taken branch, JAL or JALR to a target that is not a multiple of 4 retires once with rvfi_trap and rvfi_halt set, rvfi_rd_addr 0 and both memory masks 0, then the core halts. It does not write a register or memory. A write to x0 is reported as rd 0 and wdata 0.",
+  """
+module rv32i_imm (
+    input  logic [31:0] instr,
+    output logic [31:0] imm
+);
+""",
+  """
+module rv32i_dec (
+    input  logic [31:0] instr,
+    output logic [3:0] alu_op,
+    output logic [1:0] a_sel,
+    output logic b_sel,
+    output logic [1:0] wb_sel,
+    output logic rf_we,
+    output logic is_load,
+    output logic is_store,
+    output logic is_branch,
+    output logic is_jal,
+    output logic is_jalr,
+    output logic trap
+);
+""",
+  """
+module rv32i_alu (
+    input  logic [31:0] a,
+    input  logic [31:0] b,
+    input  logic [3:0] op,
+    output logic [31:0] y
+);
+""",
+  """
+module rv32i_br (
+    input  logic [31:0] a,
+    input  logic [31:0] b,
+    input  logic [2:0] funct3,
+    output logic taken
+);
+""",
+  """
+module rv32i_lsu (
+    input  logic [1:0] addr_lo,
+    input  logic [2:0] funct3,
+    input  logic [31:0] rdata,
+    input  logic [31:0] wdata,
+    output logic [31:0] ld,
+    output logic [3:0] wstrb,
+    output logic [31:0] sdata,
+    output logic misaligned
+);
+""",
+  """
+module rv32i_rf (
+    input  logic clk,
+    input  logic rst_n,
+    input  logic [4:0] ra1,
+    input  logic [4:0] ra2,
+    input  logic [4:0] wa,
+    input  logic [31:0] wd,
+    input  logic we,
+    output logic [31:0] rd1,
+    output logic [31:0] rd2
+);
+""",
+  """
+module rv32i_pctl (
+    input  logic clk,
+    input  logic rst_n,
+    input  logic is_load,
+    input  logic is_store,
+    input  logic is_branch,
+    input  logic is_jal,
+    input  logic is_jalr,
+    input  logic trap,
+    input  logic taken,
+    input  logic misaligned,
+    output logic ex_valid,
+    output logic halted,
+    output logic advance,
+    output logic redirect,
+    output logic rf_wen,
+    output logic dmem_valid,
+    output logic dmem_we,
+    output logic retire,
+    output logic trap_now,
+    output logic [1:0] dbg_stall
+);
+""",
+]
+
+[clock]
+name = "clk"
+
+[reset]
+name = "rst_n"
+active_low = true
+synchronous = true
+
+[sim]
+seed = 1
+max_cycles_per_case = 20000
+
+[eqy]
+enabled = false
+
+[[ports]]
+name = "clk"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "rst_n"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "imem_rdata"
+dir = "in"
+width = 32
+
+[[ports]]
+name = "dmem_rdata"
+dir = "in"
+width = 32
+
+[[ports]]
+name = "imem_addr"
+dir = "out"
+width = 32
+
+[[ports]]
+name = "dmem_valid"
+dir = "out"
+width = 1
+
+[[ports]]
+name = "dmem_addr"
+dir = "out"
+width = 32
+
+[[ports]]
+name = "dmem_wdata"
+dir = "out"
+width = 32
+
+[[ports]]
+name = "dmem_wstrb"
+dir = "out"
+width = 4
+
+[[ports]]
+name = "halted"
+dir = "out"
+width = 1
+
+[[ports]]
+name = "dbg_stall"
+dir = "out"
+width = 2
+
+[[ports]]
+name = "rvfi_valid"
+dir = "out"
+width = 1
+
+[[ports]]
+name = "rvfi_order"
+dir = "out"
+width = 64
+
+[[ports]]
+name = "rvfi_insn"
+dir = "out"
+width = 32
+
+[[ports]]
+name = "rvfi_trap"
+dir = "out"
+width = 1
+
+[[ports]]
+name = "rvfi_halt"
+dir = "out"
+width = 1
+
+[[ports]]
+name = "rvfi_intr"
+dir = "out"
+width = 1
+
+[[ports]]
+name = "rvfi_mode"
+dir = "out"
+width = 2
+
+[[ports]]
+name = "rvfi_ixl"
+dir = "out"
+width = 2
+
+[[ports]]
+name = "rvfi_rs1_addr"
+dir = "out"
+width = 5
+
+[[ports]]
+name = "rvfi_rs2_addr"
+dir = "out"
+width = 5
+
+[[ports]]
+name = "rvfi_rs1_rdata"
+dir = "out"
+width = 32
+
+[[ports]]
+name = "rvfi_rs2_rdata"
+dir = "out"
+width = 32
+
+[[ports]]
+name = "rvfi_rd_addr"
+dir = "out"
+width = 5
+
+[[ports]]
+name = "rvfi_rd_wdata"
+dir = "out"
+width = 32
+
+[[ports]]
+name = "rvfi_pc_rdata"
+dir = "out"
+width = 32
+
+[[ports]]
+name = "rvfi_pc_wdata"
+dir = "out"
+width = 32
+
+[[ports]]
+name = "rvfi_mem_addr"
+dir = "out"
+width = 32
+
+[[ports]]
+name = "rvfi_mem_rmask"
+dir = "out"
+width = 4
+
+[[ports]]
+name = "rvfi_mem_wmask"
+dir = "out"
+width = 4
+
+[[ports]]
+name = "rvfi_mem_rdata"
+dir = "out"
+width = 32
+
+[[ports]]
+name = "rvfi_mem_wdata"
+dir = "out"
+width = 32

@@ -1,0 +1,34 @@
+{
+  "note": "The live bench recording of 2026-10-29 (public/live/bench.mp4, from agent-browser record, 10 fps re-encoded to 30). Numbers from GET /runs/r_3820ff068268498cab7007e75e935809/events (reports/summary.json), GET /health (models), the reply's Details and the backend log (2 POSTs to api.tavily.com/search, 1 to google.serper.dev/scholar, both HTTP 200, 13:29:03 to 13:29:05).",
+  "request": "An 8-bit ALU with add, subtract, AND, OR and XOR, plus a zero flag",
+  "verdict": "Buildable with changes",
+  "closest": "8-bit adder with carry",
+  "research": { "tavilySearches": 2, "scholarSearches": 1, "sources": 8, "usd": 0.02 },
+  "run": {
+    "id": "r_3820ff068268498cab7007e75e935809",
+    "wallS": 153.9,
+    "llmCalls": 10,
+    "inputTokens": 17734,
+    "outputTokens": 18165,
+    "usd": 0.0361426,
+    "versions": 6,
+    "winner": "v1",
+    "areaUm2": 47.35,
+    "signoff": { "tests": 12, "seeds": 9, "plantedCaught": 2, "plantedTotal": 2 }
+  },
+  "models": {
+    "write": "nvidia/Nemotron-3-Ultra-550b-a55b",
+    "optimize": "nvidia/nemotron-3-super-120b-a12b"
+  },
+  "recording": {
+    "typeAt": 45,
+    "sentAt": 56,
+    "replyAt": 128,
+    "detailsAt": 156,
+    "costAt": 204,
+    "cardAt": 254,
+    "runAt": 290,
+    "firstPassAt": 325,
+    "endAt": 333
+  }
+}

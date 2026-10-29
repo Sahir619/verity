@@ -1,0 +1,106 @@
+/* The landing page base: root, type scale, buttons, section bands and the footer. Everything is scoped under .rk.land and
+   uses only the --rk-* and --font-* tokens from globals.css; the faces are attached by RACK_FACES on the root element.
+   Type steps sit on a 4px grid in rem; spacing is 8, 16, 24, 32, 48, 64, 96, 128 px (as rem). The sections themselves
+   live in ../landing/landing.css. */
+.rk.land {
+  /* type scale: size and line-height pairs */
+  --fs-label: 0.875rem;  --lh-label: 1.5rem;   /* 14px, Martian Mono: the button, nav links, Built/Next/Later, step numbers */
+  --fs-small: 1rem;      --lh-small: 1.5rem;   /* 16px: captions, sources, footer notes */
+  --fs-body: 1.125rem;   --lh-body: 2rem;   /* 18px: all sentences */
+  --fs-lead: clamp(1.25rem, 0.75rem + 1.25vw, 1.5rem);   --lh-lead: 2rem;   /* 20 to 24px */
+  --fs-h3: clamp(1.5rem, 0.5rem + 2vw, 2rem);        --lh-h3: 2rem;     /* 24 to 32px */
+  --fs-h2: clamp(2.5rem, 1.8rem + 2vw, 3rem);          /* 40 to 48px, line-height 1 */
+  --fs-figure: clamp(3rem, 2.2rem + 2.4vw, 4rem);      /* 48 to 64px, line-height 1 */
+  --fs-display: clamp(3rem, 1.8rem + 4vw, 5rem);       /* 48 to 80px, line-height .9 */
+  /* spacing */
+  --s-1: 0.5rem; --s-2: 1rem; --s-3: 1.5rem; --s-4: 2rem; --s-6: 3rem; --s-8: 4rem; --s-12: 6rem;
+  --pad-sec: clamp(4rem, 2rem + 6vw, 8rem);
+  --measure: 40rem;
+  --wide: 70rem;
+  --gut: 2rem;
+
+  min-height: 100vh;
+  background: var(--rk-ground);
+  color: var(--rk-ink);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  caret-color: var(--rk-run);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+.rk *, .rk *::before, .rk *::after { box-sizing: border-box; }
+.rk ::selection { background: var(--rk-a2); color: var(--rk-on-a); }
+.rk :focus-visible { outline: 2px solid var(--rk-a); outline-offset: 2px; }
+.rk a { color: inherit; text-decoration: none; }
+.rk svg { display: block; }
+.rk img { max-width: 100%; }
+
+/* headings and figures: Sofia Sans Extra Condensed, uppercase */
+.rk h1, .rk h2, .rk h3 {
+  margin: 0; font-family: var(--font-display); text-transform: uppercase; color: var(--rk-ink); text-wrap: balance;
+}
+.rk h2 { font-weight: 900; font-size: var(--fs-h2); line-height: 1; max-width: 18em; margin-inline: auto; text-wrap: balance; }
+.rk h3 { font-weight: 800; font-size: var(--fs-h3); line-height: var(--lh-h3); }
+.rk .fig { font-family: var(--font-display); font-weight: 900; font-size: var(--fs-figure); line-height: 1; color: var(--rk-ink); }
+.rk .fig.a { color: var(--rk-a); }
+
+/* sentences, captions and labels */
+.rk p { margin: 0; text-wrap: pretty; }
+.rk .small { font-size: var(--fs-small); line-height: var(--lh-small); color: var(--rk-ink-3); }
+.rk .label {
+  font-family: var(--font-data); font-weight: 500; font-size: var(--fs-label); line-height: var(--lh-label);
+  letter-spacing: .08em; text-transform: uppercase; color: var(--rk-ink-3);
+}
+
+/* the one primary action, and the quiet text link */
+.rk .btn {
+  display: inline-flex; align-items: center; gap: var(--s-1); height: 3rem; padding: 0 var(--s-3);
+  font-family: var(--font-data); font-weight: 500; font-size: var(--fs-label); line-height: var(--lh-label);
+  letter-spacing: .08em; text-transform: uppercase; white-space: nowrap;
+}
+.rk .btn svg { width: 1rem; height: 1rem; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: square; }
+.rk .btn.p { background: var(--rk-a); color: var(--rk-on-a); }
+.rk .btn.p:hover { background: var(--rk-run); }
+.rk .btn.s { background: var(--rk-ground); color: var(--rk-ink); }
+.rk .btn.s:hover { background: var(--rk-panel-2); }
+.rk .tlink {
+  font-family: var(--font-data); font-weight: 500; font-size: var(--fs-label); line-height: var(--lh-label);
+  letter-spacing: .08em; text-transform: uppercase; color: var(--rk-ink);
+  text-decoration: underline; text-underline-offset: 6px; text-decoration-color: var(--rk-ink-3);
+}
+.rk .tlink:hover { text-decoration-color: currentColor; }
+
+/* sections: space separates them, alternate ones sit on a full-width panel band */
+.rk .sec { padding: var(--pad-sec) var(--gut); }
+.rk .band { background: var(--rk-panel); }
+
+/* rows of 3 or 4 items: CSS grid, one column under 720px */
+.rk .row { display: grid; gap: var(--s-6); list-style: none; margin: var(--s-8) auto 0; padding: 0; max-width: var(--wide); }
+.rk .row > li { min-width: 0; }
+.rk .row.c3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.rk .row.c4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+/* footer */
+.rk .foot { padding: var(--s-12) var(--gut) var(--s-8); background: var(--rk-panel); }
+.rk .foot-logo { display: inline-flex; align-items: center; gap: var(--s-1); }
+.rk .foot-logo .logo-sym { height: 2rem; width: auto; color: var(--rk-a); }
+.rk .foot-logo .logo-word { height: 1.25rem; width: auto; color: var(--rk-ink); }
+.rk .foot-links { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s-1) var(--s-4); margin: var(--s-4) 0; }
+.rk .foot-notes { max-width: var(--measure); margin: 0 auto; padding: 0; list-style: none; display: grid; gap: var(--s-1); text-wrap: balance; }
+.rk .foot-legal { max-width: var(--measure); margin: var(--s-6) auto 0; }
+/* No Demo section: the Ladder band is the last one, so the footer takes the ground instead of a second panel. */
+.rk.land:has(main > .sec.band:last-child) .foot { background: var(--rk-ground); }
+
+@media (max-width: 1100px) {
+  .rk .row.c4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 720px) {
+  .rk.land { --gut: 1rem; }
+  .rk .row.c3, .rk .row.c4 { grid-template-columns: minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rk *, .rk *::before, .rk *::after { animation: none !important; transition: none !important; }
+}

@@ -1,0 +1,286 @@
+#!/usr/bin/env python3
+"""/verity/bin/verify: Verilator lint, then Yosys interface check, then cocotb + Icarus simulation.
+
+Contract: backend/CONTRACTS.md section 3.5 (stdout is one JSON object, schema verity.verify/1). Early exit: the
+first failing stage decides the status and later sections stay null. Fixed commands, no shell, no model text in
+any argument; the candidate is read from $VERITY_WORK_DIR/dut.v.
+"""
+
+from __future__ import annotations
+
+import json
+import os
+import re
+import sys
+import time
+import traceback
+from pathlib import Path
+from typing import Any
+
+LIB_DIR = Path(__file__).resolve().parent.parent / "lib"
+sys.path.insert(0, str(LIB_DIR))
+import verity_common as vc  # noqa: E402
+import verity_sim as vs  # noqa: E402
+
+LINT_LOG_CAP = 4_000
+SIM_LOG_CAP = 4_000
+MAX_FAILURES = 5
+DIR_NAMES = {"input": "in", "output": "out", "inout": "inout"}
+TIMESCALE_FILE = "`timescale 1ns/1ps\n"
+
+
+# ---------- stage 1: lint ----------
+def stage_lint(top: str, dut: Path, result: dict[str, Any], versions: dict[str, str]) -> str | None:
+    timeout = vc.env_float("VERITY_LINT_TIMEOUT_S", 20)
+    cmd = ["verilator", "--lint-only", "-Wall", "-Wno-fatal", "-Wno-DECLFILENAME", "--top-module", top, str(dut)]
+    proc = vc.run(cmd, timeout_s=timeout)
+    if proc.timed_out:
+        result["message"] = f"lint timed out after {timeout:g} s"
+        return "timeout"
+    text = vc.scrub_paths(proc.output)
+    errors = len(re.findall(r"^%Error", text, re.MULTILINE))
+    warnings = len(re.findall(r"^%Warning-", text, re.MULTILINE))
+    ok = proc.rc == 0 and errors == 0
+    counts = vs.lint_counts(text)
+    result["lint"] = {
+        "ok": ok,
+        "errors": errors,
+        "warnings": warnings,
+        "by_tag": counts["by_tag"],
+        "latches": counts["latches"],
+        "log": vc.head(text, LINT_LOG_CAP),
+        "tool": f"Verilator {versions.get('verilator', 'unknown')}",
+    }
+    return None if ok else "lint_fail"
+
+
+# ---------- stage 2: interface (Yosys JSON vs task.toml) ----------
+def compare_ports(expected: list[dict[str, Any]], module: dict[str, Any]) -> tuple[list[str], list[dict[str, Any]]]:
+    got_ports: dict[str, Any] = module.get("ports", {})
+    netnames: dict[str, Any] = module.get("netnames", {})
+    parsed: list[dict[str, Any]] = []
+    for name, port in got_ports.items():
+        # UNVERIFIED: the key Yosys uses for port signedness in write_json ("signed" on the port or its netname).
+        signed = bool(port.get("signed")) or bool(netnames.get(name, {}).get("signed"))
+        parsed.append(
+            {
+                "name": name,
+                "dir": DIR_NAMES.get(str(port.get("direction")), "inout"),
+                "width": len(port.get("bits", [])),
+                "signed": signed,
+            }
+        )
+    by_name = {p["name"]: p for p in parsed}
+    errors: list[str] = []
+    for exp in expected:
+        name = exp["name"]
+        count = int(exp.get("count", 1))
+        want_width = int(exp["width"]) * count
+        got = by_name.get(name)
+        if got is None:
+            errors.append(f"port {name}: missing")
+            continue
+        if got["dir"] == "inout":
+            errors.append(f"port {name}: inout is not allowed")
+            continue
+        if got["dir"] != exp["dir"]:
+            errors.append(f"port {name}: direction {got['dir']}, expected {exp['dir']}")
+        if got["width"] != want_width:
+            errors.append(f"port {name}: width {got['width']}, expected {want_width}")
+        elif count == 1 and got["signed"] != bool(exp.get("signed", False)):
+            want = "signed" if exp.get("signed") else "unsigned"
+            errors.append(f"port {name}: {'signed' if got['signed'] else 'unsigned'}, expected {want}")
+    expected_names = {e["name"] for e in expected}
+    for p in parsed:
+        if p["name"] not in expected_names:
+            errors.append(f"port {p['name']}: not in the contract")
+    return errors, parsed
+
+
+def stage_contract(task: dict[str, Any], dut: Path, result: dict[str, Any]) -> str | None:
+    top = task["top"]
+    ports_json = vc.scratch_dir() / "ports.json"
+    ports_json.unlink(missing_ok=True)
+    script = f"read_verilog -sv {dut}; hierarchy -check -top {top}; proc; write_json {ports_json}"
+    proc = vc.run(["yosys", "-q", "-p", script], timeout_s=vc.env_float("VERITY_LINT_TIMEOUT_S", 20))
+    if proc.timed_out:
+        result["message"] = "interface check timed out"
+        return "timeout"
+    if proc.rc != 0 or not ports_json.is_file():
+        reason = vc.first_line_matching(vc.scrub_paths(proc.output), r"error", "Yosys could not read the design")
+        result["contract"] = {"ok": False, "errors": [reason], "ports": []}
+        result["message"] = reason
+        return "contract_fail"
+    data = json.loads(ports_json.read_text(encoding="utf-8"))
+    module = data.get("modules", {}).get(top)
+    if module is None:
+        err = f"module {top} not found after elaboration"
+        result["contract"] = {"ok": False, "errors": [err], "ports": []}
+        result["message"] = err
+        return "contract_fail"
+    errors, parsed = compare_ports(task["ports"], module)
+    result["contract"] = {"ok": not errors, "errors": errors, "ports": parsed}
+    if errors:
+        result["message"] = errors[0]
+        return "contract_fail"
+    return None
+
+
+# ---------- stage 3: simulation ----------
+def _empty_sim(tool: str, seed: int | None, log_text: str) -> dict[str, Any]:
+    return {
+        "ok": False, "total": 0, "passed": 0, "failure_count": 0, "failures": [], "seed": seed, "log": log_text, "tool": tool,
+    }
+
+
+def stage_sim(task: dict[str, Any], dut: Path, result: dict[str, Any], versions: dict[str, str]) -> str:
+    top = task["top"]
+    sim = task.get("sim", {})
+    seed = int(sim.get("seed", 1))
+    deadline = time.monotonic() + vc.env_float("VERITY_SIM_TIMEOUT_S", 60)
+    tool = f"iverilog {versions.get('iverilog', 'unknown')} + cocotb {versions.get('cocotb', 'unknown')}"
+    build = vc.fresh_dir(vc.scratch_dir() / "sim_build")
+    run_dir = vc.fresh_dir(vc.scratch_dir() / "sim_run")
+    sim_result = vc.out_dir() / "sim_result.json"
+    sim_result.unlink(missing_ok=True)
+
+    # cocotb needs a time precision finer than the 1 s Icarus default for modules without a timescale.
+    (build / "timescale.v").write_text(TIMESCALE_FILE, encoding="ascii")
+    vvp_file = build / "sim.vvp"
+    compile_proc = vc.run(
+        ["iverilog", "-g2012", "-DCOCOTB_SIM=1", "-s", top, "-o", str(vvp_file), str(build / "timescale.v"), str(dut)],
+        timeout_s=max(1.0, deadline - time.monotonic()),
+    )
+    if compile_proc.timed_out:
+        result["message"] = "compile timed out"
+        return "timeout"
+    if compile_proc.rc != 0 or not vvp_file.is_file():
+        text = vc.scrub_paths(compile_proc.output)
+        result["message"] = vc.first_line_matching(text, r"error", "iverilog failed to compile the design")
+        result["sim"] = _empty_sim(tool, seed, vc.tail(text, SIM_LOG_CAP))
+        return "sim_error"
+
+    # UNVERIFIED: cocotb 1.9.2 direct vvp flow (the documented Makefile.icarus recipe) instead of cocotb.runner:
+    # vvp -M <cocotb libs> -m libcocotbvpi_icarus, with MODULE/TOPLEVEL env and the embedded Python located via
+    # LIBPYTHON_LOC and PYTHONHOME. Check on the first real simulation (CONTRACTS section 12 item 4).
+    lib_dir = vc.run(["cocotb-config", "--lib-dir"], timeout_s=20).output.strip().splitlines()[-1]
+    libpython = vc.run(["cocotb-config", "--libpython"], timeout_s=20).output.strip().splitlines()[-1]
+    env = dict(os.environ)
+    env.update(
+        {
+            "PYTHONPATH": os.pathsep.join([str(vc.pack_dir()), str(LIB_DIR), *sys.path]),
+            "PYTHONHOME": sys.base_prefix,
+            "PYTHONDONTWRITEBYTECODE": "1",
+            "PYTHONHASHSEED": "0",
+            "LIBPYTHON_LOC": libpython,
+            "MODULE": "test_dut",
+            "COCOTB_TEST_MODULES": "test_dut",
+            "TOPLEVEL": top,
+            "COCOTB_TOPLEVEL": top,
+            "TOPLEVEL_LANG": "verilog",
+            "COCOTB_RESULTS_FILE": str(run_dir / "results.xml"),
+            "COCOTB_RANDOM_SEED": str(seed),
+            "COCOTB_REDUCED_LOG_FMT": "1",
+            "COCOTB_ANSI_OUTPUT": "0",
+            "VERITY_SIM_RESULT": str(sim_result),
+            "VERITY_SEED": str(seed),
+            "VERITY_MAX_CYCLES": str(int(sim.get("max_cycles_per_case", 1000))),
+            "VERITY_TEST_COUNT": str(int(task["test_count"])),
+        }
+    )
+    proc = vc.run(
+        ["vvp", "-M", lib_dir, "-m", "libcocotbvpi_icarus", str(vvp_file)],
+        timeout_s=max(1.0, deadline - time.monotonic()),
+        cwd=run_dir,
+        env=env,
+    )
+    if proc.timed_out:
+        result["message"] = "simulation timed out"
+        return "timeout"
+
+    log_text = vc.tail(vc.scrub_paths(proc.output), SIM_LOG_CAP)
+    data: dict[str, Any] | None = None
+    if sim_result.is_file():
+        try:
+            data = json.loads(sim_result.read_text(encoding="utf-8"))
+        except ValueError:
+            data = None
+    if data is None:
+        result["message"] = vc.first_line_matching(proc.output, r"error|traceback|exception", "simulation produced no result")
+        result["sim"] = _empty_sim(tool, seed, log_text)
+        return "sim_error"
+
+    total = int(data.get("total", 0))
+    passed = int(data.get("passed", 0))
+    failure_count = int(data.get("failure_count", total - passed))
+    expected_total = int(task["test_count"])
+    ok = total == expected_total and passed == expected_total and failure_count == 0
+    failures = [
+        {
+            "name": str(f.get("name", "")),
+            "inputs": str(f.get("inputs", "")),
+            "expected": str(f.get("expected", "")),
+            "got": str(f.get("got", "")),
+            "pass": False,
+            "cycle": f.get("cycle"),
+        }
+        for f in data.get("failures", [])[:MAX_FAILURES]
+    ]
+    result["sim"] = {
+        "ok": ok,
+        "total": total,
+        "passed": passed,
+        "failure_count": failure_count,
+        "failures": failures,
+        "seed": data.get("seed", seed),
+        "log": log_text,
+        "tool": tool,
+    }
+    if total != expected_total:
+        result["message"] = f"testbench ran {total} cases, expected {expected_total}"
+    return "pass" if ok else "sim_fail"
+
+
+# ---------- main ----------
+def run_stages(task: dict[str, Any], dut: Path, result: dict[str, Any]) -> str:
+    versions = vc.tool_versions(("verilator", "yosys", "iverilog", "cocotb"))
+    result["tool_versions"] = versions
+    status = stage_lint(task["top"], dut, result, versions)
+    if status:
+        return status
+    status = stage_contract(task, dut, result)
+    if status:
+        return status
+    return stage_sim(task, dut, result, versions)
+
+
+def main() -> None:
+    started = time.monotonic()
+    result: dict[str, Any] = {
+        "schema": "verity.verify/1",
+        "status": "internal_error",
+        "lint": None,
+        "contract": None,
+        "sim": None,
+        "duration_ms": 0,
+        "message": "",
+        "tool_versions": {},
+    }
+    code = vc.EXIT_OK
+    try:
+        task = vc.load_task()
+        dut = vc.require_file(vc.work_dir() / "dut.v")
+        result["status"] = run_stages(task, dut, result)
+    except vc.InputError as exc:
+        result.update(status="input_error", message=str(exc))
+        code = vc.EXIT_INPUT
+    except Exception as exc:  # noqa: BLE001  (tool missing or crash: reported as internal_error, exit 3)
+        traceback.print_exc(file=sys.stderr)
+        result.update(status="internal_error", message=f"{type(exc).__name__}: {exc}"[:300])
+        code = vc.EXIT_INTERNAL
+    result["duration_ms"] = int((time.monotonic() - started) * 1000)
+    vc.emit(result, code)
+
+
+if __name__ == "__main__":
+    main()

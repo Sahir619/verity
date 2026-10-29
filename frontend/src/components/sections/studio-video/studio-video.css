@@ -1,0 +1,63 @@
+/* /studio with no run: the run video page. Same look as the landing: centered, no frames, the 8px type scale from
+   ../rack/rack.css. Scoped under .rk.land. Only --rk-*, --fs-*, --s-* and --font-* tokens; amber is used only by the shared
+   bar's one primary action and by focus. */
+
+/* Bar: the shared rack bar in the landing's quiet form (its rules live in landing.css, which this route does not load) */
+.rk.land.sv-page .rkbar { height: 4rem; padding: 0 var(--gut); gap: var(--s-4); border-bottom: 0; background: transparent; flex-wrap: nowrap; }
+.rk.land.sv-page .rkbar-nav { display: block; margin-left: auto; }
+.rk.land.sv-page .rkbar-nav ul { gap: var(--s-4); margin: 0; }
+.rk.land.sv-page .rkbar-nav a, .rk.land.sv-page .rkbar-btn { font-size: var(--fs-label); line-height: var(--lh-label); letter-spacing: .08em; }
+.rk.land.sv-page .rkbar-nav a { padding: var(--s-1) 0; }
+.rk.land.sv-page .rkbar-nav a:hover { border-color: transparent; }
+.rk.land.sv-page .rkbar-r { width: auto; margin-left: 0; }
+.rk.land.sv-page .rkbar-btn { height: 2.5rem; padding: 0 var(--s-2); border-color: transparent; }
+.rk.land.sv-page .rkbar-btn:hover { border-color: transparent; }
+.rk.land.sv-page .rkbar-btn.p { border-color: var(--rk-a); }
+.rk.land.sv-page .rkbar-btn.p:hover { border-color: var(--rk-run); }
+.rk.land.sv-page .rkbar-brand .logo-sym { height: 2rem; }
+.rk.land.sv-page .rkbar-brand .logo-word { height: 1.25rem; }
+
+/* Page */
+.rk.land .sv { padding: clamp(3rem, 1rem + 6vw, 6rem) var(--gut) var(--s-12); }
+.rk.land .sv h1 {
+  max-width: var(--wide); margin-inline: auto; font-weight: 900; font-size: var(--fs-display); line-height: .9; letter-spacing: -.01em;
+}
+.rk.land .sv .lead { margin: var(--s-4) auto 0; max-width: var(--measure); font-size: var(--fs-lead); line-height: var(--lh-lead); color: var(--rk-ink-2); }
+
+/* The video: 16:10, no frame */
+.rk.land .sv-player, .rk.land .sv-still { max-width: var(--wide); margin-inline: auto; }
+.rk.land .sv-player { margin-top: var(--s-6); }
+.rk.land .sv-frame { aspect-ratio: 16 / 10; background: var(--rk-inset); max-width: var(--wide); margin-inline: auto; }
+.rk.land .sv-still { margin-top: var(--s-6); }
+.rk.land .sv-frame video, .rk.land .sv-frame img { display: block; width: 100%; height: 100%; object-fit: contain; }
+
+/* Chapters: one button per row, time then label, the active one marked with a square and the word Now */
+.rk.land .sv-chapters { list-style: none; margin: var(--s-4) auto 0; padding: 0; max-width: var(--measure); display: grid; gap: 0; text-align: left; }
+.rk.land .sv-chap {
+  display: grid; grid-template-columns: 4rem minmax(0, 1fr) 5rem; align-items: baseline; gap: var(--s-2); width: 100%;
+  padding: var(--s-1) var(--s-1); border: 0; background: none; color: var(--rk-ink-2); cursor: pointer; text-align: left;
+  font: inherit; font-size: var(--fs-body); line-height: var(--lh-small);
+}
+.rk.land .sv-chap:hover { background: var(--rk-panel); color: var(--rk-ink); }
+.rk.land .sv-chap[aria-current="true"] { color: var(--rk-ink); }
+.rk.land .sv-time { font-family: var(--font-data); font-weight: 500; font-size: var(--fs-label); line-height: var(--lh-label); color: var(--rk-ink-3); }
+.rk.land .sv-chap[aria-current="true"] .sv-time { color: var(--rk-ink); }
+.rk.land .sv-now {
+  display: inline-flex; align-items: baseline; justify-content: flex-end; gap: var(--s-1);
+  font-family: var(--font-data); font-weight: 500; font-size: var(--fs-label); line-height: var(--lh-label); letter-spacing: .08em; text-transform: uppercase;
+}
+.rk.land .sv-sq { display: inline-block; width: .5rem; height: .5rem; background: var(--rk-ink); }
+
+/* Caption and job ids */
+.rk.land .sv-cap { margin: var(--s-4) auto 0; max-width: var(--measure); }
+.rk.land .sv-ids {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 0 var(--s-2); margin: var(--s-1) auto 0; max-width: var(--wide);
+  font-family: var(--font-data); font-size: var(--fs-label); line-height: var(--lh-label); color: var(--rk-ink-3);
+}
+
+@media (max-width: 720px) {
+  .rk.land.sv-page .rkbar-nav { display: none; }
+  .rk.land.sv-page .rkbar-r { margin-left: auto; }
+  .rk.land .sv-chap { grid-template-columns: 3.5rem minmax(0, 1fr); }
+  .rk.land .sv-now { grid-column: 2; justify-content: flex-start; }
+}

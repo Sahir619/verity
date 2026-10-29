@@ -1,0 +1,75 @@
+schema = "verity.task/1"
+id = "mac4"                         # == folder name == web presetId (presets.ts)
+title = "4-lane MAC array, 8-bit"
+summary = "4 lanes of 8-bit multiply-accumulate over 16 cycles"
+spec_text = "A 4-lane multiply-accumulate unit. Each cycle it multiplies four pairs of unsigned 8-bit inputs and adds the four products to a running sum. After 16 cycles it raises done and holds the 22-bit result until reset. Smallest area matters most."
+top = "mac4"
+family = "mac"
+element_type = "uint8"
+latency_cycles = 16                 # edges from the start edge until done is visible
+max_lines = 300
+test_count = 16
+default_priority = "area"
+priorities = ["area", "speed", "power"]
+target_clock_ns = 10.0
+max_plan_blocks = 8
+eval_only = false
+coding_rules = [
+  "Protocol: pulse start high for one clock edge while idle. That edge is edge 0: it clears acc and starts the run, and the a and b inputs on edge 0 are ignored.",
+  "Edges 1 to 16 each add a[0]*b[0] + a[1]*b[1] + a[2]*b[2] + a[3]*b[3] (the unsigned values on a and b at that edge, lanes as defined by the header) to acc.",
+  "done must be 0 until edge 16 and 1 right after edge 16. After edge 16, acc holds the final 22-bit sum and done stays 1 until reset; start is ignored while a run is in progress or done is 1.",
+  "After reset, acc and done are 0.",
+]
+
+[clock]
+name = "clk"
+
+[reset]
+name = "rst_n"
+active_low = true
+synchronous = true
+
+[sim]
+seed = 1
+max_cycles_per_case = 64
+
+[eqy]
+enabled = true
+depth = 24
+
+[[ports]]
+name = "clk"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "rst_n"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "start"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "a"
+dir = "in"
+width = 8
+count = 4
+
+[[ports]]
+name = "b"
+dir = "in"
+width = 8
+count = 4
+
+[[ports]]
+name = "acc"
+dir = "out"
+width = 22
+
+[[ports]]
+name = "done"
+dir = "out"
+width = 1

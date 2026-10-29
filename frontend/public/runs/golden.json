@@ -1,0 +1,3686 @@
+{
+  "format": "verity.runlog/1",
+  "meta": {
+    "runId": "golden-sample-001",
+    "sample": true,
+    "title": "4-lane MAC array, 8-bit",
+    "presetId": "mac4",
+    "recordedAt": "2026-10-04T00:00:00Z",
+    "durationMs": 90000,
+    "chapters": [
+      {
+        "id": "spec",
+        "label": "Spec",
+        "tMs": 0
+      },
+      {
+        "id": "plan",
+        "label": "Plan",
+        "tMs": 4000
+      },
+      {
+        "id": "lock",
+        "label": "Lock",
+        "tMs": 20000
+      },
+      {
+        "id": "build",
+        "label": "Build and fix",
+        "tMs": 23000
+      },
+      {
+        "id": "round1",
+        "label": "Round 1",
+        "tMs": 44000
+      },
+      {
+        "id": "round2",
+        "label": "Round 2",
+        "tMs": 62000
+      },
+      {
+        "id": "prove",
+        "label": "Prove",
+        "tMs": 80000
+      },
+      {
+        "id": "done",
+        "label": "Done",
+        "tMs": 88000
+      }
+    ],
+    "note": "SAMPLE DATA. Placeholder numbers for building the UI. Not results."
+  },
+  "events": [
+    {
+      "seq": 1,
+      "tMs": 0,
+      "t": "run",
+      "phase": "running"
+    },
+    {
+      "seq": 2,
+      "tMs": 0,
+      "t": "human",
+      "input": {
+        "kind": "spec",
+        "tMs": 0,
+        "presetId": "mac4",
+        "priority": "area"
+      }
+    },
+    {
+      "seq": 3,
+      "tMs": 0,
+      "t": "spec",
+      "spec": {
+        "presetId": "mac4",
+        "title": "4-lane MAC array, 8-bit",
+        "text": "A 4-lane multiply-accumulate unit. Each cycle it multiplies four pairs of unsigned 8-bit inputs and adds the four products to a running sum. After 16 cycles it raises done and holds the 22-bit result until reset. Smallest area matters most.",
+        "ports": [
+          {
+            "name": "clk",
+            "dir": "in",
+            "width": 1
+          },
+          {
+            "name": "rst_n",
+            "dir": "in",
+            "width": 1
+          },
+          {
+            "name": "start",
+            "dir": "in",
+            "width": 1
+          },
+          {
+            "name": "a",
+            "dir": "in",
+            "width": 8,
+            "count": 4
+          },
+          {
+            "name": "b",
+            "dir": "in",
+            "width": 8,
+            "count": 4
+          },
+          {
+            "name": "acc",
+            "dir": "out",
+            "width": 22
+          },
+          {
+            "name": "done",
+            "dir": "out",
+            "width": 1
+          }
+        ],
+        "priority": "area",
+        "testCount": 16,
+        "maxLines": 300
+      }
+    },
+    {
+      "seq": 4,
+      "tMs": 0,
+      "t": "op",
+      "by": "ai",
+      "op": {
+        "op": "add_node",
+        "id": "spec",
+        "kind": "spec",
+        "zone": "plan",
+        "label": "Spec",
+        "refId": "spec"
+      }
+    },
+    {
+      "seq": 5,
+      "tMs": 0,
+      "t": "stage",
+      "stage": "spec",
+      "status": "done"
+    },
+    {
+      "seq": 6,
+      "tMs": 0,
+      "t": "caption",
+      "text": "Spec read: 4 lanes of 8-bit multiply-accumulate over 16 cycles. Goal: smallest area.",
+      "chapter": "Spec"
+    },
+    {
+      "seq": 7,
+      "tMs": 4000,
+      "t": "stage",
+      "stage": "plan",
+      "status": "active"
+    },
+    {
+      "seq": 8,
+      "tMs": 4000,
+      "t": "caption",
+      "text": "Drafting the plan.",
+      "chapter": "Plan"
+    },
+    {
+      "seq": 9,
+      "tMs": 5000,
+      "t": "plan",
+      "revision": 1,
+      "blocks": [
+        {
+          "id": "blk-in",
+          "name": "Input registers",
+          "reason": "Capture the four input pairs once per cycle.",
+          "pinOptions": [
+            "Minimize registers"
+          ],
+          "pins": [],
+          "variants": []
+        },
+        {
+          "id": "blk-mult",
+          "name": "Multiplier array (4 lanes)",
+          "reason": "Four 8-bit multipliers, one per lane.",
+          "pinOptions": [
+            "Minimize area",
+            "Share one multiplier"
+          ],
+          "pins": [],
+          "variants": [
+            {
+              "id": "pipeline",
+              "label": "Pipeline",
+              "options": [
+                "none",
+                "2-stage"
+              ],
+              "value": "none"
+            }
+          ]
+        },
+        {
+          "id": "blk-add",
+          "name": "Adder tree",
+          "reason": "Add the four lane products into one sum.",
+          "pinOptions": [
+            "Minimize area",
+            "Minimize registers"
+          ],
+          "pins": [],
+          "variants": []
+        },
+        {
+          "id": "blk-acc",
+          "name": "Accumulator and control",
+          "reason": "Keep the running sum, count 16 cycles, raise done.",
+          "pinOptions": [
+            "Minimize registers"
+          ],
+          "pins": [],
+          "variants": [
+            {
+              "id": "width",
+              "label": "Accumulator width",
+              "options": [
+                "auto",
+                "22-bit"
+              ],
+              "value": "auto"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "seq": 10,
+      "tMs": 5500,
+      "t": "op",
+      "by": "ai",
+      "op": {
+        "op": "add_node",
+        "id": "blk-in",
+        "kind": "block",
+        "zone": "plan",
+        "label": "Input registers",
+        "refId": "blk-in"
+      }
+    },
+    {
+      "seq": 11,
+      "tMs": 5500,
+      "t": "op",
+      "by": "ai",
+      "op": {
+        "op": "connect",
+        "source": "spec",
+        "target": "blk-in",
+        "kind": "plan"
+      }
+    },
+    {
+      "seq": 12,
+      "tMs": 6000,
+      "t": "op",
+      "by": "ai",
+      "op": {
+        "op": "add_node",
+        "id": "blk-mult",
+        "kind": "block",
+        "zone": "plan",
+        "label": "Multiplier array (4 lanes)",
+        "refId": "blk-mult"
+      }
+    },
+    {
+      "seq": 13,
+      "tMs": 6000,
+      "t": "op",
+      "by": "ai",
+      "op": {
+        "op": "connect",
+        "source": "blk-in",
+        "target": "blk-mult",
+        "kind": "plan"
+      }
+    },
+    {
+      "seq": 14,
+      "tMs": 6500,
+      "t": "op",
+      "by": "ai",
+      "op": {
+        "op": "add_node",
+        "id": "blk-add",
+        "kind": "block",
+        "zone": "plan",
+        "label": "Adder tree",
+        "refId": "blk-add"
+      }
+    },
+    {
+      "seq": 15,
+      "tMs": 6500,
+      "t": "op",
+      "by": "ai",
+      "op": {
+        "op": "connect",
+        "source": "blk-mult",
+        "target": "blk-add",
+        "kind": "plan"
+      }
+    },
+    {
+      "seq": 16,
+      "tMs": 7000,
+      "t": "op",
+      "by": "ai",
+      "op": {
+        "op": "add_node",
+        "id": "blk-acc",
+        "kind": "block",
+        "zone": "plan",
+        "label": "Accumulator and control",
+        "refId": "blk-acc"
+      }
+    },
+    {
+      "seq": 17,
+      "tMs": 7000,
+      "t": "op",
+      "by": "ai",
+      "op": {
+        "op": "connect",
+        "source": "blk-add",
+        "target": "blk-acc",
+        "kind": "plan"
+      }
+    },
+    {
+      "seq": 18,
+      "tMs": 9000,
+      "t": "gate",
+      "state": "open",
+      "autoContinueMs": 10000
+    },
+    {
+      "seq": 19,
+      "tMs": 9000,
+      "t": "caption",
+      "text": "Plan drafted: 4 blocks. Building in 10 s unless you steer.",
+      "chapter": "Plan"
+    },
+    {
+      "seq": 20,
+      "tMs": 12000,
+      "t": "human",
+      "input": {
+        "kind": "toggle",
+        "tMs": 12000,
+        "blockId": "blk-mult",
+        "variantId": "pipeline",
+        "value": "2-stage"
+      }
+    },
+    {
+      "seq": 21,
+      "tMs": 12000,
+      "t": "op",
+      "by": "system",
+      "op": {
+        "op": "update_status",
+        "id": "blk-mult",
+        "status": "replanning"
+      }
+    },
+    {
+      "seq": 22,
+      "tMs": 12000,
+      "t": "caption",
+      "text": "You set the multiplier to a 2-stage pipeline. Replanning.",
+      "chapter": "Plan"
+    },
+    {
+      "seq": 23,
+      "tMs": 13500,
+      "t": "plan",
+      "revision": 2,
+      "blocks": [
+        {
+          "id": "blk-in",
+          "name": "Input registers",
+          "reason": "Capture the four input pairs once per cycle.",
+          "pinOptions": [
+            "Minimize registers"
+          ],
+          "pins": [],
+          "variants": []
+        },
+        {
+          "id": "blk-mult",
+          "name": "Multiplier array (4 lanes, 2-stage)",
+          "reason": "Four 8-bit multipliers, one per lane.",
+          "pinOptions": [
+            "Minimize area",
+            "Share one multiplier"
+          ],
+          "pins": [],
+          "variants": [
+            {
+              "id": "pipeline",
+              "label": "Pipeline",
+              "options": [
+                "none",
+                "2-stage"
+              ],
+              "value": "2-stage"
+            }
+          ]
+        },
+        {
+          "id": "blk-add",
+          "name": "Adder tree",
+          "reason": "Add the four lane products into one sum.",
+          "pinOptions": [
+            "Minimize area",
+            "Minimize registers"
+          ],
+          "pins": [],
+          "variants": []
+        },
+        {
+          "id": "blk-acc",
+          "name": "Accumulator and control",
+          "reason": "Keep the running sum, count 16 cycles, raise done.",
+          "pinOptions": [
+            "Minimize registers"
+          ],
+          "pins": [],
+          "variants": [
+            {
+              "id": "width",
+              "label": "Accumulator width",
+              "options": [
+                "auto",
+                "22-bit"
+              ],
+              "value": "auto"
+            }
+          ]
+        }
+      ],
+      "diff": {
+        "added": [],
+        "changed": [
+          "blk-mult"
+        ],
+        "removed": []
+      },
+      "reason": "You set the multiplier to a 2-stage pipeline."
+    },
+    {
+      "seq": 24,
+      "tMs": 13500,
+      "t": "op",
+      "by": "system",
+      "op": {
+        "op": "update_status",
+        "id": "blk-mult",
+        "status": "drafted",
+        "note": "Changed: 2-stage pipeline"
+      }
+    },
+    {
+      "seq": 25,
+      "tMs": 13500,
+      "t": "gate",
+      "state": "open",
+      "autoContinueMs": 6000
+    },
+    {
+      "seq": 26,
+      "tMs": 13500,
+      "t": "caption",
+      "text": "Plan updated. Building in 6 s.",
+      "chapter": "Plan"
+    },
+    {
+      "seq": 27,
+      "tMs": 19500,
+      "t": "gate",
+      "state": "closed",
+      "autoContinueMs": 0
+    },
+    {
+      "seq": 28,
+      "tMs": 19500,
+      "t": "stage",
+      "stage": "plan",
+      "status": "done"
+    },
+    {
+      "seq": 29,
+      "tMs": 19500,
+      "t": "op",
+      "by": "system",
+      "op": {
+        "op": "update_status",
+        "id": "blk-in",
+        "status": "approved"
+      }
+    },
+    {
+      "seq": 30,
+      "tMs": 19500,
+      "t": "op",
+      "by": "system",
+      "op": {
+        "op": "update_status",
+        "id": "blk-mult",
+        "status": "approved"
+      }
+    },
+    {
+      "seq": 31,
+      "tMs": 19500,
+      "t": "op",
+      "by": "system",
+      "op": {
+        "op": "update_status",
+        "id": "blk-add",
+        "status": "approved"
+      }
+    },
+    {
+      "seq": 32,
+      "tMs": 19500,
+      "t": "op",
+      "by": "system",
+      "op": {
+        "op": "update_status",
+        "id": "blk-acc",
+        "status": "approved"
+      }
+    },
+    {
+      "seq": 33,
+      "tMs": 20000,
+      "t": "stage",
+      "stage": "lock",
+      "status": "active"
+    },
+    {
+      "seq": 34,
+      "tMs": 20500,
+      "t": "op",
+      "by": "ai",
+      "op": {
+        "op": "add_node",
+        "id": "golden",
+        "kind": "golden",
+        "zone": "plan",
+        "label": "Golden model",
+        "refId": "golden"
+      }
+    },
+    {
+      "seq": 35,
+      "tMs": 20500,
+      "t": "op",
+      "by": "system",
+      "op": {
+        "op": "update_status",
+        "id": "golden",
+        "status": "pending"
+      }
+    },
+    {
+      "seq": 36,
+      "tMs": 22000,
+      "t": "op",
+      "by": "system",
+      "op": {
+        "op": "update_status",
+        "id": "golden",
+        "status": "locked"
+      }
+    },
+    {
+      "seq": 37,
+      "tMs": 22000,
+      "t": "stage",
+      "stage": "lock",
+      "status": "done"
+    },
+    {
+      "seq": 38,
+      "tMs": 22000,
+      "t": "caption",
+      "text": "Answer key locked: 16 tests from the golden model. The agent cannot edit them.",
+      "chapter": "Lock"
+    },
+    {
+      "seq": 39,
+      "tMs": 23000,
+      "t": "stage",
+      "stage": "rtl",
+      "status": "active"
+    },
+    {
+      "seq": 40,
+      "tMs": 23000,
+      "t": "op",
+      "by": "ai",
+      "op": {
+        "op": "add_node",
+        "id": "c1",
+        "kind": "candidate",
+        "zone": "tree",
+        "label": "v1",
+        "refId": "c1"
+      }
+    },
+    {
+      "seq": 41,
+      "tMs": 23000,
+      "t": "op",
+      "by": "ai",
+      "op": {
+        "op": "connect",
+        "source": "golden",
+        "target": "c1",
+        "kind": "checks",
+        "label": "checks every version"
+      }
+    },
+    {
+      "seq": 42,
+      "tMs": 23000,
+      "t": "candidate",
+      "candidate": {
+        "id": "c1",
+        "label": "v1",
+        "round": 0,
+        "parentId": null,
+        "createdBy": "INIT",
+        "reason": "First version, written from the plan",
+        "rtl": "",
+        "attempts": [],
+        "verification": null,
+        "ppa": null,
+        "fitness": null,
+        "status": "drafting",
+        "fixCount": 0,
+        "isBaseline": false,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 43,
+      "tMs": 23000,
+      "t": "caption",
+      "text": "Writing v1 from the plan.",
+      "chapter": "Build and fix"
+    },
+    {
+      "seq": 44,
+      "tMs": 26000,
+      "t": "stage",
+      "stage": "rtl",
+      "status": "done"
+    },
+    {
+      "seq": 45,
+      "tMs": 26000,
+      "t": "stage",
+      "stage": "lint",
+      "status": "active"
+    },
+    {
+      "seq": 46,
+      "tMs": 26000,
+      "t": "candidate",
+      "candidate": {
+        "id": "c1",
+        "label": "v1",
+        "round": 0,
+        "parentId": null,
+        "createdBy": "INIT",
+        "reason": "First version, written from the plan",
+        "rtl": "// SAMPLE RTL for UI development\n// v1, attempt 1: 4-lane 8-bit MAC, 16 cycles, 16-bit accumulator.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [15:0] acc,\n  output reg         done\n);\n  reg [4:0] cycle;\n  reg       busy;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [15:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc   <= 16'd0;\n      cycle <= 5'd0;\n      busy  <= 1'b0;\n      done  <= 1'b0;\n    end else if (start && !busy) begin\n      acc   <= 16'd0;\n      cycle <= 5'd0;\n      busy  <= 1'b1;\n      done  <= 1'b0;\n    end else if (busy) begin\n      acc   <= acc + sum;\n      cycle <= cycle + 5'd1;\n      if (cycle == 5'd15) begin\n        busy <= 1'b0;\n        done <= 1'b1;\n      end\n    end\n  end\nendmodule",
+        "attempts": [],
+        "verification": null,
+        "ppa": null,
+        "fitness": null,
+        "status": "linting",
+        "fixCount": 0,
+        "isBaseline": false,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 47,
+      "tMs": 27000,
+      "t": "stage",
+      "stage": "lint",
+      "status": "done"
+    },
+    {
+      "seq": 48,
+      "tMs": 28000,
+      "t": "stage",
+      "stage": "sim",
+      "status": "active"
+    },
+    {
+      "seq": 49,
+      "tMs": 28000,
+      "t": "candidate",
+      "candidate": {
+        "id": "c1",
+        "label": "v1",
+        "round": 0,
+        "parentId": null,
+        "createdBy": "INIT",
+        "reason": "First version, written from the plan",
+        "rtl": "// SAMPLE RTL for UI development\n// v1, attempt 1: 4-lane 8-bit MAC, 16 cycles, 16-bit accumulator.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [15:0] acc,\n  output reg         done\n);\n  reg [4:0] cycle;\n  reg       busy;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [15:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc   <= 16'd0;\n      cycle <= 5'd0;\n      busy  <= 1'b0;\n      done  <= 1'b0;\n    end else if (start && !busy) begin\n      acc   <= 16'd0;\n      cycle <= 5'd0;\n      busy  <= 1'b1;\n      done  <= 1'b0;\n    end else if (busy) begin\n      acc   <= acc + sum;\n      cycle <= cycle + 5'd1;\n      if (cycle == 5'd15) begin\n        busy <= 1'b0;\n        done <= 1'b1;\n      end\n    end\n  end\nendmodule",
+        "attempts": [],
+        "verification": null,
+        "ppa": null,
+        "fitness": null,
+        "status": "simulating",
+        "fixCount": 0,
+        "isBaseline": false,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 50,
+      "tMs": 28000,
+      "t": "caption",
+      "text": "Simulating 16 tests against the golden model.",
+      "chapter": "Build and fix"
+    },
+    {
+      "seq": 51,
+      "tMs": 29000,
+      "t": "candidate",
+      "candidate": {
+        "id": "c1",
+        "label": "v1",
+        "round": 0,
+        "parentId": null,
+        "createdBy": "INIT",
+        "reason": "First version, written from the plan",
+        "rtl": "// SAMPLE RTL for UI development\n// v1, attempt 1: 4-lane 8-bit MAC, 16 cycles, 16-bit accumulator.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [15:0] acc,\n  output reg         done\n);\n  reg [4:0] cycle;\n  reg       busy;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [15:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc   <= 16'd0;\n      cycle <= 5'd0;\n      busy  <= 1'b0;\n      done  <= 1'b0;\n    end else if (start && !busy) begin\n      acc   <= 16'd0;\n      cycle <= 5'd0;\n      busy  <= 1'b1;\n      done  <= 1'b0;\n    end else if (busy) begin\n      acc   <= acc + sum;\n      cycle <= cycle + 5'd1;\n      if (cycle == 5'd15) begin\n        busy <= 1'b0;\n        done <= 1'b1;\n      end\n    end\n  end\nendmodule",
+        "attempts": [
+          {
+            "n": 1,
+            "by": "INIT",
+            "reason": "First version, written from the plan",
+            "rtl": "// SAMPLE RTL for UI development\n// v1, attempt 1: 4-lane 8-bit MAC, 16 cycles, 16-bit accumulator.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [15:0] acc,\n  output reg         done\n);\n  reg [4:0] cycle;\n  reg       busy;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [15:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc   <= 16'd0;\n      cycle <= 5'd0;\n      busy  <= 1'b0;\n      done  <= 1'b0;\n    end else if (start && !busy) begin\n      acc   <= 16'd0;\n      cycle <= 5'd0;\n      busy  <= 1'b1;\n      done  <= 1'b0;\n    end else if (busy) begin\n      acc   <= acc + sum;\n      cycle <= cycle + 5'd1;\n      if (cycle == 5'd15) begin\n        busy <= 1'b0;\n        done <= 1'b1;\n      end\n    end\n  end\nendmodule",
+            "verification": {
+              "lint": "pass",
+              "lintLog": "Verilator: 0 warnings",
+              "passed": 13,
+              "total": 16,
+              "failures": [
+                {
+                  "name": "acc_16_cycles_max",
+                  "inputs": "a=[255,255,255,255] b=[255,255,255,255] x16",
+                  "expected": "0x3F8040",
+                  "got": "0x008040",
+                  "pass": false,
+                  "cycle": 16
+                },
+                {
+                  "name": "acc_random_seed_7",
+                  "inputs": "random pairs, seed 7, x16",
+                  "expected": "0x01A2B3",
+                  "got": "0x00A2B3",
+                  "pass": false,
+                  "cycle": 16
+                },
+                {
+                  "name": "acc_carry_boundary",
+                  "inputs": "a=[64,0,0,0] b=[64,0,0,0] x16",
+                  "expected": "0x010000",
+                  "got": "0x000000",
+                  "pass": false,
+                  "cycle": 16
+                }
+              ],
+              "diagnosis": "The accumulator is 16 bits wide, so sums above 65,535 wrap. Sixteen cycles of four 8-bit products need 22 bits.",
+              "tool": "iverilog 12 + cocotb",
+              "durationMs": 2140
+            }
+          }
+        ],
+        "verification": {
+          "lint": "pass",
+          "lintLog": "Verilator: 0 warnings",
+          "passed": 13,
+          "total": 16,
+          "failures": [
+            {
+              "name": "acc_16_cycles_max",
+              "inputs": "a=[255,255,255,255] b=[255,255,255,255] x16",
+              "expected": "0x3F8040",
+              "got": "0x008040",
+              "pass": false,
+              "cycle": 16
+            },
+            {
+              "name": "acc_random_seed_7",
+              "inputs": "random pairs, seed 7, x16",
+              "expected": "0x01A2B3",
+              "got": "0x00A2B3",
+              "pass": false,
+              "cycle": 16
+            },
+            {
+              "name": "acc_carry_boundary",
+              "inputs": "a=[64,0,0,0] b=[64,0,0,0] x16",
+              "expected": "0x010000",
+              "got": "0x000000",
+              "pass": false,
+              "cycle": 16
+            }
+          ],
+          "diagnosis": "The accumulator is 16 bits wide, so sums above 65,535 wrap. Sixteen cycles of four 8-bit products need 22 bits.",
+          "tool": "iverilog 12 + cocotb",
+          "durationMs": 2140
+        },
+        "ppa": null,
+        "fitness": null,
+        "status": "fail",
+        "fixCount": 0,
+        "isBaseline": false,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 52,
+      "tMs": 29000,
+      "t": "stage",
+      "stage": "sim",
+      "status": "failed"
+    },
+    {
+      "seq": 53,
+      "tMs": 29000,
+      "t": "caption",
+      "text": "v1 failed 3 of 16 tests. Reading the mismatches.",
+      "chapter": "Build and fix"
+    },
+    {
+      "seq": 54,
+      "tMs": 31000,
+      "t": "stage",
+      "stage": "fix",
+      "status": "active"
+    },
+    {
+      "seq": 55,
+      "tMs": 31000,
+      "t": "candidate",
+      "candidate": {
+        "id": "c1",
+        "label": "v1",
+        "round": 0,
+        "parentId": null,
+        "createdBy": "INIT",
+        "reason": "First version, written from the plan",
+        "rtl": "// SAMPLE RTL for UI development\n// v1, attempt 1: 4-lane 8-bit MAC, 16 cycles, 16-bit accumulator.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [15:0] acc,\n  output reg         done\n);\n  reg [4:0] cycle;\n  reg       busy;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [15:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc   <= 16'd0;\n      cycle <= 5'd0;\n      busy  <= 1'b0;\n      done  <= 1'b0;\n    end else if (start && !busy) begin\n      acc   <= 16'd0;\n      cycle <= 5'd0;\n      busy  <= 1'b1;\n      done  <= 1'b0;\n    end else if (busy) begin\n      acc   <= acc + sum;\n      cycle <= cycle + 5'd1;\n      if (cycle == 5'd15) begin\n        busy <= 1'b0;\n        done <= 1'b1;\n      end\n    end\n  end\nendmodule",
+        "attempts": [
+          {
+            "n": 1,
+            "by": "INIT",
+            "reason": "First version, written from the plan",
+            "rtl": "// SAMPLE RTL for UI development\n// v1, attempt 1: 4-lane 8-bit MAC, 16 cycles, 16-bit accumulator.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [15:0] acc,\n  output reg         done\n);\n  reg [4:0] cycle;\n  reg       busy;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [15:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc   <= 16'd0;\n      cycle <= 5'd0;\n      busy  <= 1'b0;\n      done  <= 1'b0;\n    end else if (start && !busy) begin\n      acc   <= 16'd0;\n      cycle <= 5'd0;\n      busy  <= 1'b1;\n      done  <= 1'b0;\n    end else if (busy) begin\n      acc   <= acc + sum;\n      cycle <= cycle + 5'd1;\n      if (cycle == 5'd15) begin\n        busy <= 1'b0;\n        done <= 1'b1;\n      end\n    end\n  end\nendmodule",
+            "verification": {
+              "lint": "pass",
+              "lintLog": "Verilator: 0 warnings",
+              "passed": 13,
+              "total": 16,
+              "failures": [
+                {
+                  "name": "acc_16_cycles_max",
+                  "inputs": "a=[255,255,255,255] b=[255,255,255,255] x16",
+                  "expected": "0x3F8040",
+                  "got": "0x008040",
+                  "pass": false,
+                  "cycle": 16
+                },
+                {
+                  "name": "acc_random_seed_7",
+                  "inputs": "random pairs, seed 7, x16",
+                  "expected": "0x01A2B3",
+                  "got": "0x00A2B3",
+                  "pass": false,
+                  "cycle": 16
+                },
+                {
+                  "name": "acc_carry_boundary",
+                  "inputs": "a=[64,0,0,0] b=[64,0,0,0] x16",
+                  "expected": "0x010000",
+                  "got": "0x000000",
+                  "pass": false,
+                  "cycle": 16
+                }
+              ],
+              "diagnosis": "The accumulator is 16 bits wide, so sums above 65,535 wrap. Sixteen cycles of four 8-bit products need 22 bits.",
+              "tool": "iverilog 12 + cocotb",
+              "durationMs": 2140
+            }
+          }
+        ],
+        "verification": {
+          "lint": "pass",
+          "lintLog": "Verilator: 0 warnings",
+          "passed": 13,
+          "total": 16,
+          "failures": [
+            {
+              "name": "acc_16_cycles_max",
+              "inputs": "a=[255,255,255,255] b=[255,255,255,255] x16",
+              "expected": "0x3F8040",
+              "got": "0x008040",
+              "pass": false,
+              "cycle": 16
+            },
+            {
+              "name": "acc_random_seed_7",
+              "inputs": "random pairs, seed 7, x16",
+              "expected": "0x01A2B3",
+              "got": "0x00A2B3",
+              "pass": false,
+              "cycle": 16
+            },
+            {
+              "name": "acc_carry_boundary",
+              "inputs": "a=[64,0,0,0] b=[64,0,0,0] x16",
+              "expected": "0x010000",
+              "got": "0x000000",
+              "pass": false,
+              "cycle": 16
+            }
+          ],
+          "diagnosis": "The accumulator is 16 bits wide, so sums above 65,535 wrap. Sixteen cycles of four 8-bit products need 22 bits.",
+          "tool": "iverilog 12 + cocotb",
+          "durationMs": 2140
+        },
+        "ppa": null,
+        "fitness": null,
+        "status": "fixing",
+        "fixCount": 0,
+        "isBaseline": false,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 56,
+      "tMs": 31000,
+      "t": "caption",
+      "text": "Diagnosis: the accumulator is 16 bits and wraps. Widening it to 22 bits.",
+      "chapter": "Build and fix"
+    },
+    {
+      "seq": 57,
+      "tMs": 34000,
+      "t": "stage",
+      "stage": "sim",
+      "status": "active"
+    },
+    {
+      "seq": 58,
+      "tMs": 34000,
+      "t": "candidate",
+      "candidate": {
+        "id": "c1",
+        "label": "v1",
+        "round": 0,
+        "parentId": null,
+        "createdBy": "INIT",
+        "reason": "First version, written from the plan",
+        "rtl": "// SAMPLE RTL for UI development\n// v1, attempt 2: accumulator widened from 16 to 22 bits so sums above 65,535 do not wrap.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0] cycle;\n  reg       busy;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [17:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc   <= 22'd0;\n      cycle <= 5'd0;\n      busy  <= 1'b0;\n      done  <= 1'b0;\n    end else if (start && !busy) begin\n      acc   <= 22'd0;\n      cycle <= 5'd0;\n      busy  <= 1'b1;\n      done  <= 1'b0;\n    end else if (busy) begin\n      acc   <= acc + sum;\n      cycle <= cycle + 5'd1;\n      if (cycle == 5'd15) begin\n        busy <= 1'b0;\n        done <= 1'b1;\n      end\n    end\n  end\nendmodule",
+        "attempts": [
+          {
+            "n": 1,
+            "by": "INIT",
+            "reason": "First version, written from the plan",
+            "rtl": "// SAMPLE RTL for UI development\n// v1, attempt 1: 4-lane 8-bit MAC, 16 cycles, 16-bit accumulator.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [15:0] acc,\n  output reg         done\n);\n  reg [4:0] cycle;\n  reg       busy;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [15:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc   <= 16'd0;\n      cycle <= 5'd0;\n      busy  <= 1'b0;\n      done  <= 1'b0;\n    end else if (start && !busy) begin\n      acc   <= 16'd0;\n      cycle <= 5'd0;\n      busy  <= 1'b1;\n      done  <= 1'b0;\n    end else if (busy) begin\n      acc   <= acc + sum;\n      cycle <= cycle + 5'd1;\n      if (cycle == 5'd15) begin\n        busy <= 1'b0;\n        done <= 1'b1;\n      end\n    end\n  end\nendmodule",
+            "verification": {
+              "lint": "pass",
+              "lintLog": "Verilator: 0 warnings",
+              "passed": 13,
+              "total": 16,
+              "failures": [
+                {
+                  "name": "acc_16_cycles_max",
+                  "inputs": "a=[255,255,255,255] b=[255,255,255,255] x16",
+                  "expected": "0x3F8040",
+                  "got": "0x008040",
+                  "pass": false,
+                  "cycle": 16
+                },
+                {
+                  "name": "acc_random_seed_7",
+                  "inputs": "random pairs, seed 7, x16",
+                  "expected": "0x01A2B3",
+                  "got": "0x00A2B3",
+                  "pass": false,
+                  "cycle": 16
+                },
+                {
+                  "name": "acc_carry_boundary",
+                  "inputs": "a=[64,0,0,0] b=[64,0,0,0] x16",
+                  "expected": "0x010000",
+                  "got": "0x000000",
+                  "pass": false,
+                  "cycle": 16
+                }
+              ],
+              "diagnosis": "The accumulator is 16 bits wide, so sums above 65,535 wrap. Sixteen cycles of four 8-bit products need 22 bits.",
+              "tool": "iverilog 12 + cocotb",
+              "durationMs": 2140
+            }
+          }
+        ],
+        "verification": {
+          "lint": "pass",
+          "lintLog": "Verilator: 0 warnings",
+          "passed": 13,
+          "total": 16,
+          "failures": [
+            {
+              "name": "acc_16_cycles_max",
+              "inputs": "a=[255,255,255,255] b=[255,255,255,255] x16",
+              "expected": "0x3F8040",
+              "got": "0x008040",
+              "pass": false,
+              "cycle": 16
+            },
+            {
+              "name": "acc_random_seed_7",
+              "inputs": "random pairs, seed 7, x16",
+              "expected": "0x01A2B3",
+              "got": "0x00A2B3",
+              "pass": false,
+              "cycle": 16
+            },
+            {
+              "name": "acc_carry_boundary",
+              "inputs": "a=[64,0,0,0] b=[64,0,0,0] x16",
+              "expected": "0x010000",
+              "got": "0x000000",
+              "pass": false,
+              "cycle": 16
+            }
+          ],
+          "diagnosis": "The accumulator is 16 bits wide, so sums above 65,535 wrap. Sixteen cycles of four 8-bit products need 22 bits.",
+          "tool": "iverilog 12 + cocotb",
+          "durationMs": 2140
+        },
+        "ppa": null,
+        "fitness": null,
+        "status": "simulating",
+        "fixCount": 0,
+        "isBaseline": false,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 59,
+      "tMs": 36000,
+      "t": "candidate",
+      "candidate": {
+        "id": "c1",
+        "label": "v1",
+        "round": 0,
+        "parentId": null,
+        "createdBy": "INIT",
+        "reason": "First version, written from the plan",
+        "rtl": "// SAMPLE RTL for UI development\n// v1, attempt 2: accumulator widened from 16 to 22 bits so sums above 65,535 do not wrap.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0] cycle;\n  reg       busy;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [17:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc   <= 22'd0;\n      cycle <= 5'd0;\n      busy  <= 1'b0;\n      done  <= 1'b0;\n    end else if (start && !busy) begin\n      acc   <= 22'd0;\n      cycle <= 5'd0;\n      busy  <= 1'b1;\n      done  <= 1'b0;\n    end else if (busy) begin\n      acc   <= acc + sum;\n      cycle <= cycle + 5'd1;\n      if (cycle == 5'd15) begin\n        busy <= 1'b0;\n        done <= 1'b1;\n      end\n    end\n  end\nendmodule",
+        "attempts": [
+          {
+            "n": 1,
+            "by": "INIT",
+            "reason": "First version, written from the plan",
+            "rtl": "// SAMPLE RTL for UI development\n// v1, attempt 1: 4-lane 8-bit MAC, 16 cycles, 16-bit accumulator.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [15:0] acc,\n  output reg         done\n);\n  reg [4:0] cycle;\n  reg       busy;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [15:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc   <= 16'd0;\n      cycle <= 5'd0;\n      busy  <= 1'b0;\n      done  <= 1'b0;\n    end else if (start && !busy) begin\n      acc   <= 16'd0;\n      cycle <= 5'd0;\n      busy  <= 1'b1;\n      done  <= 1'b0;\n    end else if (busy) begin\n      acc   <= acc + sum;\n      cycle <= cycle + 5'd1;\n      if (cycle == 5'd15) begin\n        busy <= 1'b0;\n        done <= 1'b1;\n      end\n    end\n  end\nendmodule",
+            "verification": {
+              "lint": "pass",
+              "lintLog": "Verilator: 0 warnings",
+              "passed": 13,
+              "total": 16,
+              "failures": [
+                {
+                  "name": "acc_16_cycles_max",
+                  "inputs": "a=[255,255,255,255] b=[255,255,255,255] x16",
+                  "expected": "0x3F8040",
+                  "got": "0x008040",
+                  "pass": false,
+                  "cycle": 16
+                },
+                {
+                  "name": "acc_random_seed_7",
+                  "inputs": "random pairs, seed 7, x16",
+                  "expected": "0x01A2B3",
+                  "got": "0x00A2B3",
+                  "pass": false,
+                  "cycle": 16
+                },
+                {
+                  "name": "acc_carry_boundary",
+                  "inputs": "a=[64,0,0,0] b=[64,0,0,0] x16",
+                  "expected": "0x010000",
+                  "got": "0x000000",
+                  "pass": false,
+                  "cycle": 16
+                }
+              ],
+              "diagnosis": "The accumulator is 16 bits wide, so sums above 65,535 wrap. Sixteen cycles of four 8-bit products need 22 bits.",
+              "tool": "iverilog 12 + cocotb",
+              "durationMs": 2140
+            }
+          },
+          {
+            "n": 2,
+            "by": "FIX",
+            "reason": "Widened the accumulator from 16 to 22 bits",
+            "rtl": "// SAMPLE RTL for UI development\n// v1, attempt 2: accumulator widened from 16 to 22 bits so sums above 65,535 do not wrap.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0] cycle;\n  reg       busy;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [17:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc   <= 22'd0;\n      cycle <= 5'd0;\n      busy  <= 1'b0;\n      done  <= 1'b0;\n    end else if (start && !busy) begin\n      acc   <= 22'd0;\n      cycle <= 5'd0;\n      busy  <= 1'b1;\n      done  <= 1'b0;\n    end else if (busy) begin\n      acc   <= acc + sum;\n      cycle <= cycle + 5'd1;\n      if (cycle == 5'd15) begin\n        busy <= 1'b0;\n        done <= 1'b1;\n      end\n    end\n  end\nendmodule",
+            "verification": {
+              "lint": "pass",
+              "lintLog": "Verilator: 0 warnings",
+              "passed": 16,
+              "total": 16,
+              "failures": [],
+              "tool": "iverilog 12 + cocotb",
+              "durationMs": 2210
+            }
+          }
+        ],
+        "verification": {
+          "lint": "pass",
+          "lintLog": "Verilator: 0 warnings",
+          "passed": 16,
+          "total": 16,
+          "failures": [],
+          "tool": "iverilog 12 + cocotb",
+          "durationMs": 2210
+        },
+        "ppa": null,
+        "fitness": null,
+        "status": "pass",
+        "fixCount": 1,
+        "isBaseline": true,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 60,
+      "tMs": 36000,
+      "t": "stage",
+      "stage": "sim",
+      "status": "done"
+    },
+    {
+      "seq": 61,
+      "tMs": 36000,
+      "t": "stage",
+      "stage": "fix",
+      "status": "done",
+      "detail": "1 fix"
+    },
+    {
+      "seq": 62,
+      "tMs": 36000,
+      "t": "caption",
+      "text": "v1 passes 16 of 16. This is the baseline.",
+      "chapter": "Build and fix"
+    },
+    {
+      "seq": 63,
+      "tMs": 37000,
+      "t": "stage",
+      "stage": "synth",
+      "status": "active"
+    },
+    {
+      "seq": 64,
+      "tMs": 37000,
+      "t": "candidate",
+      "candidate": {
+        "id": "c1",
+        "label": "v1",
+        "round": 0,
+        "parentId": null,
+        "createdBy": "INIT",
+        "reason": "First version, written from the plan",
+        "rtl": "// SAMPLE RTL for UI development\n// v1, attempt 2: accumulator widened from 16 to 22 bits so sums above 65,535 do not wrap.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0] cycle;\n  reg       busy;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [17:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc   <= 22'd0;\n      cycle <= 5'd0;\n      busy  <= 1'b0;\n      done  <= 1'b0;\n    end else if (start && !busy) begin\n      acc   <= 22'd0;\n      cycle <= 5'd0;\n      busy  <= 1'b1;\n      done  <= 1'b0;\n    end else if (busy) begin\n      acc   <= acc + sum;\n      cycle <= cycle + 5'd1;\n      if (cycle == 5'd15) begin\n        busy <= 1'b0;\n        done <= 1'b1;\n      end\n    end\n  end\nendmodule",
+        "attempts": [
+          {
+            "n": 1,
+            "by": "INIT",
+            "reason": "First version, written from the plan",
+            "rtl": "// SAMPLE RTL for UI development\n// v1, attempt 1: 4-lane 8-bit MAC, 16 cycles, 16-bit accumulator.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [15:0] acc,\n  output reg         done\n);\n  reg [4:0] cycle;\n  reg       busy;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [15:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc   <= 16'd0;\n      cycle <= 5'd0;\n      busy  <= 1'b0;\n      done  <= 1'b0;\n    end else if (start && !busy) begin\n      acc   <= 16'd0;\n      cycle <= 5'd0;\n      busy  <= 1'b1;\n      done  <= 1'b0;\n    end else if (busy) begin\n      acc   <= acc + sum;\n      cycle <= cycle + 5'd1;\n      if (cycle == 5'd15) begin\n        busy <= 1'b0;\n        done <= 1'b1;\n      end\n    end\n  end\nendmodule",
+            "verification": {
+              "lint": "pass",
+              "lintLog": "Verilator: 0 warnings",
+              "passed": 13,
+              "total": 16,
+              "failures": [
+                {
+                  "name": "acc_16_cycles_max",
+                  "inputs": "a=[255,255,255,255] b=[255,255,255,255] x16",
+                  "expected": "0x3F8040",
+                  "got": "0x008040",
+                  "pass": false,
+                  "cycle": 16
+                },
+                {
+                  "name": "acc_random_seed_7",
+                  "inputs": "random pairs, seed 7, x16",
+                  "expected": "0x01A2B3",
+                  "got": "0x00A2B3",
+                  "pass": false,
+                  "cycle": 16
+                },
+                {
+                  "name": "acc_carry_boundary",
+                  "inputs": "a=[64,0,0,0] b=[64,0,0,0] x16",
+                  "expected": "0x010000",
+                  "got": "0x000000",
+                  "pass": false,
+                  "cycle": 16
+                }
+              ],
+              "diagnosis": "The accumulator is 16 bits wide, so sums above 65,535 wrap. Sixteen cycles of four 8-bit products need 22 bits.",
+              "tool": "iverilog 12 + cocotb",
+              "durationMs": 2140
+            }
+          },
+          {
+            "n": 2,
+            "by": "FIX",
+            "reason": "Widened the accumulator from 16 to 22 bits",
+            "rtl": "// SAMPLE RTL for UI development\n// v1, attempt 2: accumulator widened from 16 to 22 bits so sums above 65,535 do not wrap.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0] cycle;\n  reg       busy;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [17:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc   <= 22'd0;\n      cycle <= 5'd0;\n      busy  <= 1'b0;\n      done  <= 1'b0;\n    end else if (start && !busy) begin\n      acc   <= 22'd0;\n      cycle <= 5'd0;\n      busy  <= 1'b1;\n      done  <= 1'b0;\n    end else if (busy) begin\n      acc   <= acc + sum;\n      cycle <= cycle + 5'd1;\n      if (cycle == 5'd15) begin\n        busy <= 1'b0;\n        done <= 1'b1;\n      end\n    end\n  end\nendmodule",
+            "verification": {
+              "lint": "pass",
+              "lintLog": "Verilator: 0 warnings",
+              "passed": 16,
+              "total": 16,
+              "failures": [],
+              "tool": "iverilog 12 + cocotb",
+              "durationMs": 2210
+            }
+          }
+        ],
+        "verification": {
+          "lint": "pass",
+          "lintLog": "Verilator: 0 warnings",
+          "passed": 16,
+          "total": 16,
+          "failures": [],
+          "tool": "iverilog 12 + cocotb",
+          "durationMs": 2210
+        },
+        "ppa": null,
+        "fitness": null,
+        "status": "synthesizing",
+        "fixCount": 1,
+        "isBaseline": true,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 65,
+      "tMs": 40000,
+      "t": "candidate",
+      "candidate": {
+        "id": "c1",
+        "label": "v1",
+        "round": 0,
+        "parentId": null,
+        "createdBy": "INIT",
+        "reason": "First version, written from the plan",
+        "rtl": "// SAMPLE RTL for UI development\n// v1, attempt 2: accumulator widened from 16 to 22 bits so sums above 65,535 do not wrap.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0] cycle;\n  reg       busy;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [17:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc   <= 22'd0;\n      cycle <= 5'd0;\n      busy  <= 1'b0;\n      done  <= 1'b0;\n    end else if (start && !busy) begin\n      acc   <= 22'd0;\n      cycle <= 5'd0;\n      busy  <= 1'b1;\n      done  <= 1'b0;\n    end else if (busy) begin\n      acc   <= acc + sum;\n      cycle <= cycle + 5'd1;\n      if (cycle == 5'd15) begin\n        busy <= 1'b0;\n        done <= 1'b1;\n      end\n    end\n  end\nendmodule",
+        "attempts": [
+          {
+            "n": 1,
+            "by": "INIT",
+            "reason": "First version, written from the plan",
+            "rtl": "// SAMPLE RTL for UI development\n// v1, attempt 1: 4-lane 8-bit MAC, 16 cycles, 16-bit accumulator.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [15:0] acc,\n  output reg         done\n);\n  reg [4:0] cycle;\n  reg       busy;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [15:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc   <= 16'd0;\n      cycle <= 5'd0;\n      busy  <= 1'b0;\n      done  <= 1'b0;\n    end else if (start && !busy) begin\n      acc   <= 16'd0;\n      cycle <= 5'd0;\n      busy  <= 1'b1;\n      done  <= 1'b0;\n    end else if (busy) begin\n      acc   <= acc + sum;\n      cycle <= cycle + 5'd1;\n      if (cycle == 5'd15) begin\n        busy <= 1'b0;\n        done <= 1'b1;\n      end\n    end\n  end\nendmodule",
+            "verification": {
+              "lint": "pass",
+              "lintLog": "Verilator: 0 warnings",
+              "passed": 13,
+              "total": 16,
+              "failures": [
+                {
+                  "name": "acc_16_cycles_max",
+                  "inputs": "a=[255,255,255,255] b=[255,255,255,255] x16",
+                  "expected": "0x3F8040",
+                  "got": "0x008040",
+                  "pass": false,
+                  "cycle": 16
+                },
+                {
+                  "name": "acc_random_seed_7",
+                  "inputs": "random pairs, seed 7, x16",
+                  "expected": "0x01A2B3",
+                  "got": "0x00A2B3",
+                  "pass": false,
+                  "cycle": 16
+                },
+                {
+                  "name": "acc_carry_boundary",
+                  "inputs": "a=[64,0,0,0] b=[64,0,0,0] x16",
+                  "expected": "0x010000",
+                  "got": "0x000000",
+                  "pass": false,
+                  "cycle": 16
+                }
+              ],
+              "diagnosis": "The accumulator is 16 bits wide, so sums above 65,535 wrap. Sixteen cycles of four 8-bit products need 22 bits.",
+              "tool": "iverilog 12 + cocotb",
+              "durationMs": 2140
+            }
+          },
+          {
+            "n": 2,
+            "by": "FIX",
+            "reason": "Widened the accumulator from 16 to 22 bits",
+            "rtl": "// SAMPLE RTL for UI development\n// v1, attempt 2: accumulator widened from 16 to 22 bits so sums above 65,535 do not wrap.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0] cycle;\n  reg       busy;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [17:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc   <= 22'd0;\n      cycle <= 5'd0;\n      busy  <= 1'b0;\n      done  <= 1'b0;\n    end else if (start && !busy) begin\n      acc   <= 22'd0;\n      cycle <= 5'd0;\n      busy  <= 1'b1;\n      done  <= 1'b0;\n    end else if (busy) begin\n      acc   <= acc + sum;\n      cycle <= cycle + 5'd1;\n      if (cycle == 5'd15) begin\n        busy <= 1'b0;\n        done <= 1'b1;\n      end\n    end\n  end\nendmodule",
+            "verification": {
+              "lint": "pass",
+              "lintLog": "Verilator: 0 warnings",
+              "passed": 16,
+              "total": 16,
+              "failures": [],
+              "tool": "iverilog 12 + cocotb",
+              "durationMs": 2210
+            }
+          }
+        ],
+        "verification": {
+          "lint": "pass",
+          "lintLog": "Verilator: 0 warnings",
+          "passed": 16,
+          "total": 16,
+          "failures": [],
+          "tool": "iverilog 12 + cocotb",
+          "durationMs": 2210
+        },
+        "ppa": {
+          "areaUm2": 1840,
+          "cellCount": 412,
+          "clockPeriodNs": 3.2,
+          "powerMw": 1.92,
+          "tools": [
+            "Yosys",
+            "OpenSTA"
+          ],
+          "pdk": "Nangate45"
+        },
+        "fitness": {
+          "score": 0,
+          "priority": "area",
+          "weights": {
+            "area": 0.6,
+            "timing": 0.25,
+            "power": 0.15
+          },
+          "gains": {
+            "area": 0,
+            "timing": 0,
+            "power": 0
+          },
+          "baselineId": "c1"
+        },
+        "status": "measured",
+        "fixCount": 1,
+        "isBaseline": true,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 66,
+      "tMs": 40000,
+      "t": "stage",
+      "stage": "synth",
+      "status": "done"
+    },
+    {
+      "seq": 67,
+      "tMs": 40000,
+      "t": "op",
+      "by": "system",
+      "op": {
+        "op": "update_status",
+        "id": "blk-in",
+        "status": "built"
+      }
+    },
+    {
+      "seq": 68,
+      "tMs": 40000,
+      "t": "op",
+      "by": "system",
+      "op": {
+        "op": "update_status",
+        "id": "blk-mult",
+        "status": "built"
+      }
+    },
+    {
+      "seq": 69,
+      "tMs": 40000,
+      "t": "op",
+      "by": "system",
+      "op": {
+        "op": "update_status",
+        "id": "blk-add",
+        "status": "built"
+      }
+    },
+    {
+      "seq": 70,
+      "tMs": 40000,
+      "t": "op",
+      "by": "system",
+      "op": {
+        "op": "update_status",
+        "id": "blk-acc",
+        "status": "built"
+      }
+    },
+    {
+      "seq": 71,
+      "tMs": 40000,
+      "t": "caption",
+      "text": "v1 measured: 1,840 µm², 3.20 ns, 1.92 mW. Everything after is compared to this.",
+      "chapter": "Build and fix"
+    },
+    {
+      "seq": 72,
+      "tMs": 44000,
+      "t": "stage",
+      "stage": "evolve",
+      "status": "active",
+      "detail": "R1 of 2",
+      "round": 1
+    },
+    {
+      "seq": 73,
+      "tMs": 44000,
+      "t": "round",
+      "round": 1,
+      "parents": [
+        "c1"
+      ]
+    },
+    {
+      "seq": 74,
+      "tMs": 44000,
+      "t": "caption",
+      "text": "Round 1: three new versions from v1.",
+      "chapter": "Round 1"
+    },
+    {
+      "seq": 75,
+      "tMs": 45000,
+      "t": "op",
+      "by": "ai",
+      "op": {
+        "op": "add_node",
+        "id": "c2",
+        "kind": "candidate",
+        "zone": "tree",
+        "label": "v2",
+        "refId": "c2"
+      }
+    },
+    {
+      "seq": 76,
+      "tMs": 45000,
+      "t": "op",
+      "by": "ai",
+      "op": {
+        "op": "connect",
+        "source": "c1",
+        "target": "c2",
+        "kind": "lineage"
+      }
+    },
+    {
+      "seq": 77,
+      "tMs": 45000,
+      "t": "candidate",
+      "candidate": {
+        "id": "c2",
+        "label": "v2",
+        "round": 1,
+        "parentId": "c1",
+        "createdBy": "SIMPLIFY",
+        "reason": "Removed resets from datapath registers",
+        "rtl": "",
+        "attempts": [],
+        "verification": null,
+        "ppa": null,
+        "fitness": null,
+        "status": "drafting",
+        "fixCount": 0,
+        "isBaseline": false,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 78,
+      "tMs": 46000,
+      "t": "op",
+      "by": "ai",
+      "op": {
+        "op": "add_node",
+        "id": "c3",
+        "kind": "candidate",
+        "zone": "tree",
+        "label": "v3",
+        "refId": "c3"
+      }
+    },
+    {
+      "seq": 79,
+      "tMs": 46000,
+      "t": "op",
+      "by": "ai",
+      "op": {
+        "op": "connect",
+        "source": "c1",
+        "target": "c3",
+        "kind": "lineage"
+      }
+    },
+    {
+      "seq": 80,
+      "tMs": 46000,
+      "t": "candidate",
+      "candidate": {
+        "id": "c3",
+        "label": "v3",
+        "round": 1,
+        "parentId": "c1",
+        "createdBy": "OPTIMIZE",
+        "reason": "Merged lane adders into one balanced adder tree",
+        "rtl": "",
+        "attempts": [],
+        "verification": null,
+        "ppa": null,
+        "fitness": null,
+        "status": "drafting",
+        "fixCount": 0,
+        "isBaseline": false,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 81,
+      "tMs": 47000,
+      "t": "op",
+      "by": "ai",
+      "op": {
+        "op": "add_node",
+        "id": "c4",
+        "kind": "candidate",
+        "zone": "tree",
+        "label": "v4",
+        "refId": "c4"
+      }
+    },
+    {
+      "seq": 82,
+      "tMs": 47000,
+      "t": "op",
+      "by": "ai",
+      "op": {
+        "op": "connect",
+        "source": "c1",
+        "target": "c4",
+        "kind": "lineage"
+      }
+    },
+    {
+      "seq": 83,
+      "tMs": 47000,
+      "t": "candidate",
+      "candidate": {
+        "id": "c4",
+        "label": "v4",
+        "round": 1,
+        "parentId": "c1",
+        "createdBy": "EXPLORE",
+        "reason": "Tried carry-save accumulation",
+        "rtl": "",
+        "attempts": [],
+        "verification": null,
+        "ppa": null,
+        "fitness": null,
+        "status": "drafting",
+        "fixCount": 0,
+        "isBaseline": false,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 84,
+      "tMs": 48000,
+      "t": "candidate",
+      "candidate": {
+        "id": "c2",
+        "label": "v2",
+        "round": 1,
+        "parentId": "c1",
+        "createdBy": "SIMPLIFY",
+        "reason": "Removed resets from datapath registers",
+        "rtl": "// SAMPLE RTL for UI development\n// v2: SIMPLIFY. Datapath registers have no reset; only control state is reset.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0] cycle;\n  reg       busy;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [17:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      cycle <= 5'd0;\n      busy  <= 1'b0;\n      done  <= 1'b0;\n    end else if (start && !busy) begin\n      cycle <= 5'd0;\n      busy  <= 1'b1;\n      done  <= 1'b0;\n    end else if (busy) begin\n      cycle <= cycle + 5'd1;\n      if (cycle == 5'd15) begin\n        busy <= 1'b0;\n        done <= 1'b1;\n      end\n    end\n  end\n  always @(posedge clk) begin\n    if (start && !busy) acc <= 22'd0;\n    else if (busy)      acc <= acc + sum;\n  end\nendmodule",
+        "attempts": [],
+        "verification": null,
+        "ppa": null,
+        "fitness": null,
+        "status": "simulating",
+        "fixCount": 0,
+        "isBaseline": false,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 85,
+      "tMs": 48000,
+      "t": "candidate",
+      "candidate": {
+        "id": "c3",
+        "label": "v3",
+        "round": 1,
+        "parentId": "c1",
+        "createdBy": "OPTIMIZE",
+        "reason": "Merged lane adders into one balanced adder tree",
+        "rtl": "// SAMPLE RTL for UI development\n// v3, attempt 1: OPTIMIZE. One balanced adder tree, with a register after the tree.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0]  cycle;\n  reg        busy;\n  reg [17:0] sum_q;              // pipeline register after the adder tree\n  reg        busy_q;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [16:0] s01 = p0 + p1;\n  wire [16:0] s23 = p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc <= 22'd0; cycle <= 5'd0; busy <= 1'b0; busy_q <= 1'b0; sum_q <= 18'd0; done <= 1'b0;\n    end else begin\n      sum_q  <= s01 + s23;\n      busy_q <= busy;\n      if (start && !busy) begin\n        acc <= 22'd0; cycle <= 5'd0; busy <= 1'b1; done <= 1'b0;\n      end else if (busy) begin\n        cycle <= cycle + 5'd1;\n        if (cycle == 5'd15) busy <= 1'b0;\n      end\n      if (busy_q) acc <= acc + sum_q;\n      if (busy_q && !busy) done <= 1'b1;   // one cycle late: waits for the pipeline to drain\n    end\n  end\nendmodule",
+        "attempts": [],
+        "verification": null,
+        "ppa": null,
+        "fitness": null,
+        "status": "simulating",
+        "fixCount": 0,
+        "isBaseline": false,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 86,
+      "tMs": 48000,
+      "t": "candidate",
+      "candidate": {
+        "id": "c4",
+        "label": "v4",
+        "round": 1,
+        "parentId": "c1",
+        "createdBy": "EXPLORE",
+        "reason": "Tried carry-save accumulation",
+        "rtl": "// SAMPLE RTL for UI development\n// v4: EXPLORE. Carry-save accumulation: faster clock, one final add, more registers.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output wire [21:0] acc,\n  output reg         done\n);\n  reg [4:0]  cycle;\n  reg        busy;\n  reg [21:0] acc_s, acc_c;       // carry-save pair\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [21:0] x = {6'd0, p0};\n  wire [21:0] y = {6'd0, p1} + {6'd0, p2} + {6'd0, p3};\n  wire [21:0] t_s = acc_s ^ acc_c ^ x;\n  wire [21:0] t_c = ((acc_s & acc_c) | (acc_s & x) | (acc_c & x)) << 1;\n  assign acc = acc_s + acc_c;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc_s <= 22'd0; acc_c <= 22'd0; cycle <= 5'd0; busy <= 1'b0; done <= 1'b0;\n    end else if (start && !busy) begin\n      acc_s <= 22'd0; acc_c <= 22'd0; cycle <= 5'd0; busy <= 1'b1; done <= 1'b0;\n    end else if (busy) begin\n      acc_s <= t_s + y;\n      acc_c <= t_c;\n      cycle <= cycle + 5'd1;\n      if (cycle == 5'd15) begin busy <= 1'b0; done <= 1'b1; end\n    end\n  end\nendmodule",
+        "attempts": [],
+        "verification": null,
+        "ppa": null,
+        "fitness": null,
+        "status": "simulating",
+        "fixCount": 0,
+        "isBaseline": false,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 87,
+      "tMs": 49000,
+      "t": "candidate",
+      "candidate": {
+        "id": "c2",
+        "label": "v2",
+        "round": 1,
+        "parentId": "c1",
+        "createdBy": "SIMPLIFY",
+        "reason": "Removed resets from datapath registers",
+        "rtl": "// SAMPLE RTL for UI development\n// v2: SIMPLIFY. Datapath registers have no reset; only control state is reset.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0] cycle;\n  reg       busy;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [17:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      cycle <= 5'd0;\n      busy  <= 1'b0;\n      done  <= 1'b0;\n    end else if (start && !busy) begin\n      cycle <= 5'd0;\n      busy  <= 1'b1;\n      done  <= 1'b0;\n    end else if (busy) begin\n      cycle <= cycle + 5'd1;\n      if (cycle == 5'd15) begin\n        busy <= 1'b0;\n        done <= 1'b1;\n      end\n    end\n  end\n  always @(posedge clk) begin\n    if (start && !busy) acc <= 22'd0;\n    else if (busy)      acc <= acc + sum;\n  end\nendmodule",
+        "attempts": [
+          {
+            "n": 1,
+            "by": "SIMPLIFY",
+            "reason": "Removed resets from datapath registers",
+            "rtl": "// SAMPLE RTL for UI development\n// v2: SIMPLIFY. Datapath registers have no reset; only control state is reset.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0] cycle;\n  reg       busy;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [17:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      cycle <= 5'd0;\n      busy  <= 1'b0;\n      done  <= 1'b0;\n    end else if (start && !busy) begin\n      cycle <= 5'd0;\n      busy  <= 1'b1;\n      done  <= 1'b0;\n    end else if (busy) begin\n      cycle <= cycle + 5'd1;\n      if (cycle == 5'd15) begin\n        busy <= 1'b0;\n        done <= 1'b1;\n      end\n    end\n  end\n  always @(posedge clk) begin\n    if (start && !busy) acc <= 22'd0;\n    else if (busy)      acc <= acc + sum;\n  end\nendmodule",
+            "verification": {
+              "lint": "pass",
+              "lintLog": "Verilator: 0 warnings",
+              "passed": 16,
+              "total": 16,
+              "failures": [],
+              "tool": "iverilog 12 + cocotb",
+              "durationMs": 2190
+            }
+          }
+        ],
+        "verification": {
+          "lint": "pass",
+          "lintLog": "Verilator: 0 warnings",
+          "passed": 16,
+          "total": 16,
+          "failures": [],
+          "tool": "iverilog 12 + cocotb",
+          "durationMs": 2190
+        },
+        "ppa": null,
+        "fitness": null,
+        "status": "pass",
+        "fixCount": 0,
+        "isBaseline": false,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 88,
+      "tMs": 49000,
+      "t": "candidate",
+      "candidate": {
+        "id": "c4",
+        "label": "v4",
+        "round": 1,
+        "parentId": "c1",
+        "createdBy": "EXPLORE",
+        "reason": "Tried carry-save accumulation",
+        "rtl": "// SAMPLE RTL for UI development\n// v4: EXPLORE. Carry-save accumulation: faster clock, one final add, more registers.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output wire [21:0] acc,\n  output reg         done\n);\n  reg [4:0]  cycle;\n  reg        busy;\n  reg [21:0] acc_s, acc_c;       // carry-save pair\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [21:0] x = {6'd0, p0};\n  wire [21:0] y = {6'd0, p1} + {6'd0, p2} + {6'd0, p3};\n  wire [21:0] t_s = acc_s ^ acc_c ^ x;\n  wire [21:0] t_c = ((acc_s & acc_c) | (acc_s & x) | (acc_c & x)) << 1;\n  assign acc = acc_s + acc_c;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc_s <= 22'd0; acc_c <= 22'd0; cycle <= 5'd0; busy <= 1'b0; done <= 1'b0;\n    end else if (start && !busy) begin\n      acc_s <= 22'd0; acc_c <= 22'd0; cycle <= 5'd0; busy <= 1'b1; done <= 1'b0;\n    end else if (busy) begin\n      acc_s <= t_s + y;\n      acc_c <= t_c;\n      cycle <= cycle + 5'd1;\n      if (cycle == 5'd15) begin busy <= 1'b0; done <= 1'b1; end\n    end\n  end\nendmodule",
+        "attempts": [
+          {
+            "n": 1,
+            "by": "EXPLORE",
+            "reason": "Tried carry-save accumulation",
+            "rtl": "// SAMPLE RTL for UI development\n// v4: EXPLORE. Carry-save accumulation: faster clock, one final add, more registers.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output wire [21:0] acc,\n  output reg         done\n);\n  reg [4:0]  cycle;\n  reg        busy;\n  reg [21:0] acc_s, acc_c;       // carry-save pair\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [21:0] x = {6'd0, p0};\n  wire [21:0] y = {6'd0, p1} + {6'd0, p2} + {6'd0, p3};\n  wire [21:0] t_s = acc_s ^ acc_c ^ x;\n  wire [21:0] t_c = ((acc_s & acc_c) | (acc_s & x) | (acc_c & x)) << 1;\n  assign acc = acc_s + acc_c;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc_s <= 22'd0; acc_c <= 22'd0; cycle <= 5'd0; busy <= 1'b0; done <= 1'b0;\n    end else if (start && !busy) begin\n      acc_s <= 22'd0; acc_c <= 22'd0; cycle <= 5'd0; busy <= 1'b1; done <= 1'b0;\n    end else if (busy) begin\n      acc_s <= t_s + y;\n      acc_c <= t_c;\n      cycle <= cycle + 5'd1;\n      if (cycle == 5'd15) begin busy <= 1'b0; done <= 1'b1; end\n    end\n  end\nendmodule",
+            "verification": {
+              "lint": "pass",
+              "lintLog": "Verilator: 0 warnings",
+              "passed": 16,
+              "total": 16,
+              "failures": [],
+              "tool": "iverilog 12 + cocotb",
+              "durationMs": 2300
+            }
+          }
+        ],
+        "verification": {
+          "lint": "pass",
+          "lintLog": "Verilator: 0 warnings",
+          "passed": 16,
+          "total": 16,
+          "failures": [],
+          "tool": "iverilog 12 + cocotb",
+          "durationMs": 2300
+        },
+        "ppa": null,
+        "fitness": null,
+        "status": "pass",
+        "fixCount": 0,
+        "isBaseline": false,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 89,
+      "tMs": 49000,
+      "t": "candidate",
+      "candidate": {
+        "id": "c3",
+        "label": "v3",
+        "round": 1,
+        "parentId": "c1",
+        "createdBy": "OPTIMIZE",
+        "reason": "Merged lane adders into one balanced adder tree",
+        "rtl": "// SAMPLE RTL for UI development\n// v3, attempt 1: OPTIMIZE. One balanced adder tree, with a register after the tree.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0]  cycle;\n  reg        busy;\n  reg [17:0] sum_q;              // pipeline register after the adder tree\n  reg        busy_q;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [16:0] s01 = p0 + p1;\n  wire [16:0] s23 = p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc <= 22'd0; cycle <= 5'd0; busy <= 1'b0; busy_q <= 1'b0; sum_q <= 18'd0; done <= 1'b0;\n    end else begin\n      sum_q  <= s01 + s23;\n      busy_q <= busy;\n      if (start && !busy) begin\n        acc <= 22'd0; cycle <= 5'd0; busy <= 1'b1; done <= 1'b0;\n      end else if (busy) begin\n        cycle <= cycle + 5'd1;\n        if (cycle == 5'd15) busy <= 1'b0;\n      end\n      if (busy_q) acc <= acc + sum_q;\n      if (busy_q && !busy) done <= 1'b1;   // one cycle late: waits for the pipeline to drain\n    end\n  end\nendmodule",
+        "attempts": [
+          {
+            "n": 1,
+            "by": "OPTIMIZE",
+            "reason": "Merged lane adders into one balanced adder tree",
+            "rtl": "// SAMPLE RTL for UI development\n// v3, attempt 1: OPTIMIZE. One balanced adder tree, with a register after the tree.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0]  cycle;\n  reg        busy;\n  reg [17:0] sum_q;              // pipeline register after the adder tree\n  reg        busy_q;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [16:0] s01 = p0 + p1;\n  wire [16:0] s23 = p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc <= 22'd0; cycle <= 5'd0; busy <= 1'b0; busy_q <= 1'b0; sum_q <= 18'd0; done <= 1'b0;\n    end else begin\n      sum_q  <= s01 + s23;\n      busy_q <= busy;\n      if (start && !busy) begin\n        acc <= 22'd0; cycle <= 5'd0; busy <= 1'b1; done <= 1'b0;\n      end else if (busy) begin\n        cycle <= cycle + 5'd1;\n        if (cycle == 5'd15) busy <= 1'b0;\n      end\n      if (busy_q) acc <= acc + sum_q;\n      if (busy_q && !busy) done <= 1'b1;   // one cycle late: waits for the pipeline to drain\n    end\n  end\nendmodule",
+            "verification": {
+              "lint": "pass",
+              "lintLog": "Verilator: 0 warnings",
+              "passed": 14,
+              "total": 16,
+              "failures": [
+                {
+                  "name": "done_timing_basic",
+                  "inputs": "start at cycle 1, then idle",
+                  "expected": "done at cycle 18",
+                  "got": "done at cycle 19",
+                  "pass": false,
+                  "cycle": 19
+                },
+                {
+                  "name": "done_timing_two_runs",
+                  "inputs": "two runs, start at cycle 1 and cycle 21",
+                  "expected": "done at cycle 38",
+                  "got": "done at cycle 39",
+                  "pass": false,
+                  "cycle": 39
+                }
+              ],
+              "diagnosis": "done rises one cycle late. The new register after the adder tree delays the last accumulate, and done waits for it.",
+              "tool": "iverilog 12 + cocotb",
+              "durationMs": 2230
+            }
+          }
+        ],
+        "verification": {
+          "lint": "pass",
+          "lintLog": "Verilator: 0 warnings",
+          "passed": 14,
+          "total": 16,
+          "failures": [
+            {
+              "name": "done_timing_basic",
+              "inputs": "start at cycle 1, then idle",
+              "expected": "done at cycle 18",
+              "got": "done at cycle 19",
+              "pass": false,
+              "cycle": 19
+            },
+            {
+              "name": "done_timing_two_runs",
+              "inputs": "two runs, start at cycle 1 and cycle 21",
+              "expected": "done at cycle 38",
+              "got": "done at cycle 39",
+              "pass": false,
+              "cycle": 39
+            }
+          ],
+          "diagnosis": "done rises one cycle late. The new register after the adder tree delays the last accumulate, and done waits for it.",
+          "tool": "iverilog 12 + cocotb",
+          "durationMs": 2230
+        },
+        "ppa": null,
+        "fitness": null,
+        "status": "fail",
+        "fixCount": 0,
+        "isBaseline": false,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 90,
+      "tMs": 49000,
+      "t": "caption",
+      "text": "v3 failed 2 tests: done is one cycle late. Fixing it before it can compete.",
+      "chapter": "Round 1"
+    },
+    {
+      "seq": 91,
+      "tMs": 52000,
+      "t": "candidate",
+      "candidate": {
+        "id": "c3",
+        "label": "v3",
+        "round": 1,
+        "parentId": "c1",
+        "createdBy": "OPTIMIZE",
+        "reason": "Merged lane adders into one balanced adder tree",
+        "rtl": "// SAMPLE RTL for UI development\n// v3, attempt 1: OPTIMIZE. One balanced adder tree, with a register after the tree.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0]  cycle;\n  reg        busy;\n  reg [17:0] sum_q;              // pipeline register after the adder tree\n  reg        busy_q;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [16:0] s01 = p0 + p1;\n  wire [16:0] s23 = p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc <= 22'd0; cycle <= 5'd0; busy <= 1'b0; busy_q <= 1'b0; sum_q <= 18'd0; done <= 1'b0;\n    end else begin\n      sum_q  <= s01 + s23;\n      busy_q <= busy;\n      if (start && !busy) begin\n        acc <= 22'd0; cycle <= 5'd0; busy <= 1'b1; done <= 1'b0;\n      end else if (busy) begin\n        cycle <= cycle + 5'd1;\n        if (cycle == 5'd15) busy <= 1'b0;\n      end\n      if (busy_q) acc <= acc + sum_q;\n      if (busy_q && !busy) done <= 1'b1;   // one cycle late: waits for the pipeline to drain\n    end\n  end\nendmodule",
+        "attempts": [
+          {
+            "n": 1,
+            "by": "OPTIMIZE",
+            "reason": "Merged lane adders into one balanced adder tree",
+            "rtl": "// SAMPLE RTL for UI development\n// v3, attempt 1: OPTIMIZE. One balanced adder tree, with a register after the tree.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0]  cycle;\n  reg        busy;\n  reg [17:0] sum_q;              // pipeline register after the adder tree\n  reg        busy_q;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [16:0] s01 = p0 + p1;\n  wire [16:0] s23 = p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc <= 22'd0; cycle <= 5'd0; busy <= 1'b0; busy_q <= 1'b0; sum_q <= 18'd0; done <= 1'b0;\n    end else begin\n      sum_q  <= s01 + s23;\n      busy_q <= busy;\n      if (start && !busy) begin\n        acc <= 22'd0; cycle <= 5'd0; busy <= 1'b1; done <= 1'b0;\n      end else if (busy) begin\n        cycle <= cycle + 5'd1;\n        if (cycle == 5'd15) busy <= 1'b0;\n      end\n      if (busy_q) acc <= acc + sum_q;\n      if (busy_q && !busy) done <= 1'b1;   // one cycle late: waits for the pipeline to drain\n    end\n  end\nendmodule",
+            "verification": {
+              "lint": "pass",
+              "lintLog": "Verilator: 0 warnings",
+              "passed": 14,
+              "total": 16,
+              "failures": [
+                {
+                  "name": "done_timing_basic",
+                  "inputs": "start at cycle 1, then idle",
+                  "expected": "done at cycle 18",
+                  "got": "done at cycle 19",
+                  "pass": false,
+                  "cycle": 19
+                },
+                {
+                  "name": "done_timing_two_runs",
+                  "inputs": "two runs, start at cycle 1 and cycle 21",
+                  "expected": "done at cycle 38",
+                  "got": "done at cycle 39",
+                  "pass": false,
+                  "cycle": 39
+                }
+              ],
+              "diagnosis": "done rises one cycle late. The new register after the adder tree delays the last accumulate, and done waits for it.",
+              "tool": "iverilog 12 + cocotb",
+              "durationMs": 2230
+            }
+          }
+        ],
+        "verification": {
+          "lint": "pass",
+          "lintLog": "Verilator: 0 warnings",
+          "passed": 14,
+          "total": 16,
+          "failures": [
+            {
+              "name": "done_timing_basic",
+              "inputs": "start at cycle 1, then idle",
+              "expected": "done at cycle 18",
+              "got": "done at cycle 19",
+              "pass": false,
+              "cycle": 19
+            },
+            {
+              "name": "done_timing_two_runs",
+              "inputs": "two runs, start at cycle 1 and cycle 21",
+              "expected": "done at cycle 38",
+              "got": "done at cycle 39",
+              "pass": false,
+              "cycle": 39
+            }
+          ],
+          "diagnosis": "done rises one cycle late. The new register after the adder tree delays the last accumulate, and done waits for it.",
+          "tool": "iverilog 12 + cocotb",
+          "durationMs": 2230
+        },
+        "ppa": null,
+        "fitness": null,
+        "status": "fixing",
+        "fixCount": 0,
+        "isBaseline": false,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 92,
+      "tMs": 53000,
+      "t": "candidate",
+      "candidate": {
+        "id": "c3",
+        "label": "v3",
+        "round": 1,
+        "parentId": "c1",
+        "createdBy": "OPTIMIZE",
+        "reason": "Merged lane adders into one balanced adder tree",
+        "rtl": "// SAMPLE RTL for UI development\n// v3, attempt 2: FIX. done is raised from the control counter, one cycle earlier.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0]  cycle;\n  reg        busy;\n  reg [17:0] sum_q;              // pipeline register after the adder tree\n  reg        busy_q;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [16:0] s01 = p0 + p1;\n  wire [16:0] s23 = p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc <= 22'd0; cycle <= 5'd0; busy <= 1'b0; busy_q <= 1'b0; sum_q <= 18'd0; done <= 1'b0;\n    end else begin\n      sum_q  <= s01 + s23;\n      busy_q <= busy;\n      if (start && !busy) begin\n        acc <= 22'd0; cycle <= 5'd0; busy <= 1'b1; done <= 1'b0;\n      end else if (busy) begin\n        cycle <= cycle + 5'd1;\n        if (cycle == 5'd15) busy <= 1'b0;\n      end\n      if (busy_q) acc <= acc + sum_q;\n      if (cycle == 5'd16 && busy_q) done <= 1'b1;   // raised from the counter, not from the drain\n    end\n  end\nendmodule",
+        "attempts": [
+          {
+            "n": 1,
+            "by": "OPTIMIZE",
+            "reason": "Merged lane adders into one balanced adder tree",
+            "rtl": "// SAMPLE RTL for UI development\n// v3, attempt 1: OPTIMIZE. One balanced adder tree, with a register after the tree.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0]  cycle;\n  reg        busy;\n  reg [17:0] sum_q;              // pipeline register after the adder tree\n  reg        busy_q;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [16:0] s01 = p0 + p1;\n  wire [16:0] s23 = p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc <= 22'd0; cycle <= 5'd0; busy <= 1'b0; busy_q <= 1'b0; sum_q <= 18'd0; done <= 1'b0;\n    end else begin\n      sum_q  <= s01 + s23;\n      busy_q <= busy;\n      if (start && !busy) begin\n        acc <= 22'd0; cycle <= 5'd0; busy <= 1'b1; done <= 1'b0;\n      end else if (busy) begin\n        cycle <= cycle + 5'd1;\n        if (cycle == 5'd15) busy <= 1'b0;\n      end\n      if (busy_q) acc <= acc + sum_q;\n      if (busy_q && !busy) done <= 1'b1;   // one cycle late: waits for the pipeline to drain\n    end\n  end\nendmodule",
+            "verification": {
+              "lint": "pass",
+              "lintLog": "Verilator: 0 warnings",
+              "passed": 14,
+              "total": 16,
+              "failures": [
+                {
+                  "name": "done_timing_basic",
+                  "inputs": "start at cycle 1, then idle",
+                  "expected": "done at cycle 18",
+                  "got": "done at cycle 19",
+                  "pass": false,
+                  "cycle": 19
+                },
+                {
+                  "name": "done_timing_two_runs",
+                  "inputs": "two runs, start at cycle 1 and cycle 21",
+                  "expected": "done at cycle 38",
+                  "got": "done at cycle 39",
+                  "pass": false,
+                  "cycle": 39
+                }
+              ],
+              "diagnosis": "done rises one cycle late. The new register after the adder tree delays the last accumulate, and done waits for it.",
+              "tool": "iverilog 12 + cocotb",
+              "durationMs": 2230
+            }
+          }
+        ],
+        "verification": {
+          "lint": "pass",
+          "lintLog": "Verilator: 0 warnings",
+          "passed": 14,
+          "total": 16,
+          "failures": [
+            {
+              "name": "done_timing_basic",
+              "inputs": "start at cycle 1, then idle",
+              "expected": "done at cycle 18",
+              "got": "done at cycle 19",
+              "pass": false,
+              "cycle": 19
+            },
+            {
+              "name": "done_timing_two_runs",
+              "inputs": "two runs, start at cycle 1 and cycle 21",
+              "expected": "done at cycle 38",
+              "got": "done at cycle 39",
+              "pass": false,
+              "cycle": 39
+            }
+          ],
+          "diagnosis": "done rises one cycle late. The new register after the adder tree delays the last accumulate, and done waits for it.",
+          "tool": "iverilog 12 + cocotb",
+          "durationMs": 2230
+        },
+        "ppa": null,
+        "fitness": null,
+        "status": "simulating",
+        "fixCount": 0,
+        "isBaseline": false,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 93,
+      "tMs": 54000,
+      "t": "candidate",
+      "candidate": {
+        "id": "c3",
+        "label": "v3",
+        "round": 1,
+        "parentId": "c1",
+        "createdBy": "OPTIMIZE",
+        "reason": "Merged lane adders into one balanced adder tree",
+        "rtl": "// SAMPLE RTL for UI development\n// v3, attempt 2: FIX. done is raised from the control counter, one cycle earlier.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0]  cycle;\n  reg        busy;\n  reg [17:0] sum_q;              // pipeline register after the adder tree\n  reg        busy_q;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [16:0] s01 = p0 + p1;\n  wire [16:0] s23 = p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc <= 22'd0; cycle <= 5'd0; busy <= 1'b0; busy_q <= 1'b0; sum_q <= 18'd0; done <= 1'b0;\n    end else begin\n      sum_q  <= s01 + s23;\n      busy_q <= busy;\n      if (start && !busy) begin\n        acc <= 22'd0; cycle <= 5'd0; busy <= 1'b1; done <= 1'b0;\n      end else if (busy) begin\n        cycle <= cycle + 5'd1;\n        if (cycle == 5'd15) busy <= 1'b0;\n      end\n      if (busy_q) acc <= acc + sum_q;\n      if (cycle == 5'd16 && busy_q) done <= 1'b1;   // raised from the counter, not from the drain\n    end\n  end\nendmodule",
+        "attempts": [
+          {
+            "n": 1,
+            "by": "OPTIMIZE",
+            "reason": "Merged lane adders into one balanced adder tree",
+            "rtl": "// SAMPLE RTL for UI development\n// v3, attempt 1: OPTIMIZE. One balanced adder tree, with a register after the tree.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0]  cycle;\n  reg        busy;\n  reg [17:0] sum_q;              // pipeline register after the adder tree\n  reg        busy_q;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [16:0] s01 = p0 + p1;\n  wire [16:0] s23 = p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc <= 22'd0; cycle <= 5'd0; busy <= 1'b0; busy_q <= 1'b0; sum_q <= 18'd0; done <= 1'b0;\n    end else begin\n      sum_q  <= s01 + s23;\n      busy_q <= busy;\n      if (start && !busy) begin\n        acc <= 22'd0; cycle <= 5'd0; busy <= 1'b1; done <= 1'b0;\n      end else if (busy) begin\n        cycle <= cycle + 5'd1;\n        if (cycle == 5'd15) busy <= 1'b0;\n      end\n      if (busy_q) acc <= acc + sum_q;\n      if (busy_q && !busy) done <= 1'b1;   // one cycle late: waits for the pipeline to drain\n    end\n  end\nendmodule",
+            "verification": {
+              "lint": "pass",
+              "lintLog": "Verilator: 0 warnings",
+              "passed": 14,
+              "total": 16,
+              "failures": [
+                {
+                  "name": "done_timing_basic",
+                  "inputs": "start at cycle 1, then idle",
+                  "expected": "done at cycle 18",
+                  "got": "done at cycle 19",
+                  "pass": false,
+                  "cycle": 19
+                },
+                {
+                  "name": "done_timing_two_runs",
+                  "inputs": "two runs, start at cycle 1 and cycle 21",
+                  "expected": "done at cycle 38",
+                  "got": "done at cycle 39",
+                  "pass": false,
+                  "cycle": 39
+                }
+              ],
+              "diagnosis": "done rises one cycle late. The new register after the adder tree delays the last accumulate, and done waits for it.",
+              "tool": "iverilog 12 + cocotb",
+              "durationMs": 2230
+            }
+          },
+          {
+            "n": 2,
+            "by": "FIX",
+            "reason": "Raised done from the control counter, one cycle earlier",
+            "rtl": "// SAMPLE RTL for UI development\n// v3, attempt 2: FIX. done is raised from the control counter, one cycle earlier.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0]  cycle;\n  reg        busy;\n  reg [17:0] sum_q;              // pipeline register after the adder tree\n  reg        busy_q;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [16:0] s01 = p0 + p1;\n  wire [16:0] s23 = p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc <= 22'd0; cycle <= 5'd0; busy <= 1'b0; busy_q <= 1'b0; sum_q <= 18'd0; done <= 1'b0;\n    end else begin\n      sum_q  <= s01 + s23;\n      busy_q <= busy;\n      if (start && !busy) begin\n        acc <= 22'd0; cycle <= 5'd0; busy <= 1'b1; done <= 1'b0;\n      end else if (busy) begin\n        cycle <= cycle + 5'd1;\n        if (cycle == 5'd15) busy <= 1'b0;\n      end\n      if (busy_q) acc <= acc + sum_q;\n      if (cycle == 5'd16 && busy_q) done <= 1'b1;   // raised from the counter, not from the drain\n    end\n  end\nendmodule",
+            "verification": {
+              "lint": "pass",
+              "lintLog": "Verilator: 0 warnings",
+              "passed": 16,
+              "total": 16,
+              "failures": [],
+              "tool": "iverilog 12 + cocotb",
+              "durationMs": 2260
+            }
+          }
+        ],
+        "verification": {
+          "lint": "pass",
+          "lintLog": "Verilator: 0 warnings",
+          "passed": 16,
+          "total": 16,
+          "failures": [],
+          "tool": "iverilog 12 + cocotb",
+          "durationMs": 2260
+        },
+        "ppa": null,
+        "fitness": null,
+        "status": "pass",
+        "fixCount": 1,
+        "isBaseline": false,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 94,
+      "tMs": 55000,
+      "t": "candidate",
+      "candidate": {
+        "id": "c2",
+        "label": "v2",
+        "round": 1,
+        "parentId": "c1",
+        "createdBy": "SIMPLIFY",
+        "reason": "Removed resets from datapath registers",
+        "rtl": "// SAMPLE RTL for UI development\n// v2: SIMPLIFY. Datapath registers have no reset; only control state is reset.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0] cycle;\n  reg       busy;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [17:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      cycle <= 5'd0;\n      busy  <= 1'b0;\n      done  <= 1'b0;\n    end else if (start && !busy) begin\n      cycle <= 5'd0;\n      busy  <= 1'b1;\n      done  <= 1'b0;\n    end else if (busy) begin\n      cycle <= cycle + 5'd1;\n      if (cycle == 5'd15) begin\n        busy <= 1'b0;\n        done <= 1'b1;\n      end\n    end\n  end\n  always @(posedge clk) begin\n    if (start && !busy) acc <= 22'd0;\n    else if (busy)      acc <= acc + sum;\n  end\nendmodule",
+        "attempts": [
+          {
+            "n": 1,
+            "by": "SIMPLIFY",
+            "reason": "Removed resets from datapath registers",
+            "rtl": "// SAMPLE RTL for UI development\n// v2: SIMPLIFY. Datapath registers have no reset; only control state is reset.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0] cycle;\n  reg       busy;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [17:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      cycle <= 5'd0;\n      busy  <= 1'b0;\n      done  <= 1'b0;\n    end else if (start && !busy) begin\n      cycle <= 5'd0;\n      busy  <= 1'b1;\n      done  <= 1'b0;\n    end else if (busy) begin\n      cycle <= cycle + 5'd1;\n      if (cycle == 5'd15) begin\n        busy <= 1'b0;\n        done <= 1'b1;\n      end\n    end\n  end\n  always @(posedge clk) begin\n    if (start && !busy) acc <= 22'd0;\n    else if (busy)      acc <= acc + sum;\n  end\nendmodule",
+            "verification": {
+              "lint": "pass",
+              "lintLog": "Verilator: 0 warnings",
+              "passed": 16,
+              "total": 16,
+              "failures": [],
+              "tool": "iverilog 12 + cocotb",
+              "durationMs": 2190
+            }
+          }
+        ],
+        "verification": {
+          "lint": "pass",
+          "lintLog": "Verilator: 0 warnings",
+          "passed": 16,
+          "total": 16,
+          "failures": [],
+          "tool": "iverilog 12 + cocotb",
+          "durationMs": 2190
+        },
+        "ppa": null,
+        "fitness": null,
+        "status": "synthesizing",
+        "fixCount": 0,
+        "isBaseline": false,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 95,
+      "tMs": 55000,
+      "t": "candidate",
+      "candidate": {
+        "id": "c4",
+        "label": "v4",
+        "round": 1,
+        "parentId": "c1",
+        "createdBy": "EXPLORE",
+        "reason": "Tried carry-save accumulation",
+        "rtl": "// SAMPLE RTL for UI development\n// v4: EXPLORE. Carry-save accumulation: faster clock, one final add, more registers.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output wire [21:0] acc,\n  output reg         done\n);\n  reg [4:0]  cycle;\n  reg        busy;\n  reg [21:0] acc_s, acc_c;       // carry-save pair\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [21:0] x = {6'd0, p0};\n  wire [21:0] y = {6'd0, p1} + {6'd0, p2} + {6'd0, p3};\n  wire [21:0] t_s = acc_s ^ acc_c ^ x;\n  wire [21:0] t_c = ((acc_s & acc_c) | (acc_s & x) | (acc_c & x)) << 1;\n  assign acc = acc_s + acc_c;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc_s <= 22'd0; acc_c <= 22'd0; cycle <= 5'd0; busy <= 1'b0; done <= 1'b0;\n    end else if (start && !busy) begin\n      acc_s <= 22'd0; acc_c <= 22'd0; cycle <= 5'd0; busy <= 1'b1; done <= 1'b0;\n    end else if (busy) begin\n      acc_s <= t_s + y;\n      acc_c <= t_c;\n      cycle <= cycle + 5'd1;\n      if (cycle == 5'd15) begin busy <= 1'b0; done <= 1'b1; end\n    end\n  end\nendmodule",
+        "attempts": [
+          {
+            "n": 1,
+            "by": "EXPLORE",
+            "reason": "Tried carry-save accumulation",
+            "rtl": "// SAMPLE RTL for UI development\n// v4: EXPLORE. Carry-save accumulation: faster clock, one final add, more registers.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output wire [21:0] acc,\n  output reg         done\n);\n  reg [4:0]  cycle;\n  reg        busy;\n  reg [21:0] acc_s, acc_c;       // carry-save pair\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [21:0] x = {6'd0, p0};\n  wire [21:0] y = {6'd0, p1} + {6'd0, p2} + {6'd0, p3};\n  wire [21:0] t_s = acc_s ^ acc_c ^ x;\n  wire [21:0] t_c = ((acc_s & acc_c) | (acc_s & x) | (acc_c & x)) << 1;\n  assign acc = acc_s + acc_c;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc_s <= 22'd0; acc_c <= 22'd0; cycle <= 5'd0; busy <= 1'b0; done <= 1'b0;\n    end else if (start && !busy) begin\n      acc_s <= 22'd0; acc_c <= 22'd0; cycle <= 5'd0; busy <= 1'b1; done <= 1'b0;\n    end else if (busy) begin\n      acc_s <= t_s + y;\n      acc_c <= t_c;\n      cycle <= cycle + 5'd1;\n      if (cycle == 5'd15) begin busy <= 1'b0; done <= 1'b1; end\n    end\n  end\nendmodule",
+            "verification": {
+              "lint": "pass",
+              "lintLog": "Verilator: 0 warnings",
+              "passed": 16,
+              "total": 16,
+              "failures": [],
+              "tool": "iverilog 12 + cocotb",
+              "durationMs": 2300
+            }
+          }
+        ],
+        "verification": {
+          "lint": "pass",
+          "lintLog": "Verilator: 0 warnings",
+          "passed": 16,
+          "total": 16,
+          "failures": [],
+          "tool": "iverilog 12 + cocotb",
+          "durationMs": 2300
+        },
+        "ppa": null,
+        "fitness": null,
+        "status": "synthesizing",
+        "fixCount": 0,
+        "isBaseline": false,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 96,
+      "tMs": 55500,
+      "t": "candidate",
+      "candidate": {
+        "id": "c3",
+        "label": "v3",
+        "round": 1,
+        "parentId": "c1",
+        "createdBy": "OPTIMIZE",
+        "reason": "Merged lane adders into one balanced adder tree",
+        "rtl": "// SAMPLE RTL for UI development\n// v3, attempt 2: FIX. done is raised from the control counter, one cycle earlier.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0]  cycle;\n  reg        busy;\n  reg [17:0] sum_q;              // pipeline register after the adder tree\n  reg        busy_q;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [16:0] s01 = p0 + p1;\n  wire [16:0] s23 = p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc <= 22'd0; cycle <= 5'd0; busy <= 1'b0; busy_q <= 1'b0; sum_q <= 18'd0; done <= 1'b0;\n    end else begin\n      sum_q  <= s01 + s23;\n      busy_q <= busy;\n      if (start && !busy) begin\n        acc <= 22'd0; cycle <= 5'd0; busy <= 1'b1; done <= 1'b0;\n      end else if (busy) begin\n        cycle <= cycle + 5'd1;\n        if (cycle == 5'd15) busy <= 1'b0;\n      end\n      if (busy_q) acc <= acc + sum_q;\n      if (cycle == 5'd16 && busy_q) done <= 1'b1;   // raised from the counter, not from the drain\n    end\n  end\nendmodule",
+        "attempts": [
+          {
+            "n": 1,
+            "by": "OPTIMIZE",
+            "reason": "Merged lane adders into one balanced adder tree",
+            "rtl": "// SAMPLE RTL for UI development\n// v3, attempt 1: OPTIMIZE. One balanced adder tree, with a register after the tree.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0]  cycle;\n  reg        busy;\n  reg [17:0] sum_q;              // pipeline register after the adder tree\n  reg        busy_q;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [16:0] s01 = p0 + p1;\n  wire [16:0] s23 = p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc <= 22'd0; cycle <= 5'd0; busy <= 1'b0; busy_q <= 1'b0; sum_q <= 18'd0; done <= 1'b0;\n    end else begin\n      sum_q  <= s01 + s23;\n      busy_q <= busy;\n      if (start && !busy) begin\n        acc <= 22'd0; cycle <= 5'd0; busy <= 1'b1; done <= 1'b0;\n      end else if (busy) begin\n        cycle <= cycle + 5'd1;\n        if (cycle == 5'd15) busy <= 1'b0;\n      end\n      if (busy_q) acc <= acc + sum_q;\n      if (busy_q && !busy) done <= 1'b1;   // one cycle late: waits for the pipeline to drain\n    end\n  end\nendmodule",
+            "verification": {
+              "lint": "pass",
+              "lintLog": "Verilator: 0 warnings",
+              "passed": 14,
+              "total": 16,
+              "failures": [
+                {
+                  "name": "done_timing_basic",
+                  "inputs": "start at cycle 1, then idle",
+                  "expected": "done at cycle 18",
+                  "got": "done at cycle 19",
+                  "pass": false,
+                  "cycle": 19
+                },
+                {
+                  "name": "done_timing_two_runs",
+                  "inputs": "two runs, start at cycle 1 and cycle 21",
+                  "expected": "done at cycle 38",
+                  "got": "done at cycle 39",
+                  "pass": false,
+                  "cycle": 39
+                }
+              ],
+              "diagnosis": "done rises one cycle late. The new register after the adder tree delays the last accumulate, and done waits for it.",
+              "tool": "iverilog 12 + cocotb",
+              "durationMs": 2230
+            }
+          },
+          {
+            "n": 2,
+            "by": "FIX",
+            "reason": "Raised done from the control counter, one cycle earlier",
+            "rtl": "// SAMPLE RTL for UI development\n// v3, attempt 2: FIX. done is raised from the control counter, one cycle earlier.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0]  cycle;\n  reg        busy;\n  reg [17:0] sum_q;              // pipeline register after the adder tree\n  reg        busy_q;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [16:0] s01 = p0 + p1;\n  wire [16:0] s23 = p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc <= 22'd0; cycle <= 5'd0; busy <= 1'b0; busy_q <= 1'b0; sum_q <= 18'd0; done <= 1'b0;\n    end else begin\n      sum_q  <= s01 + s23;\n      busy_q <= busy;\n      if (start && !busy) begin\n        acc <= 22'd0; cycle <= 5'd0; busy <= 1'b1; done <= 1'b0;\n      end else if (busy) begin\n        cycle <= cycle + 5'd1;\n        if (cycle == 5'd15) busy <= 1'b0;\n      end\n      if (busy_q) acc <= acc + sum_q;\n      if (cycle == 5'd16 && busy_q) done <= 1'b1;   // raised from the counter, not from the drain\n    end\n  end\nendmodule",
+            "verification": {
+              "lint": "pass",
+              "lintLog": "Verilator: 0 warnings",
+              "passed": 16,
+              "total": 16,
+              "failures": [],
+              "tool": "iverilog 12 + cocotb",
+              "durationMs": 2260
+            }
+          }
+        ],
+        "verification": {
+          "lint": "pass",
+          "lintLog": "Verilator: 0 warnings",
+          "passed": 16,
+          "total": 16,
+          "failures": [],
+          "tool": "iverilog 12 + cocotb",
+          "durationMs": 2260
+        },
+        "ppa": null,
+        "fitness": null,
+        "status": "synthesizing",
+        "fixCount": 1,
+        "isBaseline": false,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 97,
+      "tMs": 56500,
+      "t": "candidate",
+      "candidate": {
+        "id": "c2",
+        "label": "v2",
+        "round": 1,
+        "parentId": "c1",
+        "createdBy": "SIMPLIFY",
+        "reason": "Removed resets from datapath registers",
+        "rtl": "// SAMPLE RTL for UI development\n// v2: SIMPLIFY. Datapath registers have no reset; only control state is reset.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0] cycle;\n  reg       busy;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [17:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      cycle <= 5'd0;\n      busy  <= 1'b0;\n      done  <= 1'b0;\n    end else if (start && !busy) begin\n      cycle <= 5'd0;\n      busy  <= 1'b1;\n      done  <= 1'b0;\n    end else if (busy) begin\n      cycle <= cycle + 5'd1;\n      if (cycle == 5'd15) begin\n        busy <= 1'b0;\n        done <= 1'b1;\n      end\n    end\n  end\n  always @(posedge clk) begin\n    if (start && !busy) acc <= 22'd0;\n    else if (busy)      acc <= acc + sum;\n  end\nendmodule",
+        "attempts": [
+          {
+            "n": 1,
+            "by": "SIMPLIFY",
+            "reason": "Removed resets from datapath registers",
+            "rtl": "// SAMPLE RTL for UI development\n// v2: SIMPLIFY. Datapath registers have no reset; only control state is reset.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0] cycle;\n  reg       busy;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [17:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      cycle <= 5'd0;\n      busy  <= 1'b0;\n      done  <= 1'b0;\n    end else if (start && !busy) begin\n      cycle <= 5'd0;\n      busy  <= 1'b1;\n      done  <= 1'b0;\n    end else if (busy) begin\n      cycle <= cycle + 5'd1;\n      if (cycle == 5'd15) begin\n        busy <= 1'b0;\n        done <= 1'b1;\n      end\n    end\n  end\n  always @(posedge clk) begin\n    if (start && !busy) acc <= 22'd0;\n    else if (busy)      acc <= acc + sum;\n  end\nendmodule",
+            "verification": {
+              "lint": "pass",
+              "lintLog": "Verilator: 0 warnings",
+              "passed": 16,
+              "total": 16,
+              "failures": [],
+              "tool": "iverilog 12 + cocotb",
+              "durationMs": 2190
+            }
+          }
+        ],
+        "verification": {
+          "lint": "pass",
+          "lintLog": "Verilator: 0 warnings",
+          "passed": 16,
+          "total": 16,
+          "failures": [],
+          "tool": "iverilog 12 + cocotb",
+          "durationMs": 2190
+        },
+        "ppa": {
+          "areaUm2": 1690,
+          "cellCount": 371,
+          "clockPeriodNs": 3.18,
+          "powerMw": 1.84,
+          "tools": [
+            "Yosys",
+            "OpenSTA"
+          ],
+          "pdk": "Nangate45"
+        },
+        "fitness": {
+          "score": 5.67,
+          "priority": "area",
+          "weights": {
+            "area": 0.6,
+            "timing": 0.25,
+            "power": 0.15
+          },
+          "gains": {
+            "area": 8.15,
+            "timing": 0.63,
+            "power": 4.17
+          },
+          "baselineId": "c1"
+        },
+        "status": "measured",
+        "fixCount": 0,
+        "isBaseline": false,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 98,
+      "tMs": 57500,
+      "t": "candidate",
+      "candidate": {
+        "id": "c4",
+        "label": "v4",
+        "round": 1,
+        "parentId": "c1",
+        "createdBy": "EXPLORE",
+        "reason": "Tried carry-save accumulation",
+        "rtl": "// SAMPLE RTL for UI development\n// v4: EXPLORE. Carry-save accumulation: faster clock, one final add, more registers.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output wire [21:0] acc,\n  output reg         done\n);\n  reg [4:0]  cycle;\n  reg        busy;\n  reg [21:0] acc_s, acc_c;       // carry-save pair\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [21:0] x = {6'd0, p0};\n  wire [21:0] y = {6'd0, p1} + {6'd0, p2} + {6'd0, p3};\n  wire [21:0] t_s = acc_s ^ acc_c ^ x;\n  wire [21:0] t_c = ((acc_s & acc_c) | (acc_s & x) | (acc_c & x)) << 1;\n  assign acc = acc_s + acc_c;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc_s <= 22'd0; acc_c <= 22'd0; cycle <= 5'd0; busy <= 1'b0; done <= 1'b0;\n    end else if (start && !busy) begin\n      acc_s <= 22'd0; acc_c <= 22'd0; cycle <= 5'd0; busy <= 1'b1; done <= 1'b0;\n    end else if (busy) begin\n      acc_s <= t_s + y;\n      acc_c <= t_c;\n      cycle <= cycle + 5'd1;\n      if (cycle == 5'd15) begin busy <= 1'b0; done <= 1'b1; end\n    end\n  end\nendmodule",
+        "attempts": [
+          {
+            "n": 1,
+            "by": "EXPLORE",
+            "reason": "Tried carry-save accumulation",
+            "rtl": "// SAMPLE RTL for UI development\n// v4: EXPLORE. Carry-save accumulation: faster clock, one final add, more registers.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output wire [21:0] acc,\n  output reg         done\n);\n  reg [4:0]  cycle;\n  reg        busy;\n  reg [21:0] acc_s, acc_c;       // carry-save pair\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [21:0] x = {6'd0, p0};\n  wire [21:0] y = {6'd0, p1} + {6'd0, p2} + {6'd0, p3};\n  wire [21:0] t_s = acc_s ^ acc_c ^ x;\n  wire [21:0] t_c = ((acc_s & acc_c) | (acc_s & x) | (acc_c & x)) << 1;\n  assign acc = acc_s + acc_c;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc_s <= 22'd0; acc_c <= 22'd0; cycle <= 5'd0; busy <= 1'b0; done <= 1'b0;\n    end else if (start && !busy) begin\n      acc_s <= 22'd0; acc_c <= 22'd0; cycle <= 5'd0; busy <= 1'b1; done <= 1'b0;\n    end else if (busy) begin\n      acc_s <= t_s + y;\n      acc_c <= t_c;\n      cycle <= cycle + 5'd1;\n      if (cycle == 5'd15) begin busy <= 1'b0; done <= 1'b1; end\n    end\n  end\nendmodule",
+            "verification": {
+              "lint": "pass",
+              "lintLog": "Verilator: 0 warnings",
+              "passed": 16,
+              "total": 16,
+              "failures": [],
+              "tool": "iverilog 12 + cocotb",
+              "durationMs": 2300
+            }
+          }
+        ],
+        "verification": {
+          "lint": "pass",
+          "lintLog": "Verilator: 0 warnings",
+          "passed": 16,
+          "total": 16,
+          "failures": [],
+          "tool": "iverilog 12 + cocotb",
+          "durationMs": 2300
+        },
+        "ppa": {
+          "areaUm2": 1950,
+          "cellCount": 455,
+          "clockPeriodNs": 2.7,
+          "powerMw": 2.05,
+          "tools": [
+            "Yosys",
+            "OpenSTA"
+          ],
+          "pdk": "Nangate45"
+        },
+        "fitness": {
+          "score": -0.7,
+          "priority": "area",
+          "weights": {
+            "area": 0.6,
+            "timing": 0.25,
+            "power": 0.15
+          },
+          "gains": {
+            "area": -5.98,
+            "timing": 15.63,
+            "power": -6.77
+          },
+          "baselineId": "c1"
+        },
+        "status": "measured",
+        "fixCount": 0,
+        "isBaseline": false,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 99,
+      "tMs": 58000,
+      "t": "candidate",
+      "candidate": {
+        "id": "c3",
+        "label": "v3",
+        "round": 1,
+        "parentId": "c1",
+        "createdBy": "OPTIMIZE",
+        "reason": "Merged lane adders into one balanced adder tree",
+        "rtl": "// SAMPLE RTL for UI development\n// v3, attempt 2: FIX. done is raised from the control counter, one cycle earlier.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0]  cycle;\n  reg        busy;\n  reg [17:0] sum_q;              // pipeline register after the adder tree\n  reg        busy_q;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [16:0] s01 = p0 + p1;\n  wire [16:0] s23 = p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc <= 22'd0; cycle <= 5'd0; busy <= 1'b0; busy_q <= 1'b0; sum_q <= 18'd0; done <= 1'b0;\n    end else begin\n      sum_q  <= s01 + s23;\n      busy_q <= busy;\n      if (start && !busy) begin\n        acc <= 22'd0; cycle <= 5'd0; busy <= 1'b1; done <= 1'b0;\n      end else if (busy) begin\n        cycle <= cycle + 5'd1;\n        if (cycle == 5'd15) busy <= 1'b0;\n      end\n      if (busy_q) acc <= acc + sum_q;\n      if (cycle == 5'd16 && busy_q) done <= 1'b1;   // raised from the counter, not from the drain\n    end\n  end\nendmodule",
+        "attempts": [
+          {
+            "n": 1,
+            "by": "OPTIMIZE",
+            "reason": "Merged lane adders into one balanced adder tree",
+            "rtl": "// SAMPLE RTL for UI development\n// v3, attempt 1: OPTIMIZE. One balanced adder tree, with a register after the tree.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0]  cycle;\n  reg        busy;\n  reg [17:0] sum_q;              // pipeline register after the adder tree\n  reg        busy_q;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [16:0] s01 = p0 + p1;\n  wire [16:0] s23 = p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc <= 22'd0; cycle <= 5'd0; busy <= 1'b0; busy_q <= 1'b0; sum_q <= 18'd0; done <= 1'b0;\n    end else begin\n      sum_q  <= s01 + s23;\n      busy_q <= busy;\n      if (start && !busy) begin\n        acc <= 22'd0; cycle <= 5'd0; busy <= 1'b1; done <= 1'b0;\n      end else if (busy) begin\n        cycle <= cycle + 5'd1;\n        if (cycle == 5'd15) busy <= 1'b0;\n      end\n      if (busy_q) acc <= acc + sum_q;\n      if (busy_q && !busy) done <= 1'b1;   // one cycle late: waits for the pipeline to drain\n    end\n  end\nendmodule",
+            "verification": {
+              "lint": "pass",
+              "lintLog": "Verilator: 0 warnings",
+              "passed": 14,
+              "total": 16,
+              "failures": [
+                {
+                  "name": "done_timing_basic",
+                  "inputs": "start at cycle 1, then idle",
+                  "expected": "done at cycle 18",
+                  "got": "done at cycle 19",
+                  "pass": false,
+                  "cycle": 19
+                },
+                {
+                  "name": "done_timing_two_runs",
+                  "inputs": "two runs, start at cycle 1 and cycle 21",
+                  "expected": "done at cycle 38",
+                  "got": "done at cycle 39",
+                  "pass": false,
+                  "cycle": 39
+                }
+              ],
+              "diagnosis": "done rises one cycle late. The new register after the adder tree delays the last accumulate, and done waits for it.",
+              "tool": "iverilog 12 + cocotb",
+              "durationMs": 2230
+            }
+          },
+          {
+            "n": 2,
+            "by": "FIX",
+            "reason": "Raised done from the control counter, one cycle earlier",
+            "rtl": "// SAMPLE RTL for UI development\n// v3, attempt 2: FIX. done is raised from the control counter, one cycle earlier.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0]  cycle;\n  reg        busy;\n  reg [17:0] sum_q;              // pipeline register after the adder tree\n  reg        busy_q;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [16:0] s01 = p0 + p1;\n  wire [16:0] s23 = p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc <= 22'd0; cycle <= 5'd0; busy <= 1'b0; busy_q <= 1'b0; sum_q <= 18'd0; done <= 1'b0;\n    end else begin\n      sum_q  <= s01 + s23;\n      busy_q <= busy;\n      if (start && !busy) begin\n        acc <= 22'd0; cycle <= 5'd0; busy <= 1'b1; done <= 1'b0;\n      end else if (busy) begin\n        cycle <= cycle + 5'd1;\n        if (cycle == 5'd15) busy <= 1'b0;\n      end\n      if (busy_q) acc <= acc + sum_q;\n      if (cycle == 5'd16 && busy_q) done <= 1'b1;   // raised from the counter, not from the drain\n    end\n  end\nendmodule",
+            "verification": {
+              "lint": "pass",
+              "lintLog": "Verilator: 0 warnings",
+              "passed": 16,
+              "total": 16,
+              "failures": [],
+              "tool": "iverilog 12 + cocotb",
+              "durationMs": 2260
+            }
+          }
+        ],
+        "verification": {
+          "lint": "pass",
+          "lintLog": "Verilator: 0 warnings",
+          "passed": 16,
+          "total": 16,
+          "failures": [],
+          "tool": "iverilog 12 + cocotb",
+          "durationMs": 2260
+        },
+        "ppa": {
+          "areaUm2": 1610,
+          "cellCount": 356,
+          "clockPeriodNs": 3.45,
+          "powerMw": 1.76,
+          "tools": [
+            "Yosys",
+            "OpenSTA"
+          ],
+          "pdk": "Nangate45"
+        },
+        "fitness": {
+          "score": 6.8,
+          "priority": "area",
+          "weights": {
+            "area": 0.6,
+            "timing": 0.25,
+            "power": 0.15
+          },
+          "gains": {
+            "area": 12.5,
+            "timing": -7.81,
+            "power": 8.33
+          },
+          "baselineId": "c1"
+        },
+        "status": "measured",
+        "fixCount": 1,
+        "isBaseline": false,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 100,
+      "tMs": 59000,
+      "t": "round",
+      "round": 1,
+      "parents": [
+        "c1"
+      ],
+      "elites": [
+        "c3",
+        "c2"
+      ]
+    },
+    {
+      "seq": 101,
+      "tMs": 59000,
+      "t": "candidate",
+      "candidate": {
+        "id": "c3",
+        "label": "v3",
+        "round": 1,
+        "parentId": "c1",
+        "createdBy": "OPTIMIZE",
+        "reason": "Merged lane adders into one balanced adder tree",
+        "rtl": "// SAMPLE RTL for UI development\n// v3, attempt 2: FIX. done is raised from the control counter, one cycle earlier.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0]  cycle;\n  reg        busy;\n  reg [17:0] sum_q;              // pipeline register after the adder tree\n  reg        busy_q;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [16:0] s01 = p0 + p1;\n  wire [16:0] s23 = p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc <= 22'd0; cycle <= 5'd0; busy <= 1'b0; busy_q <= 1'b0; sum_q <= 18'd0; done <= 1'b0;\n    end else begin\n      sum_q  <= s01 + s23;\n      busy_q <= busy;\n      if (start && !busy) begin\n        acc <= 22'd0; cycle <= 5'd0; busy <= 1'b1; done <= 1'b0;\n      end else if (busy) begin\n        cycle <= cycle + 5'd1;\n        if (cycle == 5'd15) busy <= 1'b0;\n      end\n      if (busy_q) acc <= acc + sum_q;\n      if (cycle == 5'd16 && busy_q) done <= 1'b1;   // raised from the counter, not from the drain\n    end\n  end\nendmodule",
+        "attempts": [
+          {
+            "n": 1,
+            "by": "OPTIMIZE",
+            "reason": "Merged lane adders into one balanced adder tree",
+            "rtl": "// SAMPLE RTL for UI development\n// v3, attempt 1: OPTIMIZE. One balanced adder tree, with a register after the tree.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0]  cycle;\n  reg        busy;\n  reg [17:0] sum_q;              // pipeline register after the adder tree\n  reg        busy_q;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [16:0] s01 = p0 + p1;\n  wire [16:0] s23 = p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc <= 22'd0; cycle <= 5'd0; busy <= 1'b0; busy_q <= 1'b0; sum_q <= 18'd0; done <= 1'b0;\n    end else begin\n      sum_q  <= s01 + s23;\n      busy_q <= busy;\n      if (start && !busy) begin\n        acc <= 22'd0; cycle <= 5'd0; busy <= 1'b1; done <= 1'b0;\n      end else if (busy) begin\n        cycle <= cycle + 5'd1;\n        if (cycle == 5'd15) busy <= 1'b0;\n      end\n      if (busy_q) acc <= acc + sum_q;\n      if (busy_q && !busy) done <= 1'b1;   // one cycle late: waits for the pipeline to drain\n    end\n  end\nendmodule",
+            "verification": {
+              "lint": "pass",
+              "lintLog": "Verilator: 0 warnings",
+              "passed": 14,
+              "total": 16,
+              "failures": [
+                {
+                  "name": "done_timing_basic",
+                  "inputs": "start at cycle 1, then idle",
+                  "expected": "done at cycle 18",
+                  "got": "done at cycle 19",
+                  "pass": false,
+                  "cycle": 19
+                },
+                {
+                  "name": "done_timing_two_runs",
+                  "inputs": "two runs, start at cycle 1 and cycle 21",
+                  "expected": "done at cycle 38",
+                  "got": "done at cycle 39",
+                  "pass": false,
+                  "cycle": 39
+                }
+              ],
+              "diagnosis": "done rises one cycle late. The new register after the adder tree delays the last accumulate, and done waits for it.",
+              "tool": "iverilog 12 + cocotb",
+              "durationMs": 2230
+            }
+          },
+          {
+            "n": 2,
+            "by": "FIX",
+            "reason": "Raised done from the control counter, one cycle earlier",
+            "rtl": "// SAMPLE RTL for UI development\n// v3, attempt 2: FIX. done is raised from the control counter, one cycle earlier.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0]  cycle;\n  reg        busy;\n  reg [17:0] sum_q;              // pipeline register after the adder tree\n  reg        busy_q;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [16:0] s01 = p0 + p1;\n  wire [16:0] s23 = p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc <= 22'd0; cycle <= 5'd0; busy <= 1'b0; busy_q <= 1'b0; sum_q <= 18'd0; done <= 1'b0;\n    end else begin\n      sum_q  <= s01 + s23;\n      busy_q <= busy;\n      if (start && !busy) begin\n        acc <= 22'd0; cycle <= 5'd0; busy <= 1'b1; done <= 1'b0;\n      end else if (busy) begin\n        cycle <= cycle + 5'd1;\n        if (cycle == 5'd15) busy <= 1'b0;\n      end\n      if (busy_q) acc <= acc + sum_q;\n      if (cycle == 5'd16 && busy_q) done <= 1'b1;   // raised from the counter, not from the drain\n    end\n  end\nendmodule",
+            "verification": {
+              "lint": "pass",
+              "lintLog": "Verilator: 0 warnings",
+              "passed": 16,
+              "total": 16,
+              "failures": [],
+              "tool": "iverilog 12 + cocotb",
+              "durationMs": 2260
+            }
+          }
+        ],
+        "verification": {
+          "lint": "pass",
+          "lintLog": "Verilator: 0 warnings",
+          "passed": 16,
+          "total": 16,
+          "failures": [],
+          "tool": "iverilog 12 + cocotb",
+          "durationMs": 2260
+        },
+        "ppa": {
+          "areaUm2": 1610,
+          "cellCount": 356,
+          "clockPeriodNs": 3.45,
+          "powerMw": 1.76,
+          "tools": [
+            "Yosys",
+            "OpenSTA"
+          ],
+          "pdk": "Nangate45"
+        },
+        "fitness": {
+          "score": 6.8,
+          "priority": "area",
+          "weights": {
+            "area": 0.6,
+            "timing": 0.25,
+            "power": 0.15
+          },
+          "gains": {
+            "area": 12.5,
+            "timing": -7.81,
+            "power": 8.33
+          },
+          "baselineId": "c1"
+        },
+        "status": "measured",
+        "fixCount": 1,
+        "isBaseline": false,
+        "isElite": true
+      }
+    },
+    {
+      "seq": 102,
+      "tMs": 59000,
+      "t": "candidate",
+      "candidate": {
+        "id": "c2",
+        "label": "v2",
+        "round": 1,
+        "parentId": "c1",
+        "createdBy": "SIMPLIFY",
+        "reason": "Removed resets from datapath registers",
+        "rtl": "// SAMPLE RTL for UI development\n// v2: SIMPLIFY. Datapath registers have no reset; only control state is reset.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0] cycle;\n  reg       busy;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [17:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      cycle <= 5'd0;\n      busy  <= 1'b0;\n      done  <= 1'b0;\n    end else if (start && !busy) begin\n      cycle <= 5'd0;\n      busy  <= 1'b1;\n      done  <= 1'b0;\n    end else if (busy) begin\n      cycle <= cycle + 5'd1;\n      if (cycle == 5'd15) begin\n        busy <= 1'b0;\n        done <= 1'b1;\n      end\n    end\n  end\n  always @(posedge clk) begin\n    if (start && !busy) acc <= 22'd0;\n    else if (busy)      acc <= acc + sum;\n  end\nendmodule",
+        "attempts": [
+          {
+            "n": 1,
+            "by": "SIMPLIFY",
+            "reason": "Removed resets from datapath registers",
+            "rtl": "// SAMPLE RTL for UI development\n// v2: SIMPLIFY. Datapath registers have no reset; only control state is reset.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0] cycle;\n  reg       busy;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [17:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      cycle <= 5'd0;\n      busy  <= 1'b0;\n      done  <= 1'b0;\n    end else if (start && !busy) begin\n      cycle <= 5'd0;\n      busy  <= 1'b1;\n      done  <= 1'b0;\n    end else if (busy) begin\n      cycle <= cycle + 5'd1;\n      if (cycle == 5'd15) begin\n        busy <= 1'b0;\n        done <= 1'b1;\n      end\n    end\n  end\n  always @(posedge clk) begin\n    if (start && !busy) acc <= 22'd0;\n    else if (busy)      acc <= acc + sum;\n  end\nendmodule",
+            "verification": {
+              "lint": "pass",
+              "lintLog": "Verilator: 0 warnings",
+              "passed": 16,
+              "total": 16,
+              "failures": [],
+              "tool": "iverilog 12 + cocotb",
+              "durationMs": 2190
+            }
+          }
+        ],
+        "verification": {
+          "lint": "pass",
+          "lintLog": "Verilator: 0 warnings",
+          "passed": 16,
+          "total": 16,
+          "failures": [],
+          "tool": "iverilog 12 + cocotb",
+          "durationMs": 2190
+        },
+        "ppa": {
+          "areaUm2": 1690,
+          "cellCount": 371,
+          "clockPeriodNs": 3.18,
+          "powerMw": 1.84,
+          "tools": [
+            "Yosys",
+            "OpenSTA"
+          ],
+          "pdk": "Nangate45"
+        },
+        "fitness": {
+          "score": 5.67,
+          "priority": "area",
+          "weights": {
+            "area": 0.6,
+            "timing": 0.25,
+            "power": 0.15
+          },
+          "gains": {
+            "area": 8.15,
+            "timing": 0.63,
+            "power": 4.17
+          },
+          "baselineId": "c1"
+        },
+        "status": "measured",
+        "fixCount": 0,
+        "isBaseline": false,
+        "isElite": true
+      }
+    },
+    {
+      "seq": 103,
+      "tMs": 59000,
+      "t": "caption",
+      "text": "Kept the two best: v3 and v2. v4 was faster but larger.",
+      "chapter": "Round 1"
+    },
+    {
+      "seq": 104,
+      "tMs": 62000,
+      "t": "stage",
+      "stage": "evolve",
+      "status": "active",
+      "detail": "R2 of 2",
+      "round": 2
+    },
+    {
+      "seq": 105,
+      "tMs": 62000,
+      "t": "round",
+      "round": 2,
+      "parents": [
+        "c3",
+        "c2"
+      ]
+    },
+    {
+      "seq": 106,
+      "tMs": 62000,
+      "t": "caption",
+      "text": "Round 2: two new versions from the elites.",
+      "chapter": "Round 2"
+    },
+    {
+      "seq": 107,
+      "tMs": 62500,
+      "t": "op",
+      "by": "ai",
+      "op": {
+        "op": "add_node",
+        "id": "c5",
+        "kind": "candidate",
+        "zone": "tree",
+        "label": "v5",
+        "refId": "c5"
+      }
+    },
+    {
+      "seq": 108,
+      "tMs": 62500,
+      "t": "op",
+      "by": "ai",
+      "op": {
+        "op": "connect",
+        "source": "c3",
+        "target": "c5",
+        "kind": "lineage"
+      }
+    },
+    {
+      "seq": 109,
+      "tMs": 62500,
+      "t": "candidate",
+      "candidate": {
+        "id": "c5",
+        "label": "v5",
+        "round": 2,
+        "parentId": "c3",
+        "createdBy": "OPTIMIZE",
+        "reason": "Trimmed pipeline registers to the widths the math needs",
+        "rtl": "",
+        "attempts": [],
+        "verification": null,
+        "ppa": null,
+        "fitness": null,
+        "status": "drafting",
+        "fixCount": 0,
+        "isBaseline": false,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 110,
+      "tMs": 63000,
+      "t": "op",
+      "by": "ai",
+      "op": {
+        "op": "add_node",
+        "id": "c6",
+        "kind": "candidate",
+        "zone": "tree",
+        "label": "v6",
+        "refId": "c6"
+      }
+    },
+    {
+      "seq": 111,
+      "tMs": 63000,
+      "t": "op",
+      "by": "ai",
+      "op": {
+        "op": "connect",
+        "source": "c2",
+        "target": "c6",
+        "kind": "lineage"
+      }
+    },
+    {
+      "seq": 112,
+      "tMs": 63000,
+      "t": "candidate",
+      "candidate": {
+        "id": "c6",
+        "label": "v6",
+        "round": 2,
+        "parentId": "c2",
+        "createdBy": "SIMPLIFY",
+        "reason": "Merged the IDLE and LOAD control states",
+        "rtl": "",
+        "attempts": [],
+        "verification": null,
+        "ppa": null,
+        "fitness": null,
+        "status": "drafting",
+        "fixCount": 0,
+        "isBaseline": false,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 113,
+      "tMs": 64000,
+      "t": "candidate",
+      "candidate": {
+        "id": "c5",
+        "label": "v5",
+        "round": 2,
+        "parentId": "c3",
+        "createdBy": "OPTIMIZE",
+        "reason": "Trimmed pipeline registers to the widths the math needs",
+        "rtl": "// SAMPLE RTL for UI development\n// v5: OPTIMIZE (from v3). Pipeline registers trimmed to the widths the math needs.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0]  cycle;\n  reg        busy;\n  reg [17:0] sum_q;              // 4 x 16-bit products need 18 bits, not 22\n  reg        busy_q;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [16:0] s01 = p0 + p1;\n  wire [16:0] s23 = p2 + p3;\n  always @(posedge clk) begin\n    sum_q  <= s01 + s23;\n    busy_q <= busy;\n  end\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc <= 22'd0; cycle <= 5'd0; busy <= 1'b0; done <= 1'b0;\n    end else begin\n      if (start && !busy) begin\n        acc <= 22'd0; cycle <= 5'd0; busy <= 1'b1; done <= 1'b0;\n      end else if (busy) begin\n        cycle <= cycle + 5'd1;\n        if (cycle == 5'd15) busy <= 1'b0;\n      end\n      if (busy_q) acc <= acc + sum_q;\n      if (cycle == 5'd16 && busy_q) done <= 1'b1;\n    end\n  end\nendmodule",
+        "attempts": [],
+        "verification": null,
+        "ppa": null,
+        "fitness": null,
+        "status": "simulating",
+        "fixCount": 0,
+        "isBaseline": false,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 114,
+      "tMs": 64000,
+      "t": "candidate",
+      "candidate": {
+        "id": "c6",
+        "label": "v6",
+        "round": 2,
+        "parentId": "c2",
+        "createdBy": "SIMPLIFY",
+        "reason": "Merged the IDLE and LOAD control states",
+        "rtl": "// SAMPLE RTL for UI development\n// v6, attempt 1: SIMPLIFY (from v2). IDLE and LOAD merged into one state.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  localparam IDLE = 1'b0, RUN = 1'b1;\n  reg       state;\n  reg [4:0] cycle;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [17:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      state <= IDLE; cycle <= 5'd0; done <= 1'b0;\n    end else begin\n      case (state)\n        IDLE: begin\n          done <= 1'b0;\n          if (start) begin state <= RUN; cycle <= 5'd1; end\n        end\n        RUN: begin\n          cycle <= cycle + 5'd1;\n          if (cycle == 5'd15) begin state <= IDLE; done <= 1'b1; end\n        end\n      endcase\n    end\n  end\n  always @(posedge clk) begin\n    if (state == IDLE && start) acc <= {4'd0, sum};   // LOAD folded into IDLE\n    else if (state == RUN)      acc <= acc + sum;\n  end\nendmodule",
+        "attempts": [],
+        "verification": null,
+        "ppa": null,
+        "fitness": null,
+        "status": "simulating",
+        "fixCount": 0,
+        "isBaseline": false,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 115,
+      "tMs": 66000,
+      "t": "candidate",
+      "candidate": {
+        "id": "c5",
+        "label": "v5",
+        "round": 2,
+        "parentId": "c3",
+        "createdBy": "OPTIMIZE",
+        "reason": "Trimmed pipeline registers to the widths the math needs",
+        "rtl": "// SAMPLE RTL for UI development\n// v5: OPTIMIZE (from v3). Pipeline registers trimmed to the widths the math needs.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0]  cycle;\n  reg        busy;\n  reg [17:0] sum_q;              // 4 x 16-bit products need 18 bits, not 22\n  reg        busy_q;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [16:0] s01 = p0 + p1;\n  wire [16:0] s23 = p2 + p3;\n  always @(posedge clk) begin\n    sum_q  <= s01 + s23;\n    busy_q <= busy;\n  end\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc <= 22'd0; cycle <= 5'd0; busy <= 1'b0; done <= 1'b0;\n    end else begin\n      if (start && !busy) begin\n        acc <= 22'd0; cycle <= 5'd0; busy <= 1'b1; done <= 1'b0;\n      end else if (busy) begin\n        cycle <= cycle + 5'd1;\n        if (cycle == 5'd15) busy <= 1'b0;\n      end\n      if (busy_q) acc <= acc + sum_q;\n      if (cycle == 5'd16 && busy_q) done <= 1'b1;\n    end\n  end\nendmodule",
+        "attempts": [
+          {
+            "n": 1,
+            "by": "OPTIMIZE",
+            "reason": "Trimmed pipeline registers to the widths the math needs",
+            "rtl": "// SAMPLE RTL for UI development\n// v5: OPTIMIZE (from v3). Pipeline registers trimmed to the widths the math needs.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0]  cycle;\n  reg        busy;\n  reg [17:0] sum_q;              // 4 x 16-bit products need 18 bits, not 22\n  reg        busy_q;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [16:0] s01 = p0 + p1;\n  wire [16:0] s23 = p2 + p3;\n  always @(posedge clk) begin\n    sum_q  <= s01 + s23;\n    busy_q <= busy;\n  end\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc <= 22'd0; cycle <= 5'd0; busy <= 1'b0; done <= 1'b0;\n    end else begin\n      if (start && !busy) begin\n        acc <= 22'd0; cycle <= 5'd0; busy <= 1'b1; done <= 1'b0;\n      end else if (busy) begin\n        cycle <= cycle + 5'd1;\n        if (cycle == 5'd15) busy <= 1'b0;\n      end\n      if (busy_q) acc <= acc + sum_q;\n      if (cycle == 5'd16 && busy_q) done <= 1'b1;\n    end\n  end\nendmodule",
+            "verification": {
+              "lint": "pass",
+              "lintLog": "Verilator: 0 warnings",
+              "passed": 16,
+              "total": 16,
+              "failures": [],
+              "tool": "iverilog 12 + cocotb",
+              "durationMs": 2250
+            }
+          }
+        ],
+        "verification": {
+          "lint": "pass",
+          "lintLog": "Verilator: 0 warnings",
+          "passed": 16,
+          "total": 16,
+          "failures": [],
+          "tool": "iverilog 12 + cocotb",
+          "durationMs": 2250
+        },
+        "ppa": null,
+        "fitness": null,
+        "status": "pass",
+        "fixCount": 0,
+        "isBaseline": false,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 116,
+      "tMs": 66000,
+      "t": "candidate",
+      "candidate": {
+        "id": "c6",
+        "label": "v6",
+        "round": 2,
+        "parentId": "c2",
+        "createdBy": "SIMPLIFY",
+        "reason": "Merged the IDLE and LOAD control states",
+        "rtl": "// SAMPLE RTL for UI development\n// v6, attempt 1: SIMPLIFY (from v2). IDLE and LOAD merged into one state.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  localparam IDLE = 1'b0, RUN = 1'b1;\n  reg       state;\n  reg [4:0] cycle;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [17:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      state <= IDLE; cycle <= 5'd0; done <= 1'b0;\n    end else begin\n      case (state)\n        IDLE: begin\n          done <= 1'b0;\n          if (start) begin state <= RUN; cycle <= 5'd1; end\n        end\n        RUN: begin\n          cycle <= cycle + 5'd1;\n          if (cycle == 5'd15) begin state <= IDLE; done <= 1'b1; end\n        end\n      endcase\n    end\n  end\n  always @(posedge clk) begin\n    if (state == IDLE && start) acc <= {4'd0, sum};   // LOAD folded into IDLE\n    else if (state == RUN)      acc <= acc + sum;\n  end\nendmodule",
+        "attempts": [
+          {
+            "n": 1,
+            "by": "SIMPLIFY",
+            "reason": "Merged the IDLE and LOAD control states",
+            "rtl": "// SAMPLE RTL for UI development\n// v6, attempt 1: SIMPLIFY (from v2). IDLE and LOAD merged into one state.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  localparam IDLE = 1'b0, RUN = 1'b1;\n  reg       state;\n  reg [4:0] cycle;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [17:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      state <= IDLE; cycle <= 5'd0; done <= 1'b0;\n    end else begin\n      case (state)\n        IDLE: begin\n          done <= 1'b0;\n          if (start) begin state <= RUN; cycle <= 5'd1; end\n        end\n        RUN: begin\n          cycle <= cycle + 5'd1;\n          if (cycle == 5'd15) begin state <= IDLE; done <= 1'b1; end\n        end\n      endcase\n    end\n  end\n  always @(posedge clk) begin\n    if (state == IDLE && start) acc <= {4'd0, sum};   // LOAD folded into IDLE\n    else if (state == RUN)      acc <= acc + sum;\n  end\nendmodule",
+            "verification": {
+              "lint": "pass",
+              "lintLog": "Verilator: 0 warnings",
+              "passed": 14,
+              "total": 16,
+              "failures": [
+                {
+                  "name": "done_timing_back_to_back",
+                  "inputs": "two runs, start at cycle 1 and cycle 19",
+                  "expected": "done at cycle 18",
+                  "got": "done at cycle 17",
+                  "pass": false,
+                  "cycle": 17
+                },
+                {
+                  "name": "done_timing_basic",
+                  "inputs": "start at cycle 1, then idle",
+                  "expected": "done at cycle 18",
+                  "got": "done at cycle 17",
+                  "pass": false,
+                  "cycle": 17
+                }
+              ],
+              "diagnosis": "Merging IDLE and LOAD removed a cycle, so done rises one cycle early.",
+              "tool": "iverilog 12 + cocotb",
+              "durationMs": 2170
+            }
+          }
+        ],
+        "verification": {
+          "lint": "pass",
+          "lintLog": "Verilator: 0 warnings",
+          "passed": 14,
+          "total": 16,
+          "failures": [
+            {
+              "name": "done_timing_back_to_back",
+              "inputs": "two runs, start at cycle 1 and cycle 19",
+              "expected": "done at cycle 18",
+              "got": "done at cycle 17",
+              "pass": false,
+              "cycle": 17
+            },
+            {
+              "name": "done_timing_basic",
+              "inputs": "start at cycle 1, then idle",
+              "expected": "done at cycle 18",
+              "got": "done at cycle 17",
+              "pass": false,
+              "cycle": 17
+            }
+          ],
+          "diagnosis": "Merging IDLE and LOAD removed a cycle, so done rises one cycle early.",
+          "tool": "iverilog 12 + cocotb",
+          "durationMs": 2170
+        },
+        "ppa": null,
+        "fitness": null,
+        "status": "fail",
+        "fixCount": 0,
+        "isBaseline": false,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 117,
+      "tMs": 68000,
+      "t": "candidate",
+      "candidate": {
+        "id": "c6",
+        "label": "v6",
+        "round": 2,
+        "parentId": "c2",
+        "createdBy": "SIMPLIFY",
+        "reason": "Merged the IDLE and LOAD control states",
+        "rtl": "// SAMPLE RTL for UI development\n// v6, attempt 1: SIMPLIFY (from v2). IDLE and LOAD merged into one state.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  localparam IDLE = 1'b0, RUN = 1'b1;\n  reg       state;\n  reg [4:0] cycle;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [17:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      state <= IDLE; cycle <= 5'd0; done <= 1'b0;\n    end else begin\n      case (state)\n        IDLE: begin\n          done <= 1'b0;\n          if (start) begin state <= RUN; cycle <= 5'd1; end\n        end\n        RUN: begin\n          cycle <= cycle + 5'd1;\n          if (cycle == 5'd15) begin state <= IDLE; done <= 1'b1; end\n        end\n      endcase\n    end\n  end\n  always @(posedge clk) begin\n    if (state == IDLE && start) acc <= {4'd0, sum};   // LOAD folded into IDLE\n    else if (state == RUN)      acc <= acc + sum;\n  end\nendmodule",
+        "attempts": [
+          {
+            "n": 1,
+            "by": "SIMPLIFY",
+            "reason": "Merged the IDLE and LOAD control states",
+            "rtl": "// SAMPLE RTL for UI development\n// v6, attempt 1: SIMPLIFY (from v2). IDLE and LOAD merged into one state.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  localparam IDLE = 1'b0, RUN = 1'b1;\n  reg       state;\n  reg [4:0] cycle;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [17:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      state <= IDLE; cycle <= 5'd0; done <= 1'b0;\n    end else begin\n      case (state)\n        IDLE: begin\n          done <= 1'b0;\n          if (start) begin state <= RUN; cycle <= 5'd1; end\n        end\n        RUN: begin\n          cycle <= cycle + 5'd1;\n          if (cycle == 5'd15) begin state <= IDLE; done <= 1'b1; end\n        end\n      endcase\n    end\n  end\n  always @(posedge clk) begin\n    if (state == IDLE && start) acc <= {4'd0, sum};   // LOAD folded into IDLE\n    else if (state == RUN)      acc <= acc + sum;\n  end\nendmodule",
+            "verification": {
+              "lint": "pass",
+              "lintLog": "Verilator: 0 warnings",
+              "passed": 14,
+              "total": 16,
+              "failures": [
+                {
+                  "name": "done_timing_back_to_back",
+                  "inputs": "two runs, start at cycle 1 and cycle 19",
+                  "expected": "done at cycle 18",
+                  "got": "done at cycle 17",
+                  "pass": false,
+                  "cycle": 17
+                },
+                {
+                  "name": "done_timing_basic",
+                  "inputs": "start at cycle 1, then idle",
+                  "expected": "done at cycle 18",
+                  "got": "done at cycle 17",
+                  "pass": false,
+                  "cycle": 17
+                }
+              ],
+              "diagnosis": "Merging IDLE and LOAD removed a cycle, so done rises one cycle early.",
+              "tool": "iverilog 12 + cocotb",
+              "durationMs": 2170
+            }
+          }
+        ],
+        "verification": {
+          "lint": "pass",
+          "lintLog": "Verilator: 0 warnings",
+          "passed": 14,
+          "total": 16,
+          "failures": [
+            {
+              "name": "done_timing_back_to_back",
+              "inputs": "two runs, start at cycle 1 and cycle 19",
+              "expected": "done at cycle 18",
+              "got": "done at cycle 17",
+              "pass": false,
+              "cycle": 17
+            },
+            {
+              "name": "done_timing_basic",
+              "inputs": "start at cycle 1, then idle",
+              "expected": "done at cycle 18",
+              "got": "done at cycle 17",
+              "pass": false,
+              "cycle": 17
+            }
+          ],
+          "diagnosis": "Merging IDLE and LOAD removed a cycle, so done rises one cycle early.",
+          "tool": "iverilog 12 + cocotb",
+          "durationMs": 2170
+        },
+        "ppa": null,
+        "fitness": null,
+        "status": "fixing",
+        "fixCount": 0,
+        "isBaseline": false,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 118,
+      "tMs": 70000,
+      "t": "candidate",
+      "candidate": {
+        "id": "c6",
+        "label": "v6",
+        "round": 2,
+        "parentId": "c2",
+        "createdBy": "SIMPLIFY",
+        "reason": "Merged the IDLE and LOAD control states",
+        "rtl": "// SAMPLE RTL for UI development\n// v6, attempt 2: FIX. Hold the merged state one extra cycle before raising done.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  localparam IDLE = 1'b0, RUN = 1'b1;\n  reg       state;\n  reg [4:0] cycle;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [17:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      state <= IDLE; cycle <= 5'd0; done <= 1'b0;\n    end else begin\n      case (state)\n        IDLE: begin\n          done <= 1'b0;\n          if (start) begin state <= RUN; cycle <= 5'd1; end\n        end\n        RUN: begin\n          cycle <= cycle + 5'd1;\n          if (cycle == 5'd16) begin state <= IDLE; done <= 1'b1; end\n        end\n      endcase\n    end\n  end\n  always @(posedge clk) begin\n    if (state == IDLE && start) acc <= {4'd0, sum};\n    else if (state == RUN)      acc <= acc + sum;\n  end\nendmodule",
+        "attempts": [
+          {
+            "n": 1,
+            "by": "SIMPLIFY",
+            "reason": "Merged the IDLE and LOAD control states",
+            "rtl": "// SAMPLE RTL for UI development\n// v6, attempt 1: SIMPLIFY (from v2). IDLE and LOAD merged into one state.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  localparam IDLE = 1'b0, RUN = 1'b1;\n  reg       state;\n  reg [4:0] cycle;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [17:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      state <= IDLE; cycle <= 5'd0; done <= 1'b0;\n    end else begin\n      case (state)\n        IDLE: begin\n          done <= 1'b0;\n          if (start) begin state <= RUN; cycle <= 5'd1; end\n        end\n        RUN: begin\n          cycle <= cycle + 5'd1;\n          if (cycle == 5'd15) begin state <= IDLE; done <= 1'b1; end\n        end\n      endcase\n    end\n  end\n  always @(posedge clk) begin\n    if (state == IDLE && start) acc <= {4'd0, sum};   // LOAD folded into IDLE\n    else if (state == RUN)      acc <= acc + sum;\n  end\nendmodule",
+            "verification": {
+              "lint": "pass",
+              "lintLog": "Verilator: 0 warnings",
+              "passed": 14,
+              "total": 16,
+              "failures": [
+                {
+                  "name": "done_timing_back_to_back",
+                  "inputs": "two runs, start at cycle 1 and cycle 19",
+                  "expected": "done at cycle 18",
+                  "got": "done at cycle 17",
+                  "pass": false,
+                  "cycle": 17
+                },
+                {
+                  "name": "done_timing_basic",
+                  "inputs": "start at cycle 1, then idle",
+                  "expected": "done at cycle 18",
+                  "got": "done at cycle 17",
+                  "pass": false,
+                  "cycle": 17
+                }
+              ],
+              "diagnosis": "Merging IDLE and LOAD removed a cycle, so done rises one cycle early.",
+              "tool": "iverilog 12 + cocotb",
+              "durationMs": 2170
+            }
+          }
+        ],
+        "verification": {
+          "lint": "pass",
+          "lintLog": "Verilator: 0 warnings",
+          "passed": 14,
+          "total": 16,
+          "failures": [
+            {
+              "name": "done_timing_back_to_back",
+              "inputs": "two runs, start at cycle 1 and cycle 19",
+              "expected": "done at cycle 18",
+              "got": "done at cycle 17",
+              "pass": false,
+              "cycle": 17
+            },
+            {
+              "name": "done_timing_basic",
+              "inputs": "start at cycle 1, then idle",
+              "expected": "done at cycle 18",
+              "got": "done at cycle 17",
+              "pass": false,
+              "cycle": 17
+            }
+          ],
+          "diagnosis": "Merging IDLE and LOAD removed a cycle, so done rises one cycle early.",
+          "tool": "iverilog 12 + cocotb",
+          "durationMs": 2170
+        },
+        "ppa": null,
+        "fitness": null,
+        "status": "simulating",
+        "fixCount": 0,
+        "isBaseline": false,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 119,
+      "tMs": 71000,
+      "t": "candidate",
+      "candidate": {
+        "id": "c6",
+        "label": "v6",
+        "round": 2,
+        "parentId": "c2",
+        "createdBy": "SIMPLIFY",
+        "reason": "Merged the IDLE and LOAD control states",
+        "rtl": "// SAMPLE RTL for UI development\n// v6, attempt 2: FIX. Hold the merged state one extra cycle before raising done.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  localparam IDLE = 1'b0, RUN = 1'b1;\n  reg       state;\n  reg [4:0] cycle;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [17:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      state <= IDLE; cycle <= 5'd0; done <= 1'b0;\n    end else begin\n      case (state)\n        IDLE: begin\n          done <= 1'b0;\n          if (start) begin state <= RUN; cycle <= 5'd1; end\n        end\n        RUN: begin\n          cycle <= cycle + 5'd1;\n          if (cycle == 5'd16) begin state <= IDLE; done <= 1'b1; end\n        end\n      endcase\n    end\n  end\n  always @(posedge clk) begin\n    if (state == IDLE && start) acc <= {4'd0, sum};\n    else if (state == RUN)      acc <= acc + sum;\n  end\nendmodule",
+        "attempts": [
+          {
+            "n": 1,
+            "by": "SIMPLIFY",
+            "reason": "Merged the IDLE and LOAD control states",
+            "rtl": "// SAMPLE RTL for UI development\n// v6, attempt 1: SIMPLIFY (from v2). IDLE and LOAD merged into one state.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  localparam IDLE = 1'b0, RUN = 1'b1;\n  reg       state;\n  reg [4:0] cycle;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [17:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      state <= IDLE; cycle <= 5'd0; done <= 1'b0;\n    end else begin\n      case (state)\n        IDLE: begin\n          done <= 1'b0;\n          if (start) begin state <= RUN; cycle <= 5'd1; end\n        end\n        RUN: begin\n          cycle <= cycle + 5'd1;\n          if (cycle == 5'd15) begin state <= IDLE; done <= 1'b1; end\n        end\n      endcase\n    end\n  end\n  always @(posedge clk) begin\n    if (state == IDLE && start) acc <= {4'd0, sum};   // LOAD folded into IDLE\n    else if (state == RUN)      acc <= acc + sum;\n  end\nendmodule",
+            "verification": {
+              "lint": "pass",
+              "lintLog": "Verilator: 0 warnings",
+              "passed": 14,
+              "total": 16,
+              "failures": [
+                {
+                  "name": "done_timing_back_to_back",
+                  "inputs": "two runs, start at cycle 1 and cycle 19",
+                  "expected": "done at cycle 18",
+                  "got": "done at cycle 17",
+                  "pass": false,
+                  "cycle": 17
+                },
+                {
+                  "name": "done_timing_basic",
+                  "inputs": "start at cycle 1, then idle",
+                  "expected": "done at cycle 18",
+                  "got": "done at cycle 17",
+                  "pass": false,
+                  "cycle": 17
+                }
+              ],
+              "diagnosis": "Merging IDLE and LOAD removed a cycle, so done rises one cycle early.",
+              "tool": "iverilog 12 + cocotb",
+              "durationMs": 2170
+            }
+          },
+          {
+            "n": 2,
+            "by": "FIX",
+            "reason": "Held the merged state one extra cycle before raising done",
+            "rtl": "// SAMPLE RTL for UI development\n// v6, attempt 2: FIX. Hold the merged state one extra cycle before raising done.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  localparam IDLE = 1'b0, RUN = 1'b1;\n  reg       state;\n  reg [4:0] cycle;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [17:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      state <= IDLE; cycle <= 5'd0; done <= 1'b0;\n    end else begin\n      case (state)\n        IDLE: begin\n          done <= 1'b0;\n          if (start) begin state <= RUN; cycle <= 5'd1; end\n        end\n        RUN: begin\n          cycle <= cycle + 5'd1;\n          if (cycle == 5'd16) begin state <= IDLE; done <= 1'b1; end\n        end\n      endcase\n    end\n  end\n  always @(posedge clk) begin\n    if (state == IDLE && start) acc <= {4'd0, sum};\n    else if (state == RUN)      acc <= acc + sum;\n  end\nendmodule",
+            "verification": {
+              "lint": "pass",
+              "lintLog": "Verilator: 0 warnings",
+              "passed": 15,
+              "total": 16,
+              "failures": [
+                {
+                  "name": "restart_during_run",
+                  "inputs": "start pulsed again at cycle 5",
+                  "expected": "start ignored, done at cycle 18",
+                  "got": "run restarted, done at cycle 22",
+                  "pass": false,
+                  "cycle": 22
+                }
+              ],
+              "diagnosis": "The merged state now accepts a new start while it is still running, so the run restarts.",
+              "tool": "iverilog 12 + cocotb",
+              "durationMs": 2180
+            }
+          }
+        ],
+        "verification": {
+          "lint": "pass",
+          "lintLog": "Verilator: 0 warnings",
+          "passed": 15,
+          "total": 16,
+          "failures": [
+            {
+              "name": "restart_during_run",
+              "inputs": "start pulsed again at cycle 5",
+              "expected": "start ignored, done at cycle 18",
+              "got": "run restarted, done at cycle 22",
+              "pass": false,
+              "cycle": 22
+            }
+          ],
+          "diagnosis": "The merged state now accepts a new start while it is still running, so the run restarts.",
+          "tool": "iverilog 12 + cocotb",
+          "durationMs": 2180
+        },
+        "ppa": null,
+        "fitness": null,
+        "status": "fail",
+        "fixCount": 0,
+        "isBaseline": false,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 120,
+      "tMs": 72000,
+      "t": "candidate",
+      "candidate": {
+        "id": "c6",
+        "label": "v6",
+        "round": 2,
+        "parentId": "c2",
+        "createdBy": "SIMPLIFY",
+        "reason": "Merged the IDLE and LOAD control states",
+        "rtl": "// SAMPLE RTL for UI development\n// v6, attempt 2: FIX. Hold the merged state one extra cycle before raising done.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  localparam IDLE = 1'b0, RUN = 1'b1;\n  reg       state;\n  reg [4:0] cycle;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [17:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      state <= IDLE; cycle <= 5'd0; done <= 1'b0;\n    end else begin\n      case (state)\n        IDLE: begin\n          done <= 1'b0;\n          if (start) begin state <= RUN; cycle <= 5'd1; end\n        end\n        RUN: begin\n          cycle <= cycle + 5'd1;\n          if (cycle == 5'd16) begin state <= IDLE; done <= 1'b1; end\n        end\n      endcase\n    end\n  end\n  always @(posedge clk) begin\n    if (state == IDLE && start) acc <= {4'd0, sum};\n    else if (state == RUN)      acc <= acc + sum;\n  end\nendmodule",
+        "attempts": [
+          {
+            "n": 1,
+            "by": "SIMPLIFY",
+            "reason": "Merged the IDLE and LOAD control states",
+            "rtl": "// SAMPLE RTL for UI development\n// v6, attempt 1: SIMPLIFY (from v2). IDLE and LOAD merged into one state.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  localparam IDLE = 1'b0, RUN = 1'b1;\n  reg       state;\n  reg [4:0] cycle;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [17:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      state <= IDLE; cycle <= 5'd0; done <= 1'b0;\n    end else begin\n      case (state)\n        IDLE: begin\n          done <= 1'b0;\n          if (start) begin state <= RUN; cycle <= 5'd1; end\n        end\n        RUN: begin\n          cycle <= cycle + 5'd1;\n          if (cycle == 5'd15) begin state <= IDLE; done <= 1'b1; end\n        end\n      endcase\n    end\n  end\n  always @(posedge clk) begin\n    if (state == IDLE && start) acc <= {4'd0, sum};   // LOAD folded into IDLE\n    else if (state == RUN)      acc <= acc + sum;\n  end\nendmodule",
+            "verification": {
+              "lint": "pass",
+              "lintLog": "Verilator: 0 warnings",
+              "passed": 14,
+              "total": 16,
+              "failures": [
+                {
+                  "name": "done_timing_back_to_back",
+                  "inputs": "two runs, start at cycle 1 and cycle 19",
+                  "expected": "done at cycle 18",
+                  "got": "done at cycle 17",
+                  "pass": false,
+                  "cycle": 17
+                },
+                {
+                  "name": "done_timing_basic",
+                  "inputs": "start at cycle 1, then idle",
+                  "expected": "done at cycle 18",
+                  "got": "done at cycle 17",
+                  "pass": false,
+                  "cycle": 17
+                }
+              ],
+              "diagnosis": "Merging IDLE and LOAD removed a cycle, so done rises one cycle early.",
+              "tool": "iverilog 12 + cocotb",
+              "durationMs": 2170
+            }
+          },
+          {
+            "n": 2,
+            "by": "FIX",
+            "reason": "Held the merged state one extra cycle before raising done",
+            "rtl": "// SAMPLE RTL for UI development\n// v6, attempt 2: FIX. Hold the merged state one extra cycle before raising done.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  localparam IDLE = 1'b0, RUN = 1'b1;\n  reg       state;\n  reg [4:0] cycle;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [17:0] sum = p0 + p1 + p2 + p3;\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      state <= IDLE; cycle <= 5'd0; done <= 1'b0;\n    end else begin\n      case (state)\n        IDLE: begin\n          done <= 1'b0;\n          if (start) begin state <= RUN; cycle <= 5'd1; end\n        end\n        RUN: begin\n          cycle <= cycle + 5'd1;\n          if (cycle == 5'd16) begin state <= IDLE; done <= 1'b1; end\n        end\n      endcase\n    end\n  end\n  always @(posedge clk) begin\n    if (state == IDLE && start) acc <= {4'd0, sum};\n    else if (state == RUN)      acc <= acc + sum;\n  end\nendmodule",
+            "verification": {
+              "lint": "pass",
+              "lintLog": "Verilator: 0 warnings",
+              "passed": 15,
+              "total": 16,
+              "failures": [
+                {
+                  "name": "restart_during_run",
+                  "inputs": "start pulsed again at cycle 5",
+                  "expected": "start ignored, done at cycle 18",
+                  "got": "run restarted, done at cycle 22",
+                  "pass": false,
+                  "cycle": 22
+                }
+              ],
+              "diagnosis": "The merged state now accepts a new start while it is still running, so the run restarts.",
+              "tool": "iverilog 12 + cocotb",
+              "durationMs": 2180
+            }
+          }
+        ],
+        "verification": {
+          "lint": "pass",
+          "lintLog": "Verilator: 0 warnings",
+          "passed": 15,
+          "total": 16,
+          "failures": [
+            {
+              "name": "restart_during_run",
+              "inputs": "start pulsed again at cycle 5",
+              "expected": "start ignored, done at cycle 18",
+              "got": "run restarted, done at cycle 22",
+              "pass": false,
+              "cycle": 22
+            }
+          ],
+          "diagnosis": "The merged state now accepts a new start while it is still running, so the run restarts.",
+          "tool": "iverilog 12 + cocotb",
+          "durationMs": 2180
+        },
+        "ppa": null,
+        "fitness": null,
+        "status": "rejected",
+        "fixCount": 0,
+        "isBaseline": false,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 121,
+      "tMs": 72000,
+      "t": "caption",
+      "text": "v6 failed again after a fix and was rejected.",
+      "chapter": "Round 2"
+    },
+    {
+      "seq": 122,
+      "tMs": 73000,
+      "t": "candidate",
+      "candidate": {
+        "id": "c5",
+        "label": "v5",
+        "round": 2,
+        "parentId": "c3",
+        "createdBy": "OPTIMIZE",
+        "reason": "Trimmed pipeline registers to the widths the math needs",
+        "rtl": "// SAMPLE RTL for UI development\n// v5: OPTIMIZE (from v3). Pipeline registers trimmed to the widths the math needs.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0]  cycle;\n  reg        busy;\n  reg [17:0] sum_q;              // 4 x 16-bit products need 18 bits, not 22\n  reg        busy_q;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [16:0] s01 = p0 + p1;\n  wire [16:0] s23 = p2 + p3;\n  always @(posedge clk) begin\n    sum_q  <= s01 + s23;\n    busy_q <= busy;\n  end\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc <= 22'd0; cycle <= 5'd0; busy <= 1'b0; done <= 1'b0;\n    end else begin\n      if (start && !busy) begin\n        acc <= 22'd0; cycle <= 5'd0; busy <= 1'b1; done <= 1'b0;\n      end else if (busy) begin\n        cycle <= cycle + 5'd1;\n        if (cycle == 5'd15) busy <= 1'b0;\n      end\n      if (busy_q) acc <= acc + sum_q;\n      if (cycle == 5'd16 && busy_q) done <= 1'b1;\n    end\n  end\nendmodule",
+        "attempts": [
+          {
+            "n": 1,
+            "by": "OPTIMIZE",
+            "reason": "Trimmed pipeline registers to the widths the math needs",
+            "rtl": "// SAMPLE RTL for UI development\n// v5: OPTIMIZE (from v3). Pipeline registers trimmed to the widths the math needs.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0]  cycle;\n  reg        busy;\n  reg [17:0] sum_q;              // 4 x 16-bit products need 18 bits, not 22\n  reg        busy_q;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [16:0] s01 = p0 + p1;\n  wire [16:0] s23 = p2 + p3;\n  always @(posedge clk) begin\n    sum_q  <= s01 + s23;\n    busy_q <= busy;\n  end\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc <= 22'd0; cycle <= 5'd0; busy <= 1'b0; done <= 1'b0;\n    end else begin\n      if (start && !busy) begin\n        acc <= 22'd0; cycle <= 5'd0; busy <= 1'b1; done <= 1'b0;\n      end else if (busy) begin\n        cycle <= cycle + 5'd1;\n        if (cycle == 5'd15) busy <= 1'b0;\n      end\n      if (busy_q) acc <= acc + sum_q;\n      if (cycle == 5'd16 && busy_q) done <= 1'b1;\n    end\n  end\nendmodule",
+            "verification": {
+              "lint": "pass",
+              "lintLog": "Verilator: 0 warnings",
+              "passed": 16,
+              "total": 16,
+              "failures": [],
+              "tool": "iverilog 12 + cocotb",
+              "durationMs": 2250
+            }
+          }
+        ],
+        "verification": {
+          "lint": "pass",
+          "lintLog": "Verilator: 0 warnings",
+          "passed": 16,
+          "total": 16,
+          "failures": [],
+          "tool": "iverilog 12 + cocotb",
+          "durationMs": 2250
+        },
+        "ppa": null,
+        "fitness": null,
+        "status": "synthesizing",
+        "fixCount": 0,
+        "isBaseline": false,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 123,
+      "tMs": 76000,
+      "t": "candidate",
+      "candidate": {
+        "id": "c5",
+        "label": "v5",
+        "round": 2,
+        "parentId": "c3",
+        "createdBy": "OPTIMIZE",
+        "reason": "Trimmed pipeline registers to the widths the math needs",
+        "rtl": "// SAMPLE RTL for UI development\n// v5: OPTIMIZE (from v3). Pipeline registers trimmed to the widths the math needs.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0]  cycle;\n  reg        busy;\n  reg [17:0] sum_q;              // 4 x 16-bit products need 18 bits, not 22\n  reg        busy_q;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [16:0] s01 = p0 + p1;\n  wire [16:0] s23 = p2 + p3;\n  always @(posedge clk) begin\n    sum_q  <= s01 + s23;\n    busy_q <= busy;\n  end\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc <= 22'd0; cycle <= 5'd0; busy <= 1'b0; done <= 1'b0;\n    end else begin\n      if (start && !busy) begin\n        acc <= 22'd0; cycle <= 5'd0; busy <= 1'b1; done <= 1'b0;\n      end else if (busy) begin\n        cycle <= cycle + 5'd1;\n        if (cycle == 5'd15) busy <= 1'b0;\n      end\n      if (busy_q) acc <= acc + sum_q;\n      if (cycle == 5'd16 && busy_q) done <= 1'b1;\n    end\n  end\nendmodule",
+        "attempts": [
+          {
+            "n": 1,
+            "by": "OPTIMIZE",
+            "reason": "Trimmed pipeline registers to the widths the math needs",
+            "rtl": "// SAMPLE RTL for UI development\n// v5: OPTIMIZE (from v3). Pipeline registers trimmed to the widths the math needs.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0]  cycle;\n  reg        busy;\n  reg [17:0] sum_q;              // 4 x 16-bit products need 18 bits, not 22\n  reg        busy_q;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [16:0] s01 = p0 + p1;\n  wire [16:0] s23 = p2 + p3;\n  always @(posedge clk) begin\n    sum_q  <= s01 + s23;\n    busy_q <= busy;\n  end\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc <= 22'd0; cycle <= 5'd0; busy <= 1'b0; done <= 1'b0;\n    end else begin\n      if (start && !busy) begin\n        acc <= 22'd0; cycle <= 5'd0; busy <= 1'b1; done <= 1'b0;\n      end else if (busy) begin\n        cycle <= cycle + 5'd1;\n        if (cycle == 5'd15) busy <= 1'b0;\n      end\n      if (busy_q) acc <= acc + sum_q;\n      if (cycle == 5'd16 && busy_q) done <= 1'b1;\n    end\n  end\nendmodule",
+            "verification": {
+              "lint": "pass",
+              "lintLog": "Verilator: 0 warnings",
+              "passed": 16,
+              "total": 16,
+              "failures": [],
+              "tool": "iverilog 12 + cocotb",
+              "durationMs": 2250
+            }
+          }
+        ],
+        "verification": {
+          "lint": "pass",
+          "lintLog": "Verilator: 0 warnings",
+          "passed": 16,
+          "total": 16,
+          "failures": [],
+          "tool": "iverilog 12 + cocotb",
+          "durationMs": 2250
+        },
+        "ppa": {
+          "areaUm2": 1520,
+          "cellCount": 334,
+          "clockPeriodNs": 3.38,
+          "powerMw": 1.66,
+          "tools": [
+            "Yosys",
+            "OpenSTA"
+          ],
+          "pdk": "Nangate45"
+        },
+        "fitness": {
+          "score": 11.06,
+          "priority": "area",
+          "weights": {
+            "area": 0.6,
+            "timing": 0.25,
+            "power": 0.15
+          },
+          "gains": {
+            "area": 17.39,
+            "timing": -5.62,
+            "power": 13.54
+          },
+          "baselineId": "c1"
+        },
+        "status": "measured",
+        "fixCount": 0,
+        "isBaseline": false,
+        "isElite": false
+      }
+    },
+    {
+      "seq": 124,
+      "tMs": 76000,
+      "t": "caption",
+      "text": "v5: area −17.4% vs v1, clock period +5.6%, power −13.5%.",
+      "chapter": "Round 2"
+    },
+    {
+      "seq": 125,
+      "tMs": 78000,
+      "t": "winner",
+      "candidateId": "c5",
+      "by": "ai",
+      "aiPickId": "c5"
+    },
+    {
+      "seq": 126,
+      "tMs": 78000,
+      "t": "stage",
+      "stage": "evolve",
+      "status": "done"
+    },
+    {
+      "seq": 127,
+      "tMs": 78000,
+      "t": "caption",
+      "text": "Winner by fitness: v5.",
+      "chapter": "Round 2"
+    },
+    {
+      "seq": 128,
+      "tMs": 80000,
+      "t": "stage",
+      "stage": "prove",
+      "status": "active"
+    },
+    {
+      "seq": 129,
+      "tMs": 80000,
+      "t": "caption",
+      "text": "Checking v5 against v1 with Yosys EQY.",
+      "chapter": "Prove"
+    },
+    {
+      "seq": 130,
+      "tMs": 85000,
+      "t": "candidate",
+      "candidate": {
+        "id": "c5",
+        "label": "v5",
+        "round": 2,
+        "parentId": "c3",
+        "createdBy": "OPTIMIZE",
+        "reason": "Trimmed pipeline registers to the widths the math needs",
+        "rtl": "// SAMPLE RTL for UI development\n// v5: OPTIMIZE (from v3). Pipeline registers trimmed to the widths the math needs.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0]  cycle;\n  reg        busy;\n  reg [17:0] sum_q;              // 4 x 16-bit products need 18 bits, not 22\n  reg        busy_q;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [16:0] s01 = p0 + p1;\n  wire [16:0] s23 = p2 + p3;\n  always @(posedge clk) begin\n    sum_q  <= s01 + s23;\n    busy_q <= busy;\n  end\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc <= 22'd0; cycle <= 5'd0; busy <= 1'b0; done <= 1'b0;\n    end else begin\n      if (start && !busy) begin\n        acc <= 22'd0; cycle <= 5'd0; busy <= 1'b1; done <= 1'b0;\n      end else if (busy) begin\n        cycle <= cycle + 5'd1;\n        if (cycle == 5'd15) busy <= 1'b0;\n      end\n      if (busy_q) acc <= acc + sum_q;\n      if (cycle == 5'd16 && busy_q) done <= 1'b1;\n    end\n  end\nendmodule",
+        "attempts": [
+          {
+            "n": 1,
+            "by": "OPTIMIZE",
+            "reason": "Trimmed pipeline registers to the widths the math needs",
+            "rtl": "// SAMPLE RTL for UI development\n// v5: OPTIMIZE (from v3). Pipeline registers trimmed to the widths the math needs.\nmodule mac4 (\n  input  wire        clk,\n  input  wire        rst_n,\n  input  wire        start,\n  input  wire [31:0] a,          // four 8-bit lanes\n  input  wire [31:0] b,          // four 8-bit lanes\n  output reg  [21:0] acc,\n  output reg         done\n);\n  reg [4:0]  cycle;\n  reg        busy;\n  reg [17:0] sum_q;              // 4 x 16-bit products need 18 bits, not 22\n  reg        busy_q;\n  wire [15:0] p0 = a[7:0]   * b[7:0];\n  wire [15:0] p1 = a[15:8]  * b[15:8];\n  wire [15:0] p2 = a[23:16] * b[23:16];\n  wire [15:0] p3 = a[31:24] * b[31:24];\n  wire [16:0] s01 = p0 + p1;\n  wire [16:0] s23 = p2 + p3;\n  always @(posedge clk) begin\n    sum_q  <= s01 + s23;\n    busy_q <= busy;\n  end\n  always @(posedge clk or negedge rst_n) begin\n    if (!rst_n) begin\n      acc <= 22'd0; cycle <= 5'd0; busy <= 1'b0; done <= 1'b0;\n    end else begin\n      if (start && !busy) begin\n        acc <= 22'd0; cycle <= 5'd0; busy <= 1'b1; done <= 1'b0;\n      end else if (busy) begin\n        cycle <= cycle + 5'd1;\n        if (cycle == 5'd15) busy <= 1'b0;\n      end\n      if (busy_q) acc <= acc + sum_q;\n      if (cycle == 5'd16 && busy_q) done <= 1'b1;\n    end\n  end\nendmodule",
+            "verification": {
+              "lint": "pass",
+              "lintLog": "Verilator: 0 warnings",
+              "passed": 16,
+              "total": 16,
+              "failures": [],
+              "tool": "iverilog 12 + cocotb",
+              "durationMs": 2250
+            }
+          }
+        ],
+        "verification": {
+          "lint": "pass",
+          "lintLog": "Verilator: 0 warnings",
+          "passed": 16,
+          "total": 16,
+          "failures": [],
+          "tool": "iverilog 12 + cocotb",
+          "durationMs": 2250
+        },
+        "ppa": {
+          "areaUm2": 1520,
+          "cellCount": 334,
+          "clockPeriodNs": 3.38,
+          "powerMw": 1.66,
+          "tools": [
+            "Yosys",
+            "OpenSTA"
+          ],
+          "pdk": "Nangate45"
+        },
+        "fitness": {
+          "score": 11.06,
+          "priority": "area",
+          "weights": {
+            "area": 0.6,
+            "timing": 0.25,
+            "power": 0.15
+          },
+          "gains": {
+            "area": 17.39,
+            "timing": -5.62,
+            "power": 13.54
+          },
+          "baselineId": "c1"
+        },
+        "status": "measured",
+        "fixCount": 0,
+        "isBaseline": false,
+        "isElite": false,
+        "eqy": {
+          "status": "proven",
+          "againstId": "c1",
+          "tool": "yosys-eqy",
+          "log": "yosys-eqy: SAMPLE log, equivalence proven for all 16 test cycles and the full state space (placeholder)."
+        }
+      }
+    },
+    {
+      "seq": 131,
+      "tMs": 85000,
+      "t": "op",
+      "by": "ai",
+      "op": {
+        "op": "connect",
+        "source": "c5",
+        "target": "c1",
+        "kind": "proof",
+        "label": "Proven equal (EQY)"
+      }
+    },
+    {
+      "seq": 132,
+      "tMs": 85000,
+      "t": "stage",
+      "stage": "prove",
+      "status": "done"
+    },
+    {
+      "seq": 133,
+      "tMs": 85000,
+      "t": "caption",
+      "text": "Proven equal to v1.",
+      "chapter": "Prove"
+    },
+    {
+      "seq": 134,
+      "tMs": 86000,
+      "t": "credits",
+      "usedUsd": 0.42,
+      "capUsd": null
+    },
+    {
+      "seq": 135,
+      "tMs": 86000,
+      "t": "artifact",
+      "path": "tests/golden_model.py",
+      "content": "# SAMPLE FILE for UI development. Not a real golden model.\ndef golden_mac4(a_lanes, b_lanes, cycles=16):\n    \"\"\"Reference result: sum of lane products over 16 cycles.\"\"\"\n    acc = 0\n    for _ in range(cycles):\n        acc += sum(a * b for a, b in zip(a_lanes, b_lanes))\n    return acc & 0x3FFFFF  # 22-bit result\n"
+    },
+    {
+      "seq": 136,
+      "tMs": 86000,
+      "t": "artifact",
+      "path": "tests/test_mac4.py",
+      "content": "# SAMPLE FILE for UI development. Not a real testbench.\nimport cocotb\nfrom golden_model import golden_mac4\n\n@cocotb.test()\nasync def acc_16_cycles_max(dut):\n    expected = golden_mac4([255] * 4, [255] * 4)\n    # drive 16 cycles of max inputs, then compare dut.acc with expected\n    assert expected == 0x3F8040\n"
+    },
+    {
+      "seq": 137,
+      "tMs": 86000,
+      "t": "artifact",
+      "path": "reports/synth_v5.txt",
+      "content": "SAMPLE REPORT for UI development. Placeholder numbers, not results.\ndesign: mac4 (v5)   pdk: Nangate45   tools: Yosys, OpenSTA\narea:          1520 um^2\ncells:         334\nclock period:  3.38 ns\npower:         1.66 mW\n"
+    },
+    {
+      "seq": 138,
+      "tMs": 86000,
+      "t": "artifact",
+      "path": "reports/eqy_v5_vs_v1.log",
+      "content": "SAMPLE LOG for UI development. Not a real proof.\nyosys-eqy: comparing v5 against v1\nyosys-eqy: partition mac4 ... equivalent\nyosys-eqy: result PROVEN (placeholder)\n"
+    },
+    {
+      "seq": 139,
+      "tMs": 88000,
+      "t": "run",
+      "phase": "done"
+    },
+    {
+      "seq": 140,
+      "tMs": 88000,
+      "t": "caption",
+      "text": "Done. 6 versions, 2 fixes, 1 rejected. Human inputs: 2.",
+      "chapter": "Done"
+    }
+  ]
+}

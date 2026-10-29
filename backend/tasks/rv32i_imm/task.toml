@@ -1,0 +1,50 @@
+schema = "verity.task/1"
+id = "rv32i_imm"
+title = "RV32I immediate generator"
+summary = "RV32I I, S, B, U and J immediate extraction"
+spec_text = "Extract the 32-bit immediate from instr using CPU_CONTRACT section 2 RV32I formats. Return zero for every unlisted opcode."
+top = "rv32i_imm"
+family = "cpu"
+element_type = "none"
+latency_cycles = 0
+max_lines = 150
+test_count = 10
+default_priority = "area"
+priorities = ["area", "speed", "power"]
+target_clock_ns = 10.0
+max_plan_blocks = 8
+eval_only = true
+is_custom = false
+coding_rules = [
+  "Purely combinational, no clock and no reset. All ports are unsigned logic. Outputs settle in the same step as inputs.",
+  "I opcodes 0x03, 0x13, 0x67: sign-extend instr[31:20]. S opcode 0x23: sign-extend {instr[31:25], instr[11:7]}.",
+  "B opcode 0x63: sign-extend {instr[31], instr[7], instr[30:25], instr[11:8], 0}.",
+  "U opcodes 0x37 and 0x17: instr[31:12] followed by twelve zero bits. J opcode 0x6f: sign-extend {instr[31], instr[19:12], instr[20], instr[30:21], 0}.",
+  "Ignore non-immediate instruction fields. Every other opcode returns imm = 0.",
+]
+
+[clock]
+name = ""
+
+[reset]
+name = ""
+active_low = true
+synchronous = true
+
+[sim]
+seed = 1
+max_cycles_per_case = 512
+
+[eqy]
+enabled = true
+depth = 4
+
+[[ports]]
+name = "instr"
+dir = "in"
+width = 32
+
+[[ports]]
+name = "imm"
+dir = "out"
+width = 32

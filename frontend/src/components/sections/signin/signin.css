@@ -1,0 +1,34 @@
+/* /signin: one quiet column on the bench's warm ground. Amber is the Sign in button and keyboard focus, nothing else
+   (beside the account form, the access code form's Continue is outlined so Sign in stays the one filled action).
+   A failed sign-in is a hollow square plus the sentence, never red. Tokens only, no raw colours. Scoped under .vs.signin,
+   which keeps the studio's fonts and status squares; the access code form comes from the bench's styles. */
+
+.vs.signin { min-height: 100dvh; display: flex; flex-direction: column; background: var(--rk-ground); color: var(--rk-ink); font-family: var(--font-body); }
+.vs.signin .si-top { flex: none; padding: 16px 20px; }
+.vs.signin .si-main { flex: 1; display: flex; flex-direction: column; justify-content: center; width: min(100%, 400px); margin: 0 auto; padding: 0 20px 12vh; }
+.vs.signin h1 { margin: 0 0 10px; font: 800 clamp(36px, 3.4vw, 46px)/1.02 var(--font-display); letter-spacing: .005em; color: var(--rk-ink); }
+.vs.signin .si-lede { margin: 0 0 28px; font-size: 16px; line-height: 1.55; color: var(--rk-ink-2); }
+
+.vs.signin .si-form { display: flex; flex-direction: column; gap: 14px; }
+.vs.signin .si-field { display: flex; flex-direction: column; gap: 6px; }
+.vs.signin .si-field label { font: 600 14px/1.3 var(--font-body); color: var(--rk-ink); }
+.vs.signin .si-input { width: 100%; padding: 10px 12px; background: var(--rk-inset); color: var(--rk-ink); border: 1px solid var(--rk-rule-2); border-radius: 8px; font: 400 16px/1.3 var(--font-body); }
+.vs.signin .si-input::placeholder { color: var(--rk-ink-3); }
+.vs.signin .si-input:hover:not(:disabled) { border-color: var(--rk-ink-3); }
+.vs.signin .si-input:focus-visible { outline: none; border-color: var(--rk-a); box-shadow: inset 0 0 0 1px var(--rk-a); }
+.vs.signin .si-input:disabled { opacity: .55; }
+.vs.signin .si-err { margin: 0; font-size: 14px; line-height: 1.5; color: var(--rk-ink); overflow-wrap: anywhere; }
+.vs.signin .si-err .rkq { margin-right: 4px; }
+.vs.signin .si-go { justify-content: center; margin-top: 4px; padding: 12px 18px; border-radius: 9px; }
+.vs.signin .si-go:disabled { opacity: .55; cursor: default; }
+
+.vs.signin .si-code { margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--rk-rule); display: flex; flex-direction: column; gap: 14px; }
+.vs.signin:not(:has(.si-form)) .si-code { margin-top: 0; padding-top: 0; border-top: 0; }
+.vs.signin .si-code .btn { padding: 9px 14px; border-radius: 9px; font-size: 14px; }
+.vs.signin:has(.si-form) .si-code .btn { background: transparent; color: var(--rk-ink); border-color: var(--rk-ink-3); }
+.vs.signin:has(.si-form) .si-code .btn:hover:not(:disabled) { background: var(--rk-panel-2); color: var(--rk-ink); border-color: var(--rk-ink); }
+
+@media (max-width: 899.98px) {
+  .vs.signin .si-main { padding: 0 16px 8vh; }
+  .vs.signin :is(.si-go, .si-input, .si-code .btn, .si-code .b-link) { min-height: 44px; }
+}

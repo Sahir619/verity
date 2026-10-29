@@ -1,0 +1,246 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ---------- Verity tokens (amber rack palette) ---------- */
+:root {
+  /* Rack palette: fixed brand colors. Do not change. Warm near-black ground, one amber accent used in tiers. */
+  --rk-ground: #0A0806; --rk-panel: #13100C; --rk-panel-2: #19150F; --rk-inset: #0C0A07; --rk-rule: #2A231A; --rk-rule-2: #3A3024;
+  --rk-ink: #F3EEE6; --rk-ink-2: #C4BBAE; --rk-ink-3: #978C7E; --rk-seg-off: #1E1912; --rk-seg-off-b: #2C251B; --rk-grey: #7E7468;
+  --rk-a: #FFB000; --rk-a2: #E09A00; --rk-a3: #A66F00; --rk-a4: #5C3E00; --rk-a5: #2E1F05;   /* accent tiers: earned only */
+  --rk-run: #FFD98A; --rk-run-2: #B8995A; --rk-run-bg: #211A0C;                            /* running / in progress */
+  --rk-on-a: #140C00;                                                                     /* text on accent fills */
+  --font-display: var(--font-rk-display), "Arial Narrow", sans-serif;
+  --font-body: var(--font-rk-body), system-ui, sans-serif;
+  --font-data: var(--font-rk-mono), ui-monospace, monospace;
+
+  /* Legacy names kept so existing components keep working; they now resolve to the rack palette. */
+  --verity-navy: var(--rk-ground);
+  --verity-blue: var(--rk-panel);
+  --verity-green: var(--rk-a);  /* historic name; the accent is amber */
+  --verity-amber: var(--rk-a);
+
+  --radius: 0.375rem;
+
+  /* Surfaces (depth = lightness, no shadows) */
+  --background: var(--rk-ground);
+  --surface: var(--rk-panel);
+  --surface-2: var(--rk-panel-2);
+  --surface-3: var(--rk-seg-off);
+
+  /* Text */
+  --foreground: var(--rk-ink);
+  --fg-muted: var(--rk-ink-2);
+  --fg-subtle: var(--rk-ink-3);
+  --fg-disabled: var(--rk-grey);
+
+  /* Lines */
+  --border: var(--rk-rule);
+  --border-strong: var(--rk-rule-2);
+
+  /* Accent */
+  --primary: var(--verity-green);
+  --primary-foreground: var(--rk-on-a);
+  --primary-hover: var(--rk-run);
+  --primary-press: var(--rk-a2);
+  --primary-muted: var(--rk-a5);
+
+  /* Status */
+  --pass: var(--verity-green);
+  --pass-muted: var(--primary-muted);
+  --fail: var(--rk-ink); /* fail is a hollow white square plus the word, never red */
+  --fail-muted: var(--rk-seg-off);
+  --warn: var(--rk-ink);
+  --warn-muted: var(--rk-seg-off);
+  --info: var(--rk-run);
+  --info-muted: var(--rk-run-bg);
+
+  /* shadcn semantic mapping */
+  --card: var(--surface);
+  --card-foreground: var(--foreground);
+  --popover: var(--surface-2);
+  --popover-foreground: var(--foreground);
+  --secondary: var(--surface-2);
+  --secondary-foreground: var(--foreground);
+  --muted: var(--surface-2);
+  --muted-foreground: var(--fg-muted);
+  --accent: var(--surface-3); /* shadcn "accent" is a hover/selected background, NOT the brand accent */
+  --accent-foreground: var(--foreground);
+  --destructive: var(--fail);
+  --destructive-foreground: var(--rk-ground);
+  --input: var(--border-strong);
+  --ring: var(--verity-green);
+  --chart-1: var(--verity-green);
+  --chart-2: var(--info);
+  --chart-3: var(--rk-a3);
+  --chart-4: var(--warn);
+  --chart-5: var(--rk-grey);
+  --sidebar: var(--surface);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--verity-green);
+  --sidebar-primary-foreground: var(--rk-on-a);
+  --sidebar-accent: var(--surface-3);
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--verity-green);
+
+  /* Code */
+  --code-bg: var(--rk-inset);
+  --syn-plain: var(--foreground);
+  --syn-punct: var(--fg-muted);
+  --syn-keyword: var(--rk-a);
+  --syn-type: var(--rk-run);
+  --syn-number: var(--rk-a2);
+  --syn-comment: var(--rk-ink-3);
+  --syn-string: var(--rk-run-2);
+  --diff-add: var(--rk-a5);
+  --diff-del: var(--rk-seg-off);
+  --selection: var(--rk-a4);
+
+  /* Edges */
+  --edge: var(--border-strong);
+  --edge-active: var(--info);
+  --edge-proof: var(--verity-green);
+
+  /* Elevation: overlays only (tooltip, popover, sheet) */
+  --shadow-overlay: 0 8px 24px oklch(5% 0.01 70 / 0.6);
+  /* The one glow in the system: winner moment only (amber) */
+  --glow-pass: 0 0 0 1px var(--verity-green), 0 0 24px oklch(80% 0.17 75 / 0.35);
+
+  /* Layout constants (AppHeader on /try and /results) */
+  --topbar-h: 3.5rem;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Verity additions: bg-surface-2, text-fg-muted, border-border-strong, text-pass, bg-fail-muted ... */
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-subtle: var(--fg-subtle);
+  --color-fg-disabled: var(--fg-disabled);
+  --color-border-strong: var(--border-strong);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-press: var(--primary-press);
+  --color-primary-muted: var(--primary-muted);
+  --color-pass: var(--pass);
+  --color-pass-muted: var(--pass-muted);
+  --color-fail: var(--fail);
+  --color-fail-muted: var(--fail-muted);
+  --color-warn: var(--warn);
+  --color-warn-muted: var(--warn-muted);
+  --color-info: var(--info);
+  --color-info-muted: var(--info-muted);
+  --color-code-bg: var(--code-bg);
+  --color-syn-plain: var(--syn-plain);
+  --color-syn-punct: var(--syn-punct);
+  --color-syn-keyword: var(--syn-keyword);
+  --color-syn-type: var(--syn-type);
+  --color-syn-number: var(--syn-number);
+  --color-syn-comment: var(--syn-comment);
+  --color-syn-string: var(--syn-string);
+  --color-diff-add: var(--diff-add);
+  --color-diff-del: var(--diff-del);
+
+  /* Fonts: the --font-rk-* variables are set by next/font (RACK_FACES) in app/layout.tsx */
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-data);
+  --font-display: var(--font-rk-display), "Arial Narrow", sans-serif;
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+}
+
+@theme {
+  /* Product type scale = Tailwind defaults (xs 12, sm 14, base 16, xl 20, 2xl 24, 3xl 30).
+     Light-on-dark: open up line-height on reading sizes. */
+  --text-sm--line-height: calc(1.375 / 0.875);
+  --text-base--line-height: calc(1.625 / 1);
+
+  /* Brand (landing) fluid scale */
+  --text-display: clamp(3rem, 1.6rem + 3.6vw, 6rem);
+  --text-display--line-height: 1;
+  --text-display--letter-spacing: -0.025em;
+  --text-display--font-weight: 800;
+  --text-headline: clamp(2rem, 1.5rem + 1.6vw, 3rem);
+  --text-headline--line-height: 1.1;
+  --text-headline--letter-spacing: -0.015em;
+  --text-headline--font-weight: 700;
+  --text-lead: 1.25rem;
+  --text-lead--line-height: 1.6;
+
+  /* Motion */
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-toggle: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --animate-status-blink: status-blink 1.2s ease-in-out infinite;
+  --animate-node-enter: node-enter 220ms cubic-bezier(0.25, 1, 0.5, 1) both;
+  --animate-status-pop: status-pop 320ms cubic-bezier(0.25, 1, 0.5, 1);
+  --animate-diff-outline: diff-outline 4s ease-out forwards;
+  --animate-winner-glow: winner-glow 900ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+  @keyframes status-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+  @keyframes node-enter { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+  @keyframes status-pop { 0% { transform: scale(1); } 40% { transform: scale(1.3); } 100% { transform: scale(1); } }
+  @keyframes diff-outline { 0%, 70% { outline-color: var(--verity-green); } 100% { outline-color: transparent; } }
+  @keyframes winner-glow { 0% { box-shadow: 0 0 0 0 transparent; } 40% { box-shadow: 0 0 0 1px var(--verity-green), 0 0 40px oklch(80% 0.17 75 / 0.5); } 100% { box-shadow: var(--glow-pass); } }
+}
+
+@layer base {
+  * { @apply border-border outline-ring/50; }
+  html { color-scheme: dark; }
+  body { @apply bg-background text-foreground font-sans antialiased; font-kerning: normal; }
+  ::selection { background: var(--selection); color: var(--foreground); }
+  :focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+  h1, h2, h3 { text-wrap: balance; }
+  p { text-wrap: pretty; }
+  code, kbd, pre, samp { font-variant-ligatures: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

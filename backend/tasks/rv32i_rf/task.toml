@@ -1,0 +1,83 @@
+schema = "verity.task/1"
+id = "rv32i_rf"
+title = "RV32I register file"
+summary = "31 registers, x0 hardwired to zero, synchronous reset"
+spec_text = "A clocked RV32I register file. There are 31 registers, x1 to x31, each 32 bits. x0 is not a register: both read ports return 0 when the address is 0, and a write whose wa is 0 is ignored. On each rising edge of clk, if rst_n is low every register becomes 0. Otherwise, if we is 1 and wa is not 0, register wa becomes wd. rd1 and rd2 are combinational reads of the register values after that edge, so a write in the step is visible on a read of wa in the same step. The two read ports are independent and may select the same register. we = 0 holds every register."
+top = "rv32i_rf"
+family = "cpu"
+element_type = "none"
+latency_cycles = 1
+max_lines = 200
+test_count = 8
+default_priority = "area"
+priorities = ["area", "speed", "power"]
+target_clock_ns = 10.0
+max_plan_blocks = 6
+eval_only = true
+is_custom = false
+coding_rules = [
+  "x0 reads as 0 on both rd1 and rd2. A write with wa = 0 is ignored. we = 0 holds every register.",
+  "rst_n is active low and synchronous. Sampled on the rising edge of clk, it wins over we and clears x1 to x31 to 0.",
+  "The test samples rd1 and rd2 after the rising edge with the inputs still held. They must show the values after that edge's write or reset, not the values from before the edge.",
+]
+
+[clock]
+name = "clk"
+
+[reset]
+name = "rst_n"
+active_low = true
+synchronous = true
+
+[sim]
+seed = 1
+max_cycles_per_case = 4096
+
+[eqy]
+enabled = true
+depth = 8
+
+[[ports]]
+name = "clk"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "rst_n"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "ra1"
+dir = "in"
+width = 5
+
+[[ports]]
+name = "ra2"
+dir = "in"
+width = 5
+
+[[ports]]
+name = "wa"
+dir = "in"
+width = 5
+
+[[ports]]
+name = "wd"
+dir = "in"
+width = 32
+
+[[ports]]
+name = "we"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "rd1"
+dir = "out"
+width = 32
+
+[[ports]]
+name = "rd2"
+dir = "out"
+width = 32

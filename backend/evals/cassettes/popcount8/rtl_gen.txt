@@ -1,0 +1,12 @@
+REASON: Straightforward combinational popcount, one bit of count per set input bit, summed in one always_comb block.
+
+```verilog
+module popcount8 (
+    input  logic [7:0] x,
+    output logic [3:0] count
+);
+    always_comb begin
+        count = x[0] + x[1] + x[2] + x[3] + x[4] + x[5] + x[6] + x[7];
+    end
+endmodule
+```

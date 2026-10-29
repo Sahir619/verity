@@ -1,0 +1,35 @@
+# Dependencies and build output (frontend/ has its own .gitignore too)
+node_modules/
+.next/
+.next-*/
+out/
+*.tsbuildinfo
+
+# Environment files: never commit secrets (examples are fine)
+.env*
+!.env.example
+
+# Agent tooling and planning files (a dev server regenerates frontend/AGENTS.md)
+CLAUDE.md
+frontend/CLAUDE.md
+frontend/AGENTS.md
+.claude/
+.planning/
+*.bak
+
+# Backend data and run outputs (backend/.gitignore lists them too)
+backend/data/
+backend/evals/results/
+backend/evals/work/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Python environments and caches
+.venv/
+__pycache__/
+*.pyc
+
+# Crash dumps
+*.stackdump

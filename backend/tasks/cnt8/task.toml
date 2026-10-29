@@ -1,0 +1,55 @@
+schema = "verity.task/1"
+id = "cnt8"
+title = "8-bit counter with enable"
+summary = "an 8-bit up counter with enable and synchronous reset"
+spec_text = "An 8-bit up counter with enable. On each rising clock edge q increases by 1 when en is high and holds when en is low. q wraps from 255 to 0. A synchronous active-low reset clears q to 0 and wins over en."
+top = "cnt8"
+family = "counter"
+element_type = "uint8"
+latency_cycles = 1
+max_lines = 60
+test_count = 10
+default_priority = "area"
+priorities = ["area", "speed", "power"]
+target_clock_ns = 10.0
+max_plan_blocks = 4
+eval_only = false
+coding_rules = [
+  "q is a register: it changes only on a rising clock edge, to q + 1 (modulo 256) when en is 1 and rst_n is 1, and it holds otherwise. rst_n low at the edge sets q to 0 regardless of en.",
+]
+
+[clock]
+name = "clk"
+
+[reset]
+name = "rst_n"
+active_low = true
+synchronous = true
+
+[sim]
+seed = 1
+max_cycles_per_case = 512
+
+[eqy]
+enabled = true
+depth = 8
+
+[[ports]]
+name = "clk"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "rst_n"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "en"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "q"
+dir = "out"
+width = 8

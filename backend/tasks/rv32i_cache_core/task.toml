@@ -1,0 +1,241 @@
+schema = "verity.task/1"
+id = "rv32i_cache_core"
+title = "RV32I cached multicycle core"
+summary = "the RV32I multicycle core behind a 16-word unified cache"
+spec_text = "A cached RV32I multicycle core with exactly the RVFI and memory ports of the provided rv32i_core. Instantiate rv32i_core and rv32i_cache once each. Connect the core memory port to the cache cpu side, and the cache memory side to the top memory port. Pass halted, dbg_stall and all RVFI outputs from the core unchanged. The same ISA programs run at memory wait 0 and wait 3."
+top = "rv32i_cache_core"
+family = "cpu"
+latency_cycles = 1
+max_lines = 200
+test_count = 36
+default_priority = "area"
+priorities = ["area", "speed", "power"]
+target_clock_ns = 10.0
+max_plan_blocks = 3
+eval_only = true
+is_custom = false
+coding_rules = [
+  "The rv32i_core and rv32i_cache modules are provided. Instantiate each exactly once; never define or copy them.",
+  "Connect clk and synchronous active-low rst_n to both instances. Connect core mem_valid, mem_addr, mem_wdata, mem_wstrb to cache cpu_valid, cpu_addr, cpu_wdata, cpu_wstrb. Connect cache cpu_ready and cpu_rdata to core mem_ready and mem_rdata.",
+  "Connect cache mem_valid, mem_addr, mem_wdata, mem_wstrb to the top outputs; connect top mem_ready and mem_rdata to cache inputs. Pass all core RVFI, halted and dbg_stall outputs unchanged.",
+  """
+module rv32i_core (
+    input logic clk,
+    input logic rst_n,
+    input logic mem_ready,
+    input logic [31:0] mem_rdata,
+    output  logic mem_valid,
+    output  logic [31:0] mem_addr,
+    output  logic [31:0] mem_wdata,
+    output  logic [3:0] mem_wstrb,
+    output  logic halted,
+    output  logic [1:0] dbg_stall,
+    output  logic rvfi_valid,
+    output  logic [63:0] rvfi_order,
+    output  logic [31:0] rvfi_insn,
+    output  logic rvfi_trap,
+    output  logic rvfi_halt,
+    output  logic rvfi_intr,
+    output  logic [1:0] rvfi_mode,
+    output  logic [1:0] rvfi_ixl,
+    output  logic [4:0] rvfi_rs1_addr,
+    output  logic [4:0] rvfi_rs2_addr,
+    output  logic [31:0] rvfi_rs1_rdata,
+    output  logic [31:0] rvfi_rs2_rdata,
+    output  logic [4:0] rvfi_rd_addr,
+    output  logic [31:0] rvfi_rd_wdata,
+    output  logic [31:0] rvfi_pc_rdata,
+    output  logic [31:0] rvfi_pc_wdata,
+    output  logic [31:0] rvfi_mem_addr,
+    output  logic [3:0] rvfi_mem_rmask,
+    output  logic [3:0] rvfi_mem_wmask,
+    output  logic [31:0] rvfi_mem_rdata,
+    output  logic [31:0] rvfi_mem_wdata
+);
+""",
+  """
+module rv32i_cache (
+    input  logic clk,
+    input  logic rst_n,
+    input  logic cpu_valid,
+    input  logic [31:0] cpu_addr,
+    input  logic [31:0] cpu_wdata,
+    input  logic [3:0] cpu_wstrb,
+    input  logic mem_ready,
+    input  logic [31:0] mem_rdata,
+    output  logic cpu_ready,
+    output  logic [31:0] cpu_rdata,
+    output  logic mem_valid,
+    output  logic [31:0] mem_addr,
+    output  logic [31:0] mem_wdata,
+    output  logic [3:0] mem_wstrb
+);
+""",
+]
+
+[clock]
+name = "clk"
+[reset]
+name = "rst_n"
+active_low = true
+synchronous = true
+[sim]
+seed = 1
+max_cycles_per_case = 20000
+[eqy]
+enabled = false
+
+[[ports]]
+name = "clk"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "rst_n"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "mem_ready"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "mem_rdata"
+dir = "in"
+width = 32
+
+[[ports]]
+name = "mem_valid"
+dir = "out"
+width = 1
+
+[[ports]]
+name = "mem_addr"
+dir = "out"
+width = 32
+
+[[ports]]
+name = "mem_wdata"
+dir = "out"
+width = 32
+
+[[ports]]
+name = "mem_wstrb"
+dir = "out"
+width = 4
+
+[[ports]]
+name = "halted"
+dir = "out"
+width = 1
+
+[[ports]]
+name = "dbg_stall"
+dir = "out"
+width = 2
+
+[[ports]]
+name = "rvfi_valid"
+dir = "out"
+width = 1
+
+[[ports]]
+name = "rvfi_order"
+dir = "out"
+width = 64
+
+[[ports]]
+name = "rvfi_insn"
+dir = "out"
+width = 32
+
+[[ports]]
+name = "rvfi_trap"
+dir = "out"
+width = 1
+
+[[ports]]
+name = "rvfi_halt"
+dir = "out"
+width = 1
+
+[[ports]]
+name = "rvfi_intr"
+dir = "out"
+width = 1
+
+[[ports]]
+name = "rvfi_mode"
+dir = "out"
+width = 2
+
+[[ports]]
+name = "rvfi_ixl"
+dir = "out"
+width = 2
+
+[[ports]]
+name = "rvfi_rs1_addr"
+dir = "out"
+width = 5
+
+[[ports]]
+name = "rvfi_rs2_addr"
+dir = "out"
+width = 5
+
+[[ports]]
+name = "rvfi_rs1_rdata"
+dir = "out"
+width = 32
+
+[[ports]]
+name = "rvfi_rs2_rdata"
+dir = "out"
+width = 32
+
+[[ports]]
+name = "rvfi_rd_addr"
+dir = "out"
+width = 5
+
+[[ports]]
+name = "rvfi_rd_wdata"
+dir = "out"
+width = 32
+
+[[ports]]
+name = "rvfi_pc_rdata"
+dir = "out"
+width = 32
+
+[[ports]]
+name = "rvfi_pc_wdata"
+dir = "out"
+width = 32
+
+[[ports]]
+name = "rvfi_mem_addr"
+dir = "out"
+width = 32
+
+[[ports]]
+name = "rvfi_mem_rmask"
+dir = "out"
+width = 4
+
+[[ports]]
+name = "rvfi_mem_wmask"
+dir = "out"
+width = 4
+
+[[ports]]
+name = "rvfi_mem_rdata"
+dir = "out"
+width = 32
+
+[[ports]]
+name = "rvfi_mem_wdata"
+dir = "out"
+width = 32

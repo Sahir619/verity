@@ -1,0 +1,1429 @@
+{
+  "note": "Exported by backend/evals/export_cpu_fixture.py from real Nebius CPU jobs (Nemotron wrote every block). Values are copied from the job records, never typed. Do not hand-edit: run the script again.",
+  "recordedAt": "2026-10-28",
+  "provider": "nebius",
+  "parent": {
+    "jobId": "cpu_ffd87205211749d985d0db0882abcd70",
+    "specId": "rv32i_micro",
+    "goal": "area",
+    "status": "passed",
+    "createdAt": "2026-10-28T11:48:37.661759+00:00",
+    "finishedAt": "2026-10-28T13:20:39.916897+00:00",
+    "spentUsd": 1.3847548,
+    "message": "Improve stopped: rv32i_rf found nothing better on area that EQY proves equal to its own v1.",
+    "parentJobId": null,
+    "upgradeId": null,
+    "blocks": [
+      {
+        "blockId": "rv32i_imm",
+        "title": "RV32I immediate generator",
+        "status": "passed",
+        "attempts": 1,
+        "reused": false,
+        "usedVersion": null,
+        "runId": "r_3505acf3a50a4f5c9c5c740ef3c1f058",
+        "winner": {
+          "label": "v1",
+          "areaUm2": 82.19,
+          "clockPeriodNs": 0.407
+        },
+        "usd": 0.04506,
+        "evidence": {
+          "eqyVsV1": "v1_is_winner",
+          "testsPassed": 10,
+          "testsTotal": 10,
+          "seedsPassed": 9,
+          "seedsRun": 9,
+          "mutantsKilled": 12,
+          "mutantsTotal": 17,
+          "repairs": 0,
+          "techniques": [],
+          "rvfiPassed": null,
+          "rvfiTotal": null,
+          "rvfiTimeouts": null,
+          "rvfiFailed": null
+        }
+      },
+      {
+        "blockId": "rv32i_dec",
+        "title": "RV32I instruction decoder",
+        "status": "passed",
+        "attempts": 1,
+        "reused": false,
+        "usedVersion": null,
+        "runId": "r_14264488b26846d486dd0874c1a7fd90",
+        "winner": {
+          "label": "v1",
+          "areaUm2": 73.15,
+          "clockPeriodNs": 0.308
+        },
+        "usd": 0.186245,
+        "evidence": {
+          "eqyVsV1": "v1_is_winner",
+          "testsPassed": 27,
+          "testsTotal": 27,
+          "seedsPassed": 9,
+          "seedsRun": 9,
+          "mutantsKilled": 20,
+          "mutantsTotal": 20,
+          "repairs": 3,
+          "techniques": [],
+          "rvfiPassed": null,
+          "rvfiTotal": null,
+          "rvfiTimeouts": null,
+          "rvfiFailed": null
+        }
+      },
+      {
+        "blockId": "rv32i_alu",
+        "title": "RV32I ALU",
+        "status": "passed",
+        "attempts": 1,
+        "reused": false,
+        "usedVersion": "v1",
+        "runId": "r_0075ee7685494014a94a2d6cc0baf7ba",
+        "winner": {
+          "label": "v2",
+          "areaUm2": 1036.07,
+          "clockPeriodNs": 1.767
+        },
+        "usd": 0.125408,
+        "evidence": {
+          "eqyVsV1": "inconclusive",
+          "testsPassed": 33,
+          "testsTotal": 33,
+          "seedsPassed": 9,
+          "seedsRun": 9,
+          "mutantsKilled": 20,
+          "mutantsTotal": 20,
+          "repairs": 1,
+          "techniques": [
+            "alu_carry_lookahead"
+          ],
+          "rvfiPassed": null,
+          "rvfiTotal": null,
+          "rvfiTimeouts": null,
+          "rvfiFailed": null
+        }
+      },
+      {
+        "blockId": "rv32i_br",
+        "title": "RV32I branch comparator",
+        "status": "passed",
+        "attempts": 1,
+        "reused": false,
+        "usedVersion": null,
+        "runId": "r_9963622296974a26b95e186719591ed7",
+        "winner": {
+          "label": "v2",
+          "areaUm2": 126.35,
+          "clockPeriodNs": 0.404
+        },
+        "usd": 0.043223,
+        "evidence": {
+          "eqyVsV1": "proven",
+          "testsPassed": 9,
+          "testsTotal": 9,
+          "seedsPassed": 9,
+          "seedsRun": 9,
+          "mutantsKilled": 14,
+          "mutantsTotal": 14,
+          "repairs": 0,
+          "techniques": [],
+          "rvfiPassed": null,
+          "rvfiTotal": null,
+          "rvfiTimeouts": null,
+          "rvfiFailed": null
+        }
+      },
+      {
+        "blockId": "rv32i_lsu",
+        "title": "RV32I load/store aligner",
+        "status": "passed",
+        "attempts": 1,
+        "reused": false,
+        "usedVersion": null,
+        "runId": "r_81875543b7f5434ca8dc309e7e71f3b2",
+        "winner": {
+          "label": "v1",
+          "areaUm2": 198.7,
+          "clockPeriodNs": 0.324
+        },
+        "usd": 0.094366,
+        "evidence": {
+          "eqyVsV1": "v1_is_winner",
+          "testsPassed": 65,
+          "testsTotal": 65,
+          "seedsPassed": 9,
+          "seedsRun": 9,
+          "mutantsKilled": 19,
+          "mutantsTotal": 20,
+          "repairs": 2,
+          "techniques": [],
+          "rvfiPassed": null,
+          "rvfiTotal": null,
+          "rvfiTimeouts": null,
+          "rvfiFailed": null
+        }
+      },
+      {
+        "blockId": "rv32i_rf",
+        "title": "RV32I register file",
+        "status": "passed",
+        "attempts": 1,
+        "reused": false,
+        "usedVersion": null,
+        "runId": "r_67f54ddc363c40aca5f3a235d5c1384e",
+        "winner": {
+          "label": "v1",
+          "areaUm2": 9348.84,
+          "clockPeriodNs": 2.359
+        },
+        "usd": 0.058337,
+        "evidence": {
+          "eqyVsV1": "v1_is_winner",
+          "testsPassed": 8,
+          "testsTotal": 8,
+          "seedsPassed": 9,
+          "seedsRun": 9,
+          "mutantsKilled": 19,
+          "mutantsTotal": 20,
+          "repairs": 0,
+          "techniques": [],
+          "rvfiPassed": null,
+          "rvfiTotal": null,
+          "rvfiTimeouts": null,
+          "rvfiFailed": null
+        }
+      },
+      {
+        "blockId": "rv32i_ctl",
+        "title": "RV32I multicycle control",
+        "status": "passed",
+        "attempts": 1,
+        "reused": false,
+        "usedVersion": null,
+        "runId": "r_67174368ab334505bd0dadaba565bc5a",
+        "winner": {
+          "label": "v1",
+          "areaUm2": 40.96,
+          "clockPeriodNs": 0.294
+        },
+        "usd": 0.048611,
+        "evidence": {
+          "eqyVsV1": "v1_is_winner",
+          "testsPassed": 15,
+          "testsTotal": 15,
+          "seedsPassed": 9,
+          "seedsRun": 9,
+          "mutantsKilled": 19,
+          "mutantsTotal": 20,
+          "repairs": 0,
+          "techniques": [
+            "ctl_gray_state"
+          ],
+          "rvfiPassed": null,
+          "rvfiTotal": null,
+          "rvfiTimeouts": null,
+          "rvfiFailed": null
+        }
+      }
+    ],
+    "core": {
+      "status": "passed",
+      "runId": "r_811c84b64585456a822e6824914c7bd4",
+      "winner": {
+        "label": "v1",
+        "areaUm2": 13500.3,
+        "clockPeriodNs": 8.271
+      },
+      "evidence": {
+        "eqyVsV1": "v1_is_winner",
+        "testsPassed": 18,
+        "testsTotal": 18,
+        "seedsPassed": 9,
+        "seedsRun": 9,
+        "mutantsKilled": null,
+        "mutantsTotal": null,
+        "repairs": 1,
+        "techniques": [],
+        "rvfiPassed": 44,
+        "rvfiTotal": 44,
+        "rvfiTimeouts": 0,
+        "rvfiFailed": []
+      }
+    },
+    "versions": [
+      {
+        "version": 1,
+        "changedBlock": null,
+        "totals": {
+          "areaUm2": 10916.37,
+          "clockNs": 2.359,
+          "powerMw": 1.1637
+        },
+        "coreEvidence": {
+          "eqyVsV1": "v1_is_winner",
+          "testsPassed": 18,
+          "testsTotal": 18,
+          "seedsPassed": 9,
+          "seedsRun": 9,
+          "mutantsKilled": null,
+          "mutantsTotal": null,
+          "repairs": 1,
+          "techniques": [],
+          "rvfiPassed": 44,
+          "rvfiTotal": 44,
+          "rvfiTimeouts": 0,
+          "rvfiFailed": []
+        },
+        "rvfiPassed": 44,
+        "rvfiTotal": 44,
+        "rvfiTimeouts": 0,
+        "rvfiFailed": [],
+        "profile": {
+          "cpi": 4.025439011986404,
+          "clockNs": 8.271,
+          "waitCycles": 0,
+          "benchTimeUs": 3278588.495589,
+          "cyclesByStall": {
+            "busy": 396395659,
+            "fetch": 0,
+            "data": 0
+          },
+          "areaByBlockUm2": {
+            "rv32i_imm": 82.19,
+            "rv32i_dec": 73.15,
+            "rv32i_alu": 1046.18,
+            "rv32i_br": 126.35,
+            "rv32i_lsu": 198.7,
+            "rv32i_rf": 9348.84,
+            "rv32i_ctl": 40.96
+          },
+          "bench": [
+            {
+              "name": "crc32",
+              "instructions": 5746546,
+              "cycles": 23508612,
+              "cpi": 4.090911653713379,
+              "passed": true
+            },
+            {
+              "name": "matmult-int",
+              "instructions": 24112967,
+              "cycles": 97466906,
+              "cpi": 4.04209511007086,
+              "passed": true
+            },
+            {
+              "name": "edn",
+              "instructions": 68613140,
+              "cycles": 275420141,
+              "cpi": 4.014101978134217,
+              "passed": true
+            }
+          ]
+        },
+        "flashProfile": null,
+        "profileNote": "Benchmarks with flash-like memory did not finish."
+      },
+      {
+        "version": 2,
+        "changedBlock": "rv32i_rf",
+        "totals": {
+          "areaUm2": 10873.27,
+          "clockNs": 5.119,
+          "powerMw": 1.2834
+        },
+        "coreEvidence": {
+          "eqyVsV1": "v1_is_winner",
+          "testsPassed": 18,
+          "testsTotal": 18,
+          "seedsPassed": 9,
+          "seedsRun": 9,
+          "mutantsKilled": null,
+          "mutantsTotal": null,
+          "repairs": 2,
+          "techniques": [],
+          "rvfiPassed": 19,
+          "rvfiTotal": 44,
+          "rvfiTimeouts": 8,
+          "rvfiFailed": []
+        },
+        "rvfiPassed": 19,
+        "rvfiTotal": 44,
+        "rvfiTimeouts": 8,
+        "rvfiFailed": [],
+        "profile": {
+          "cpi": 4.025439011986404,
+          "clockNs": 10.687,
+          "waitCycles": 0,
+          "benchTimeUs": 4236280.407733,
+          "cyclesByStall": {
+            "busy": 396395659,
+            "fetch": 0,
+            "data": 0
+          },
+          "areaByBlockUm2": {
+            "rv32i_imm": 82.19,
+            "rv32i_dec": 73.15,
+            "rv32i_alu": 1046.18,
+            "rv32i_br": 126.35,
+            "rv32i_lsu": 198.7,
+            "rv32i_rf": 9305.74,
+            "rv32i_ctl": 40.96
+          },
+          "bench": [
+            {
+              "name": "crc32",
+              "instructions": 5746546,
+              "cycles": 23508612,
+              "cpi": 4.090911653713379,
+              "passed": true
+            },
+            {
+              "name": "matmult-int",
+              "instructions": 24112967,
+              "cycles": 97466906,
+              "cpi": 4.04209511007086,
+              "passed": true
+            },
+            {
+              "name": "edn",
+              "instructions": 68613140,
+              "cycles": 275420141,
+              "cpi": 4.014101978134217,
+              "passed": true
+            }
+          ]
+        },
+        "flashProfile": {
+          "cpi": 7.101756047945616,
+          "clockNs": 10.687,
+          "waitCycles": 3,
+          "benchTimeUs": 7473726.4474329995,
+          "cyclesByStall": {
+            "busy": 396395659,
+            "fetch": 295417959,
+            "data": 7515141
+          },
+          "areaByBlockUm2": {
+            "rv32i_imm": 82.19,
+            "rv32i_dec": 73.15,
+            "rv32i_alu": 1046.18,
+            "rv32i_br": 126.35,
+            "rv32i_lsu": 198.7,
+            "rv32i_rf": 9305.74,
+            "rv32i_ctl": 40.96
+          },
+          "bench": [
+            {
+              "name": "crc32",
+              "instructions": 5746546,
+              "cycles": 42315534,
+              "cpi": 7.363646614853514,
+              "passed": true
+            },
+            {
+              "name": "matmult-int",
+              "instructions": 24112967,
+              "cycles": 172850921,
+              "cpi": 7.168380440283437,
+              "passed": true
+            },
+            {
+              "name": "edn",
+              "instructions": 68613140,
+              "cycles": 484162304,
+              "cpi": 7.05640791253687,
+              "passed": true
+            }
+          ]
+        },
+        "profileNote": null
+      }
+    ],
+    "comparison": null
+  },
+  "upgrades": [
+    {
+      "jobId": "cpu_05332b01dae74315af9cf9c178557991",
+      "specId": "rv32i_pipe2",
+      "goal": "area",
+      "status": "passed",
+      "createdAt": "2026-10-28T13:20:41.515721+00:00",
+      "finishedAt": "2026-10-28T13:30:38.440343+00:00",
+      "spentUsd": 0.1802001,
+      "message": "riscv-formal: 1 of 44 checks not proven within the time limit.",
+      "parentJobId": "cpu_ffd87205211749d985d0db0882abcd70",
+      "upgradeId": "pipeline_2",
+      "blocks": [
+        {
+          "blockId": "rv32i_imm",
+          "title": "RV32I immediate generator",
+          "status": "passed",
+          "attempts": 0,
+          "reused": true,
+          "usedVersion": null,
+          "runId": "r_3505acf3a50a4f5c9c5c740ef3c1f058",
+          "winner": {
+            "label": "v1",
+            "areaUm2": 82.19,
+            "clockPeriodNs": 0.407
+          },
+          "usd": 0.04506,
+          "evidence": {
+            "eqyVsV1": "v1_is_winner",
+            "testsPassed": 10,
+            "testsTotal": 10,
+            "seedsPassed": 9,
+            "seedsRun": 9,
+            "mutantsKilled": 12,
+            "mutantsTotal": 17,
+            "repairs": 0,
+            "techniques": [],
+            "rvfiPassed": null,
+            "rvfiTotal": null,
+            "rvfiTimeouts": null,
+            "rvfiFailed": null
+          }
+        },
+        {
+          "blockId": "rv32i_dec",
+          "title": "RV32I instruction decoder",
+          "status": "passed",
+          "attempts": 0,
+          "reused": true,
+          "usedVersion": null,
+          "runId": "r_14264488b26846d486dd0874c1a7fd90",
+          "winner": {
+            "label": "v1",
+            "areaUm2": 73.15,
+            "clockPeriodNs": 0.308
+          },
+          "usd": 0.186245,
+          "evidence": {
+            "eqyVsV1": "v1_is_winner",
+            "testsPassed": 27,
+            "testsTotal": 27,
+            "seedsPassed": 9,
+            "seedsRun": 9,
+            "mutantsKilled": 20,
+            "mutantsTotal": 20,
+            "repairs": 3,
+            "techniques": [],
+            "rvfiPassed": null,
+            "rvfiTotal": null,
+            "rvfiTimeouts": null,
+            "rvfiFailed": null
+          }
+        },
+        {
+          "blockId": "rv32i_alu",
+          "title": "RV32I ALU",
+          "status": "passed",
+          "attempts": 0,
+          "reused": true,
+          "usedVersion": "v1",
+          "runId": "r_0075ee7685494014a94a2d6cc0baf7ba",
+          "winner": {
+            "label": "v2",
+            "areaUm2": 1036.07,
+            "clockPeriodNs": 1.767
+          },
+          "usd": 0.125408,
+          "evidence": {
+            "eqyVsV1": "inconclusive",
+            "testsPassed": 33,
+            "testsTotal": 33,
+            "seedsPassed": 9,
+            "seedsRun": 9,
+            "mutantsKilled": 20,
+            "mutantsTotal": 20,
+            "repairs": 1,
+            "techniques": [
+              "alu_carry_lookahead"
+            ],
+            "rvfiPassed": null,
+            "rvfiTotal": null,
+            "rvfiTimeouts": null,
+            "rvfiFailed": null
+          }
+        },
+        {
+          "blockId": "rv32i_br",
+          "title": "RV32I branch comparator",
+          "status": "passed",
+          "attempts": 0,
+          "reused": true,
+          "usedVersion": null,
+          "runId": "r_9963622296974a26b95e186719591ed7",
+          "winner": {
+            "label": "v2",
+            "areaUm2": 126.35,
+            "clockPeriodNs": 0.404
+          },
+          "usd": 0.043223,
+          "evidence": {
+            "eqyVsV1": "proven",
+            "testsPassed": 9,
+            "testsTotal": 9,
+            "seedsPassed": 9,
+            "seedsRun": 9,
+            "mutantsKilled": 14,
+            "mutantsTotal": 14,
+            "repairs": 0,
+            "techniques": [],
+            "rvfiPassed": null,
+            "rvfiTotal": null,
+            "rvfiTimeouts": null,
+            "rvfiFailed": null
+          }
+        },
+        {
+          "blockId": "rv32i_lsu",
+          "title": "RV32I load/store aligner",
+          "status": "passed",
+          "attempts": 0,
+          "reused": true,
+          "usedVersion": null,
+          "runId": "r_81875543b7f5434ca8dc309e7e71f3b2",
+          "winner": {
+            "label": "v1",
+            "areaUm2": 198.7,
+            "clockPeriodNs": 0.324
+          },
+          "usd": 0.094366,
+          "evidence": {
+            "eqyVsV1": "v1_is_winner",
+            "testsPassed": 65,
+            "testsTotal": 65,
+            "seedsPassed": 9,
+            "seedsRun": 9,
+            "mutantsKilled": 19,
+            "mutantsTotal": 20,
+            "repairs": 2,
+            "techniques": [],
+            "rvfiPassed": null,
+            "rvfiTotal": null,
+            "rvfiTimeouts": null,
+            "rvfiFailed": null
+          }
+        },
+        {
+          "blockId": "rv32i_rf",
+          "title": "RV32I register file",
+          "status": "passed",
+          "attempts": 0,
+          "reused": true,
+          "usedVersion": null,
+          "runId": "r_67f54ddc363c40aca5f3a235d5c1384e",
+          "winner": {
+            "label": "v1",
+            "areaUm2": 9348.84,
+            "clockPeriodNs": 2.359
+          },
+          "usd": 0.058337,
+          "evidence": {
+            "eqyVsV1": "v1_is_winner",
+            "testsPassed": 8,
+            "testsTotal": 8,
+            "seedsPassed": 9,
+            "seedsRun": 9,
+            "mutantsKilled": 19,
+            "mutantsTotal": 20,
+            "repairs": 0,
+            "techniques": [],
+            "rvfiPassed": null,
+            "rvfiTotal": null,
+            "rvfiTimeouts": null,
+            "rvfiFailed": null
+          }
+        },
+        {
+          "blockId": "rv32i_pctl",
+          "title": "RV32I pipeline control",
+          "status": "passed",
+          "attempts": 1,
+          "reused": false,
+          "usedVersion": null,
+          "runId": "r_acfeec6c4e1941e6b8900437484ad38e",
+          "winner": {
+            "label": "v1",
+            "areaUm2": 25.8,
+            "clockPeriodNs": 0.269
+          },
+          "usd": 0.081852,
+          "evidence": {
+            "eqyVsV1": "v1_is_winner",
+            "testsPassed": 17,
+            "testsTotal": 17,
+            "seedsPassed": 9,
+            "seedsRun": 9,
+            "mutantsKilled": 20,
+            "mutantsTotal": 20,
+            "repairs": 0,
+            "techniques": [],
+            "rvfiPassed": null,
+            "rvfiTotal": null,
+            "rvfiTimeouts": null,
+            "rvfiFailed": null
+          }
+        }
+      ],
+      "core": {
+        "status": "passed",
+        "runId": "r_b014707603ca4acc9b1648759e1a26a2",
+        "winner": {
+          "label": "v1",
+          "areaUm2": 13216.21,
+          "clockPeriodNs": 8.588
+        },
+        "evidence": {
+          "eqyVsV1": "v1_is_winner",
+          "testsPassed": 18,
+          "testsTotal": 18,
+          "seedsPassed": 9,
+          "seedsRun": 9,
+          "mutantsKilled": 16,
+          "mutantsTotal": 20,
+          "repairs": 0,
+          "techniques": [],
+          "rvfiPassed": 43,
+          "rvfiTotal": 44,
+          "rvfiTimeouts": 1,
+          "rvfiFailed": []
+        }
+      },
+      "versions": [
+        {
+          "version": 1,
+          "changedBlock": null,
+          "totals": {
+            "areaUm2": 10901.21,
+            "clockNs": 2.359,
+            "powerMw": 1.1565
+          },
+          "coreEvidence": {
+            "eqyVsV1": "v1_is_winner",
+            "testsPassed": 18,
+            "testsTotal": 18,
+            "seedsPassed": 9,
+            "seedsRun": 9,
+            "mutantsKilled": 16,
+            "mutantsTotal": 20,
+            "repairs": 0,
+            "techniques": [],
+            "rvfiPassed": 43,
+            "rvfiTotal": 44,
+            "rvfiTimeouts": 1,
+            "rvfiFailed": []
+          },
+          "rvfiPassed": 43,
+          "rvfiTotal": 44,
+          "rvfiTimeouts": 1,
+          "rvfiFailed": [],
+          "profile": {
+            "cpi": 1.238858975394925,
+            "clockNs": 8.588,
+            "waitCycles": 0,
+            "benchTimeUs": 1047682.1532399999,
+            "cyclesByStall": {
+              "busy": 98472653,
+              "fetch": 23521077,
+              "data": 0
+            },
+            "areaByBlockUm2": {
+              "rv32i_imm": 82.19,
+              "rv32i_dec": 73.15,
+              "rv32i_alu": 1046.18,
+              "rv32i_br": 126.35,
+              "rv32i_lsu": 198.7,
+              "rv32i_rf": 9348.84,
+              "rv32i_pctl": 25.8
+            },
+            "bench": [
+              {
+                "name": "crc32",
+                "instructions": 5746546,
+                "cycles": 6269130,
+                "cpi": 1.0909388004550908,
+                "passed": true
+              },
+              {
+                "name": "matmult-int",
+                "instructions": 24112967,
+                "cycles": 30186910,
+                "cpi": 1.2518952976628717,
+                "passed": true
+              },
+              {
+                "name": "edn",
+                "instructions": 68613140,
+                "cycles": 85537690,
+                "cpi": 1.2466663091063899,
+                "passed": true
+              }
+            ]
+          },
+          "flashProfile": null,
+          "profileNote": "This core cannot run with memory wait cycles."
+        }
+      ],
+      "comparison": {
+        "parentAreaUm2": 10916.37,
+        "areaUm2": 10901.210000000001,
+        "areaDeltaPct": -0.13887400298817631,
+        "parentClockNs": 8.271,
+        "clockNs": 8.588,
+        "clockDeltaPct": 3.832668359327762,
+        "fast": {
+          "waitCycles": 0,
+          "parent": {
+            "cpi": 4.025439011986404,
+            "clockNs": 8.271,
+            "waitCycles": 0,
+            "benchTimeUs": 3278588.495589,
+            "cyclesByStall": {
+              "busy": 396395659,
+              "fetch": 0,
+              "data": 0
+            },
+            "areaByBlockUm2": {
+              "rv32i_imm": 82.19,
+              "rv32i_dec": 73.15,
+              "rv32i_alu": 1046.18,
+              "rv32i_br": 126.35,
+              "rv32i_lsu": 198.7,
+              "rv32i_rf": 9348.84,
+              "rv32i_ctl": 40.96
+            },
+            "bench": [
+              {
+                "name": "crc32",
+                "instructions": 5746546,
+                "cycles": 23508612,
+                "cpi": 4.090911653713379,
+                "passed": true
+              },
+              {
+                "name": "matmult-int",
+                "instructions": 24112967,
+                "cycles": 97466906,
+                "cpi": 4.04209511007086,
+                "passed": true
+              },
+              {
+                "name": "edn",
+                "instructions": 68613140,
+                "cycles": 275420141,
+                "cpi": 4.014101978134217,
+                "passed": true
+              }
+            ]
+          },
+          "child": {
+            "cpi": 1.238858975394925,
+            "clockNs": 8.588,
+            "waitCycles": 0,
+            "benchTimeUs": 1047682.1532399999,
+            "cyclesByStall": {
+              "busy": 98472653,
+              "fetch": 23521077,
+              "data": 0
+            },
+            "areaByBlockUm2": {
+              "rv32i_imm": 82.19,
+              "rv32i_dec": 73.15,
+              "rv32i_alu": 1046.18,
+              "rv32i_br": 126.35,
+              "rv32i_lsu": 198.7,
+              "rv32i_rf": 9348.84,
+              "rv32i_pctl": 25.8
+            },
+            "bench": [
+              {
+                "name": "crc32",
+                "instructions": 5746546,
+                "cycles": 6269130,
+                "cpi": 1.0909388004550908,
+                "passed": true
+              },
+              {
+                "name": "matmult-int",
+                "instructions": 24112967,
+                "cycles": 30186910,
+                "cpi": 1.2518952976628717,
+                "passed": true
+              },
+              {
+                "name": "edn",
+                "instructions": 68613140,
+                "cycles": 85537690,
+                "cpi": 1.2466663091063899,
+                "passed": true
+              }
+            ]
+          },
+          "cpiDeltaPct": -69.22425177214164,
+          "benchTimeRatio": 0.3195528059253387,
+          "bench": [
+            {
+              "name": "crc32",
+              "parentCycles": 23508612,
+              "cycles": 6269130,
+              "cyclesDeltaPct": -73.33262380611836,
+              "parentCpi": 4.090911653713379,
+              "cpi": 1.0909388004550908
+            },
+            {
+              "name": "matmult-int",
+              "parentCycles": 97466906,
+              "cycles": 30186910,
+              "cyclesDeltaPct": -69.02855416381023,
+              "parentCpi": 4.04209511007086,
+              "cpi": 1.2518952976628717
+            },
+            {
+              "name": "edn",
+              "parentCycles": 275420141,
+              "cycles": 85537690,
+              "cyclesDeltaPct": -68.94283414080454,
+              "parentCpi": 4.014101978134217,
+              "cpi": 1.2466663091063899
+            }
+          ]
+        },
+        "flash": null
+      }
+    },
+    {
+      "jobId": "cpu_e97a3b18caf84384ad65fc4e77250282",
+      "specId": "rv32i_cached",
+      "goal": "area",
+      "status": "passed",
+      "createdAt": "2026-10-28T13:30:41.720596+00:00",
+      "finishedAt": "2026-10-28T13:52:30.140573+00:00",
+      "spentUsd": 0.09558119999999999,
+      "message": null,
+      "parentJobId": "cpu_ffd87205211749d985d0db0882abcd70",
+      "upgradeId": "cache_16",
+      "blocks": [
+        {
+          "blockId": "rv32i_imm",
+          "title": "RV32I immediate generator",
+          "status": "passed",
+          "attempts": 0,
+          "reused": true,
+          "usedVersion": null,
+          "runId": "r_3505acf3a50a4f5c9c5c740ef3c1f058",
+          "winner": {
+            "label": "v1",
+            "areaUm2": 82.19,
+            "clockPeriodNs": 0.407
+          },
+          "usd": 0.04506,
+          "evidence": {
+            "eqyVsV1": "v1_is_winner",
+            "testsPassed": 10,
+            "testsTotal": 10,
+            "seedsPassed": 9,
+            "seedsRun": 9,
+            "mutantsKilled": 12,
+            "mutantsTotal": 17,
+            "repairs": 0,
+            "techniques": [],
+            "rvfiPassed": null,
+            "rvfiTotal": null,
+            "rvfiTimeouts": null,
+            "rvfiFailed": null
+          }
+        },
+        {
+          "blockId": "rv32i_dec",
+          "title": "RV32I instruction decoder",
+          "status": "passed",
+          "attempts": 0,
+          "reused": true,
+          "usedVersion": null,
+          "runId": "r_14264488b26846d486dd0874c1a7fd90",
+          "winner": {
+            "label": "v1",
+            "areaUm2": 73.15,
+            "clockPeriodNs": 0.308
+          },
+          "usd": 0.186245,
+          "evidence": {
+            "eqyVsV1": "v1_is_winner",
+            "testsPassed": 27,
+            "testsTotal": 27,
+            "seedsPassed": 9,
+            "seedsRun": 9,
+            "mutantsKilled": 20,
+            "mutantsTotal": 20,
+            "repairs": 3,
+            "techniques": [],
+            "rvfiPassed": null,
+            "rvfiTotal": null,
+            "rvfiTimeouts": null,
+            "rvfiFailed": null
+          }
+        },
+        {
+          "blockId": "rv32i_alu",
+          "title": "RV32I ALU",
+          "status": "passed",
+          "attempts": 0,
+          "reused": true,
+          "usedVersion": "v1",
+          "runId": "r_0075ee7685494014a94a2d6cc0baf7ba",
+          "winner": {
+            "label": "v2",
+            "areaUm2": 1036.07,
+            "clockPeriodNs": 1.767
+          },
+          "usd": 0.125408,
+          "evidence": {
+            "eqyVsV1": "inconclusive",
+            "testsPassed": 33,
+            "testsTotal": 33,
+            "seedsPassed": 9,
+            "seedsRun": 9,
+            "mutantsKilled": 20,
+            "mutantsTotal": 20,
+            "repairs": 1,
+            "techniques": [
+              "alu_carry_lookahead"
+            ],
+            "rvfiPassed": null,
+            "rvfiTotal": null,
+            "rvfiTimeouts": null,
+            "rvfiFailed": null
+          }
+        },
+        {
+          "blockId": "rv32i_br",
+          "title": "RV32I branch comparator",
+          "status": "passed",
+          "attempts": 0,
+          "reused": true,
+          "usedVersion": null,
+          "runId": "r_9963622296974a26b95e186719591ed7",
+          "winner": {
+            "label": "v2",
+            "areaUm2": 126.35,
+            "clockPeriodNs": 0.404
+          },
+          "usd": 0.043223,
+          "evidence": {
+            "eqyVsV1": "proven",
+            "testsPassed": 9,
+            "testsTotal": 9,
+            "seedsPassed": 9,
+            "seedsRun": 9,
+            "mutantsKilled": 14,
+            "mutantsTotal": 14,
+            "repairs": 0,
+            "techniques": [],
+            "rvfiPassed": null,
+            "rvfiTotal": null,
+            "rvfiTimeouts": null,
+            "rvfiFailed": null
+          }
+        },
+        {
+          "blockId": "rv32i_lsu",
+          "title": "RV32I load/store aligner",
+          "status": "passed",
+          "attempts": 0,
+          "reused": true,
+          "usedVersion": null,
+          "runId": "r_81875543b7f5434ca8dc309e7e71f3b2",
+          "winner": {
+            "label": "v1",
+            "areaUm2": 198.7,
+            "clockPeriodNs": 0.324
+          },
+          "usd": 0.094366,
+          "evidence": {
+            "eqyVsV1": "v1_is_winner",
+            "testsPassed": 65,
+            "testsTotal": 65,
+            "seedsPassed": 9,
+            "seedsRun": 9,
+            "mutantsKilled": 19,
+            "mutantsTotal": 20,
+            "repairs": 2,
+            "techniques": [],
+            "rvfiPassed": null,
+            "rvfiTotal": null,
+            "rvfiTimeouts": null,
+            "rvfiFailed": null
+          }
+        },
+        {
+          "blockId": "rv32i_rf",
+          "title": "RV32I register file",
+          "status": "passed",
+          "attempts": 0,
+          "reused": true,
+          "usedVersion": null,
+          "runId": "r_67f54ddc363c40aca5f3a235d5c1384e",
+          "winner": {
+            "label": "v1",
+            "areaUm2": 9348.84,
+            "clockPeriodNs": 2.359
+          },
+          "usd": 0.058337,
+          "evidence": {
+            "eqyVsV1": "v1_is_winner",
+            "testsPassed": 8,
+            "testsTotal": 8,
+            "seedsPassed": 9,
+            "seedsRun": 9,
+            "mutantsKilled": 19,
+            "mutantsTotal": 20,
+            "repairs": 0,
+            "techniques": [],
+            "rvfiPassed": null,
+            "rvfiTotal": null,
+            "rvfiTimeouts": null,
+            "rvfiFailed": null
+          }
+        },
+        {
+          "blockId": "rv32i_ctl",
+          "title": "RV32I multicycle control",
+          "status": "passed",
+          "attempts": 0,
+          "reused": true,
+          "usedVersion": null,
+          "runId": "r_67174368ab334505bd0dadaba565bc5a",
+          "winner": {
+            "label": "v1",
+            "areaUm2": 40.96,
+            "clockPeriodNs": 0.294
+          },
+          "usd": 0.048611,
+          "evidence": {
+            "eqyVsV1": "v1_is_winner",
+            "testsPassed": 15,
+            "testsTotal": 15,
+            "seedsPassed": 9,
+            "seedsRun": 9,
+            "mutantsKilled": 19,
+            "mutantsTotal": 20,
+            "repairs": 0,
+            "techniques": [
+              "ctl_gray_state"
+            ],
+            "rvfiPassed": null,
+            "rvfiTotal": null,
+            "rvfiTimeouts": null,
+            "rvfiFailed": null
+          }
+        },
+        {
+          "blockId": "rv32i_cache",
+          "title": "RV32I 16-word cache",
+          "status": "passed",
+          "attempts": 1,
+          "reused": false,
+          "usedVersion": null,
+          "runId": "r_dfcb2bb06b5f499bbe6a0c996e5bc941",
+          "winner": {
+            "label": "v2",
+            "areaUm2": 7287.6,
+            "clockPeriodNs": 2.227
+          },
+          "usd": 0.05785,
+          "evidence": {
+            "eqyVsV1": "proven",
+            "testsPassed": 8,
+            "testsTotal": 8,
+            "seedsPassed": 9,
+            "seedsRun": 9,
+            "mutantsKilled": 19,
+            "mutantsTotal": 20,
+            "repairs": 0,
+            "techniques": [],
+            "rvfiPassed": null,
+            "rvfiTotal": null,
+            "rvfiTimeouts": null,
+            "rvfiFailed": null
+          }
+        }
+      ],
+      "core": {
+        "status": "passed",
+        "runId": "r_535e7e8a1e334e75ac5fc9c26aa25c1e",
+        "winner": {
+          "label": "v1",
+          "areaUm2": 20645.06,
+          "clockPeriodNs": 10.293
+        },
+        "evidence": {
+          "eqyVsV1": "v1_is_winner",
+          "testsPassed": 36,
+          "testsTotal": 36,
+          "seedsPassed": 9,
+          "seedsRun": 9,
+          "mutantsKilled": null,
+          "mutantsTotal": null,
+          "repairs": 0,
+          "techniques": [],
+          "rvfiPassed": 43,
+          "rvfiTotal": 44,
+          "rvfiTimeouts": 1,
+          "rvfiFailed": []
+        }
+      },
+      "versions": [
+        {
+          "version": 1,
+          "changedBlock": null,
+          "totals": {
+            "areaUm2": 18203.97,
+            "clockNs": 2.359,
+            "powerMw": 2.06
+          },
+          "coreEvidence": {
+            "eqyVsV1": "v1_is_winner",
+            "testsPassed": 36,
+            "testsTotal": 36,
+            "seedsPassed": 9,
+            "seedsRun": 9,
+            "mutantsKilled": null,
+            "mutantsTotal": null,
+            "repairs": 0,
+            "techniques": [],
+            "rvfiPassed": 43,
+            "rvfiTotal": 44,
+            "rvfiTimeouts": 1,
+            "rvfiFailed": []
+          },
+          "rvfiPassed": 43,
+          "rvfiTotal": 44,
+          "rvfiTimeouts": 1,
+          "rvfiFailed": [],
+          "profile": {
+            "cpi": 4.025439011986404,
+            "clockNs": 10.293,
+            "waitCycles": 0,
+            "benchTimeUs": 4080100.518087,
+            "cyclesByStall": {
+              "busy": 396395659,
+              "fetch": 0,
+              "data": 0
+            },
+            "areaByBlockUm2": {
+              "rv32i_imm": 82.19,
+              "rv32i_dec": 73.15,
+              "rv32i_alu": 1046.18,
+              "rv32i_br": 126.35,
+              "rv32i_lsu": 198.7,
+              "rv32i_rf": 9348.84,
+              "rv32i_ctl": 40.96,
+              "rv32i_cache": 7287.6
+            },
+            "bench": [
+              {
+                "name": "crc32",
+                "instructions": 5746546,
+                "cycles": 23508612,
+                "cpi": 4.090911653713379,
+                "passed": true
+              },
+              {
+                "name": "matmult-int",
+                "instructions": 24112967,
+                "cycles": 97466906,
+                "cpi": 4.04209511007086,
+                "passed": true
+              },
+              {
+                "name": "edn",
+                "instructions": 68613140,
+                "cycles": 275420141,
+                "cpi": 4.014101978134217,
+                "passed": true
+              }
+            ]
+          },
+          "flashProfile": {
+            "cpi": 4.440355679256453,
+            "clockNs": 10.293,
+            "waitCycles": 3,
+            "benchTimeUs": 4500651.345972,
+            "cyclesByStall": {
+              "busy": 396395659,
+              "fetch": 33376824,
+              "data": 7481121
+            },
+            "areaByBlockUm2": {
+              "rv32i_imm": 82.19,
+              "rv32i_dec": 73.15,
+              "rv32i_alu": 1046.18,
+              "rv32i_br": 126.35,
+              "rv32i_lsu": 198.7,
+              "rv32i_rf": 9348.84,
+              "rv32i_ctl": 40.96,
+              "rv32i_cache": 7287.6
+            },
+            "bench": [
+              {
+                "name": "crc32",
+                "instructions": 5746546,
+                "cycles": 40356615,
+                "cpi": 7.02276028069731,
+                "passed": true
+              },
+              {
+                "name": "matmult-int",
+                "instructions": 24112967,
+                "cycles": 106538363,
+                "cpi": 4.418301696344543,
+                "passed": true
+              },
+              {
+                "name": "edn",
+                "instructions": 68613140,
+                "cycles": 290358626,
+                "cpi": 4.231822446837443,
+                "passed": true
+              }
+            ]
+          },
+          "profileNote": null
+        }
+      ],
+      "comparison": {
+        "parentAreaUm2": 10916.37,
+        "areaUm2": 18203.97,
+        "areaDeltaPct": 66.7584554206206,
+        "parentClockNs": 8.271,
+        "clockNs": 10.293,
+        "clockDeltaPct": 24.44686253173738,
+        "fast": {
+          "waitCycles": 0,
+          "parent": {
+            "cpi": 4.025439011986404,
+            "clockNs": 8.271,
+            "waitCycles": 0,
+            "benchTimeUs": 3278588.495589,
+            "cyclesByStall": {
+              "busy": 396395659,
+              "fetch": 0,
+              "data": 0
+            },
+            "areaByBlockUm2": {
+              "rv32i_imm": 82.19,
+              "rv32i_dec": 73.15,
+              "rv32i_alu": 1046.18,
+              "rv32i_br": 126.35,
+              "rv32i_lsu": 198.7,
+              "rv32i_rf": 9348.84,
+              "rv32i_ctl": 40.96
+            },
+            "bench": [
+              {
+                "name": "crc32",
+                "instructions": 5746546,
+                "cycles": 23508612,
+                "cpi": 4.090911653713379,
+                "passed": true
+              },
+              {
+                "name": "matmult-int",
+                "instructions": 24112967,
+                "cycles": 97466906,
+                "cpi": 4.04209511007086,
+                "passed": true
+              },
+              {
+                "name": "edn",
+                "instructions": 68613140,
+                "cycles": 275420141,
+                "cpi": 4.014101978134217,
+                "passed": true
+              }
+            ]
+          },
+          "child": {
+            "cpi": 4.025439011986404,
+            "clockNs": 10.293,
+            "waitCycles": 0,
+            "benchTimeUs": 4080100.518087,
+            "cyclesByStall": {
+              "busy": 396395659,
+              "fetch": 0,
+              "data": 0
+            },
+            "areaByBlockUm2": {
+              "rv32i_imm": 82.19,
+              "rv32i_dec": 73.15,
+              "rv32i_alu": 1046.18,
+              "rv32i_br": 126.35,
+              "rv32i_lsu": 198.7,
+              "rv32i_rf": 9348.84,
+              "rv32i_ctl": 40.96,
+              "rv32i_cache": 7287.6
+            },
+            "bench": [
+              {
+                "name": "crc32",
+                "instructions": 5746546,
+                "cycles": 23508612,
+                "cpi": 4.090911653713379,
+                "passed": true
+              },
+              {
+                "name": "matmult-int",
+                "instructions": 24112967,
+                "cycles": 97466906,
+                "cpi": 4.04209511007086,
+                "passed": true
+              },
+              {
+                "name": "edn",
+                "instructions": 68613140,
+                "cycles": 275420141,
+                "cpi": 4.014101978134217,
+                "passed": true
+              }
+            ]
+          },
+          "cpiDeltaPct": 0.0,
+          "benchTimeRatio": 1.244468625317374,
+          "bench": [
+            {
+              "name": "crc32",
+              "parentCycles": 23508612,
+              "cycles": 23508612,
+              "cyclesDeltaPct": 0.0,
+              "parentCpi": 4.090911653713379,
+              "cpi": 4.090911653713379
+            },
+            {
+              "name": "matmult-int",
+              "parentCycles": 97466906,
+              "cycles": 97466906,
+              "cyclesDeltaPct": 0.0,
+              "parentCpi": 4.04209511007086,
+              "cpi": 4.04209511007086
+            },
+            {
+              "name": "edn",
+              "parentCycles": 275420141,
+              "cycles": 275420141,
+              "cyclesDeltaPct": 0.0,
+              "parentCpi": 4.014101978134217,
+              "cpi": 4.014101978134217
+            }
+          ]
+        },
+        "flash": null
+      }
+    }
+  ]
+}

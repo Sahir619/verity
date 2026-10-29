@@ -1,0 +1,104 @@
+schema = "verity.task/1"
+id = "rv32i_dec"
+title = "RV32I instruction decoder"
+summary = "locked RV32I control decoding and illegal instruction traps"
+spec_text = "Decode instr into the CPU_CONTRACT section 2 control table. ALU codes: 0 ADD, 1 SUB, 2 SLL, 3 SLT, 4 SLTU, 5 XOR, 6 SRL, 7 SRA, 8 OR, 9 AND."
+top = "rv32i_dec"
+family = "cpu"
+element_type = "none"
+latency_cycles = 0
+max_lines = 150
+test_count = 27
+default_priority = "area"
+priorities = ["area", "speed", "power"]
+target_clock_ns = 10.0
+max_plan_blocks = 8
+eval_only = true
+is_custom = false
+coding_rules = [
+  "Purely combinational, no clock and no reset. All ports are unsigned logic. Outputs settle in the same step as inputs.",
+  "a_sel: 0 rs1, 1 pc, 2 zero, 3 zero. b_sel: 0 rs2, 1 immediate. wb_sel: 0 ALU, 1 load, 2 pc+4, 3 zero. Unmentioned controls in legal rows are zero; alu_op is ADD unless specified.",
+  "LUI opcode 0x37: a_sel=2, b_sel=1, rf_we=1. AUIPC 0x17: a_sel=1, b_sel=1, rf_we=1. JAL 0x6f: a_sel=1, b_sel=1, wb_sel=2, rf_we=1, is_jal=1.",
+  "JALR 0x67 only funct3 000: a_sel=0, b_sel=1, wb_sel=2, rf_we=1, is_jalr=1. BRANCH 0x63 only funct3 000,001,100,101,110,111: a_sel=1, b_sel=1, is_branch=1.",
+  "LOAD 0x03 only funct3 000,001,010,100,101: b_sel=1, wb_sel=1, rf_we=1, is_load=1. STORE 0x23 only funct3 000,001,010: b_sel=1, is_store=1.",
+  "OP-IMM 0x13: b_sel=1, rf_we=1. OP 0x33: b_sel=0, rf_we=1. Both map funct3 000,001,010,011,100,101,110,111 to ADD,SLL,SLT,SLTU,XOR,SRL,OR,AND.",
+  "OP funct7 must be 0x00 for all funct3, or 0x20 only for funct3 000 (SUB) and 101 (SRA). OP-IMM ignores funct7 except funct3 001 requires 0x00, and funct3 101 requires 0x00 (SRLI) or 0x20 (SRAI).",
+  "FENCE opcode 0x0f is a no-op with all controls including trap zero, regardless of the other instruction bits. Non-ALU groups ignore funct7 and unused register fields.",
+  "Every unlisted opcode or illegal funct3/funct7 returns trap=1 and every other control output zero. ECALL, EBREAK and all SYSTEM encodings trap.",
+]
+
+[clock]
+name = ""
+
+[reset]
+name = ""
+active_low = true
+synchronous = true
+
+[sim]
+seed = 1
+max_cycles_per_case = 512
+
+[eqy]
+enabled = true
+depth = 4
+
+[[ports]]
+name = "instr"
+dir = "in"
+width = 32
+
+[[ports]]
+name = "alu_op"
+dir = "out"
+width = 4
+
+[[ports]]
+name = "a_sel"
+dir = "out"
+width = 2
+
+[[ports]]
+name = "b_sel"
+dir = "out"
+width = 1
+
+[[ports]]
+name = "wb_sel"
+dir = "out"
+width = 2
+
+[[ports]]
+name = "rf_we"
+dir = "out"
+width = 1
+
+[[ports]]
+name = "is_load"
+dir = "out"
+width = 1
+
+[[ports]]
+name = "is_store"
+dir = "out"
+width = 1
+
+[[ports]]
+name = "is_branch"
+dir = "out"
+width = 1
+
+[[ports]]
+name = "is_jal"
+dir = "out"
+width = 1
+
+[[ports]]
+name = "is_jalr"
+dir = "out"
+width = 1
+
+[[ports]]
+name = "trap"
+dir = "out"
+width = 1

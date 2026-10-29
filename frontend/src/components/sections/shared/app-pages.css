@@ -1,0 +1,66 @@
+/* /try (.vt), /results (.vr) and the 404 page (.vn) in the rack world. A re-skin only: markup, layout and copy are unchanged.
+   The palette tokens come from datasheet-base.css; this file swaps square corners in through the
+   global font and radius tokens, and restyles the few looks a token cannot reach. Fail and warn are the
+   white hollow square, always next to their word. */
+
+html:has(:is(.vt, .vr, .vn)) {
+  scrollbar-color: var(--rk-a3) var(--rk-ground);
+  background: var(--rk-ground);
+}
+html:has(:is(.vt, .vr, .vn)) body { background: var(--rk-ground); }
+
+:is(.vt, .vr, .vn) {
+  /* The shared components read these global tokens through Tailwind utilities. */
+  --radius: 0;
+  --chart-1: var(--pass);
+  --chart-2: var(--rk-a3);
+  --chart-3: var(--rk-run);
+  --chart-4: var(--rk-ink);
+  --chart-5: var(--border-strong);
+
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--sans);
+}
+
+/* Status squares: square corners; fail and warn hollow, rejected dashed. */
+:is(.vt, .vr, .vn) [data-status] { border-radius: 0; }
+:is(.vt, .vr, .vn) [data-status="fail"] { background: transparent; border: 2px solid var(--fail); }
+:is(.vt, .vr, .vn) [data-status="warn"] { background: transparent; border: 2px solid var(--warn); }
+:is(.vt, .vr, .vn) [data-status="rejected"] { background: transparent; border: 1.5px dashed var(--fg-subtle); }
+
+/* Badges and small chips: square, on a dim hairline. The badge already reserves a 1px border. Warn and
+   fail tones (Sample data among them) draw it in their own white so the honesty marks stay prominent. Matched by
+   class: a badge used as a tooltip trigger carries the trigger's data-slot instead of its own. */
+:is(.vt, .vr, .vn) .group\/badge { border-radius: 0; border-color: var(--hair); }
+:is(.vt, .vr, .vn) .group\/badge:is(.bg-warn-muted, .bg-fail-muted) { border-color: currentColor; }
+:is(.vt, .vr, .vn) .bg-surface-3 { box-shadow: inset 0 0 0 1px var(--hair); }
+
+/* Outline buttons are the ghost button: no fill, an ivory hairline, inverted on hover. */
+:is(.vt, .vr, .vn) [data-slot="button"][data-variant="outline"] { background-color: transparent; border-color: var(--fg); color: var(--fg); }
+:is(.vt, .vr, .vn) [data-slot="button"][data-variant="outline"]:hover { background-color: var(--fg); color: var(--bg); }
+:is(.vt, .vr, .vn) [data-slot="button"][data-variant="ghost"]:hover { text-decoration: underline; text-underline-offset: 4px; }
+/* Radix marks the chosen radio with data-state, not data-checked: ivory, with the dark indicator dot inside. */
+:is(.vt, .vr, .vn) [data-slot="radio-group-item"][data-state="unchecked"] { background-color: transparent; }
+:is(.vt, .vr, .vn) [data-slot="radio-group-item"][data-state="checked"] { background-color: var(--fg); border-color: var(--fg); }
+
+/* The winner card keeps its amber border (a passed, measured winner); the soft halo is dropped. */
+:is(.vt, .vr, .vn) .animate-winner-glow { animation: none; box-shadow: none; }
+
+/* Chart bars are sharp like every other mark on the page; a worse result is a hollow white bar. */
+:is(.vt, .vr, .vn) svg[role="img"] rect { rx: 0; }
+:is(.vt, .vr, .vn) svg[role="img"] rect.fill-warn { fill: transparent; stroke: var(--warn); stroke-width: 1.5px; }
+
+/* Text links stay white on hover (amber is earned); the underline thickens instead. */
+:is(.vt, .vr, .vn) a.hover\:text-primary:hover { color: var(--fg); text-decoration-thickness: 2px; }
+
+:is(.vt, .vr, .vn) [data-slot="skeleton"] { background-color: var(--rk-seg-off); }
+
+/* Tooltips render in a portal outside the page root, so they are themed from the html element. */
+html:has(:is(.vt, .vr, .vn)) [data-slot="tooltip-content"] {
+  border-radius: 0;
+  background: var(--rk-ink);
+  color: var(--rk-ground);
+  font-family: var(--font-body);
+}
+html:has(:is(.vt, .vr, .vn)) [data-slot="tooltip-content"] svg { fill: var(--rk-ink); background: var(--rk-ink); }

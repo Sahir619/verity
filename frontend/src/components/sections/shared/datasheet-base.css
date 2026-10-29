@@ -1,0 +1,215 @@
+/* Rack base: shared by the landing (.rk, and the legacy .ds) and the studio (.vs); /try (.vt), /results (.vr) and the
+   404 page (.vn) take the tokens and the vignette grid only.
+   Palette: warm near-black ground, ivory ink, and amber as the single accent hue, used in tiers:
+   dim amber for structure (rules, hairlines, grid), pale amber for running states, full amber for numbers,
+   pass/proven and the primary action. Status never relies on colour: every status pairs a marker shape (filled or
+   hollow square) with a word; fail is a hollow white square, never red. Page-specific rules stay in datasheet.css,
+   studio.css and app-pages.css. The file keeps its old name so existing imports still resolve. */
+
+:is(.ds, .vs, .vt, .vr, .vn, .rk) {
+  /* Rack overrides of the global tokens, scoped to the app pages. Amber (--pass, --primary) stays as is. */
+  --background: var(--rk-ground);
+  --surface: var(--rk-panel);
+  --surface-2: var(--rk-panel-2);
+  --foreground: var(--rk-ink);
+  --fg-muted: var(--rk-ink-2);
+  --fg-subtle: var(--rk-ink-3);
+  --border: var(--rk-rule);
+  --border-strong: var(--rk-rule-2);
+  --info: var(--rk-run);
+  --warn: var(--rk-ink);
+  --fail: var(--rk-ink);
+  --fail-muted: var(--rk-ground);
+  --primary-foreground: var(--rk-on-a);
+
+  /* Local aliases onto the global tokens, kept short because the pages use them everywhere. */
+  --bg: var(--background);
+  --fg: var(--foreground);
+  --rule: var(--border-strong);
+  --hair: var(--border);
+  --green: var(--pass); /* historic name; resolves to amber */
+  --green-ink: var(--primary-foreground);
+  --sans: var(--font-body);
+  --mono: var(--font-data);
+  --display: var(--font-display);
+  --wrap: 1240px;
+  --gut: clamp(20px, 3.2vw, 40px);
+  --band-h: 54px;
+}
+
+/* The app pages (studio, /try, /results, 404) are built from the shared shadcn and domain components, which read
+   tones the landing never uses; these fold them into the rack palette. */
+:is(.vs, .vt, .vr, .vn) {
+  --surface-3: var(--rk-seg-off);
+  --pass-muted: var(--rk-a5);
+  --info-muted: var(--rk-run-bg);
+  --warn-muted: var(--rk-seg-off);
+  --primary-muted: var(--rk-a5);
+  --edge: var(--border-strong);
+  --edge-active: var(--rk-run);
+  --edge-proof: var(--pass);
+  --ring: var(--pass);
+  --fg-disabled: var(--rk-grey);
+  /* shadcn aliases resolve at :root, so they are restated here or they keep the root values. */
+  --card: var(--rk-panel);
+  --card-foreground: var(--rk-ink);
+  --popover: var(--rk-panel-2);
+  --popover-foreground: var(--rk-ink);
+  --secondary: var(--rk-panel-2);
+  --secondary-foreground: var(--rk-ink);
+  --muted: var(--rk-panel-2);
+  --muted-foreground: var(--rk-ink-2);
+  --accent: var(--rk-seg-off);
+  --accent-foreground: var(--rk-ink);
+  --destructive: var(--rk-ink);
+  --destructive-foreground: var(--rk-ground);
+  --input: var(--border-strong);
+  --sidebar: var(--rk-panel);
+  --sidebar-foreground: var(--rk-ink);
+  --sidebar-primary: var(--pass);
+  --sidebar-primary-foreground: var(--rk-on-a);
+  --sidebar-accent: var(--rk-seg-off);
+  --sidebar-accent-foreground: var(--rk-ink);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--pass);
+  --code-bg: var(--rk-inset);
+  --syn-plain: var(--rk-ink);
+  --syn-punct: var(--rk-ink-3);
+  --syn-keyword: var(--pass);
+  --syn-type: var(--rk-ink);
+  --syn-number: var(--rk-a2);
+  --syn-comment: var(--rk-ink-3);
+  --syn-string: var(--rk-run-2);
+  --diff-add: var(--rk-a5);
+  --diff-del: var(--rk-seg-off);
+  --selection: var(--rk-a4);
+  --shadow-overlay: none;
+  --glow-pass: 0 0 0 1px var(--pass);
+  --mint: var(--fg-subtle);
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+}
+
+:is(.ds, .vs) {
+  position: relative;
+  isolation: isolate;
+  background: var(--bg);
+  color: var(--fg-muted);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.55;
+  font-variation-settings: "wdth" 100;
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+}
+:is(.ds, .vs) *,
+:is(.ds, .vs) *::before,
+:is(.ds, .vs) *::after { box-sizing: border-box; }
+:is(.ds, .vs) ::selection { background: var(--info); color: var(--bg); }
+:is(.ds, .vs) :focus-visible { outline: 2px solid var(--green); outline-offset: 3px; border-radius: 0; }
+:is(.ds, .vs) a { color: inherit; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+:is(.ds, .vs) a:hover { color: var(--fg); }
+:is(.ds, .vs) code,
+:is(.ds, .vs) kbd,
+:is(.ds, .vs) pre,
+:is(.ds, .vs) .mono { font-family: var(--mono); font-size: .875em; font-variant-numeric: tabular-nums; }
+:is(.ds, .vs) table,
+:is(.ds, .vs) .partno,
+:is(.ds, .vs) .docmeta,
+:is(.ds, .vs) svg text { font-variant-numeric: tabular-nums; }
+:is(.ds, .vs) svg { display: block; max-width: 100%; }
+:is(.ds, .vs) b,
+:is(.ds, .vs) strong { color: var(--fg); font-weight: 650; }
+:is(.ds, .vs) [id] { scroll-margin-top: 68px; }
+:is(.ds, .vs) .wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 var(--gut); }
+:is(.ds, .vs) .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+:is(.ds, .vs) .skip { position: absolute; left: 12px; top: -60px; background: var(--fg); color: var(--bg); padding: 8px 12px; z-index: 50; font-weight: 600; }
+:is(.ds, .vs) .skip:focus { top: 12px; }
+:is(.ds, .vs) .sd { color: var(--fg); font-weight: 700; text-decoration: underline dotted; text-underline-offset: 3px; }
+
+/* ---------- mouse-reactive vignette grid (every page) ---------- */
+.ds-vg {
+  --mx: 50%;
+  --my: 28%;
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.ds-vg::before,
+.ds-vg::after { content: ""; position: absolute; inset: 0; }
+/* Base grid: 48px cells, hairlines, faded out by a radial vignette that follows the pointer. */
+.ds-vg::before {
+  background-image:
+    linear-gradient(to right, color-mix(in oklch, var(--rk-a) 12%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklch, var(--rk-a) 12%, transparent) 1px, transparent 1px);
+  background-size: 48px 48px;
+  -webkit-mask-image: radial-gradient(circle at var(--mx) var(--my), black, transparent 45%);
+  mask-image: radial-gradient(circle at var(--mx) var(--my), black, transparent 45%);
+}
+/* A second, smaller and very faint layer, slightly brighter near the cursor. */
+.ds-vg::after {
+  background-image:
+    radial-gradient(circle 380px at var(--mx) var(--my), color-mix(in oklch, var(--rk-a) 8%, transparent), transparent),
+    linear-gradient(to right, color-mix(in oklch, var(--rk-a) 26%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklch, var(--rk-a) 26%, transparent) 1px, transparent 1px);
+  background-size: 100% 100%, 48px 48px, 48px 48px;
+  -webkit-mask-image: radial-gradient(circle 380px at var(--mx) var(--my), black, transparent);
+  mask-image: radial-gradient(circle 380px at var(--mx) var(--my), black, transparent);
+}
+/* The app pages do not lift their content onto a positioned layer like the landing's .ds-content, so the grid
+   goes under it instead: z-index -1 inside the isolated page root, above the root's ground background. */
+:is(.vt, .vr, .vn) { position: relative; isolation: isolate; }
+:is(.vs, .vt, .vr, .vn) > .ds-vg { z-index: -1; }
+
+/* ---------- header band ---------- */
+:is(.ds, .vs) .band { background: var(--surface); color: var(--fg); position: sticky; top: 0; z-index: 20; border-bottom: 1.5px solid var(--rule); }
+:is(.ds, .vs) .band .wrap { display: flex; align-items: center; gap: 28px; height: var(--band-h); }
+:is(.ds, .vs) .logo { display: inline-flex; align-items: center; text-decoration: none; color: var(--fg); }
+:is(.ds, .vs) .logo:hover { color: var(--fg); }
+:is(.ds, .vs) .band .right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+
+/* ---------- buttons ---------- */
+:is(.ds, .vs) .btn { display: inline-flex; align-items: center; gap: 10px; font: 600 15px/1 var(--sans); padding: 13px 18px; border: 1.5px solid var(--green); background: var(--green); color: var(--green-ink); text-decoration: none; cursor: pointer; border-radius: 0; transition: background .15s, color .15s, border-color .15s; }
+:is(.ds, .vs) .btn:hover { background: var(--primary-hover); border-color: var(--primary-hover); color: var(--green-ink); }
+:is(.ds, .vs) .btn.ghost { background: transparent; color: var(--fg); border-color: var(--fg-muted); }
+:is(.ds, .vs) .btn.ghost:hover { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+:is(.ds, .vs) .btn.sm { padding: 9px 14px; font-size: 14px; }
+:is(.ds, .vs) .btn svg { flex: none; }
+
+/* ---------- stamp ---------- */
+:is(.ds, .vs) .stamp { font: 700 11px/1 var(--sans); letter-spacing: .14em; color: var(--warn); border: 1.5px solid var(--warn); padding: 5px 7px 4px; display: inline-block; transform: rotate(-1.5deg); }
+
+/* ---------- tables ---------- */
+:is(.ds, .vs) .tbl-wrap { overflow-x: auto; border-top: 1.5px solid var(--rule); border-bottom: 1.5px solid var(--rule); }
+:is(.ds, .vs) table.dtbl { width: 100%; border-collapse: collapse; font-size: 14px; }
+:is(.ds, .vs) table.dtbl th { background: var(--surface); color: var(--fg); font-weight: 700; text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--rule); font-size: 12.5px; letter-spacing: .04em; text-transform: uppercase; font-variation-settings: "wdth" 88; white-space: nowrap; }
+:is(.ds, .vs) table.dtbl td { padding: 8px 12px; border-bottom: 1px dotted var(--hair); vertical-align: top; }
+:is(.ds, .vs) table.dtbl tr:last-child td { border-bottom: 0; }
+:is(.ds, .vs) table.dtbl td.c,
+:is(.ds, .vs) table.dtbl th.c { text-align: center; }
+:is(.ds, .vs) table.dtbl td.num,
+:is(.ds, .vs) table.dtbl th.num { text-align: right; white-space: nowrap; }
+:is(.ds, .vs) table.dtbl td code { font-size: 12.5px; color: var(--fg); }
+:is(.ds, .vs) table.dtbl td small { color: var(--fg-subtle); font-size: 11.5px; margin-left: 4px; }
+:is(.ds, .vs) table.dtbl tbody tr { transition: background .12s; }
+:is(.ds, .vs) table.dtbl td:first-child { color: var(--fg); }
+
+/* ---------- status markers: a square plus a word ---------- */
+:is(.ds, .vs) .mk { display: inline-flex; align-items: center; gap: 8px; font: 700 11.5px/1.2 var(--sans); letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; }
+:is(.ds, .vs) .mk::before { content: ""; width: 8px; height: 8px; background: currentColor; flex: none; }
+:is(.ds, .vs) .mk.pass { color: var(--green); }
+:is(.ds, .vs) .mk.fail { color: var(--fail); }
+:is(.ds, .vs) .mk.fail::before,
+:is(.ds, .vs) .mk.warn::before { background: transparent; border: 2px solid currentColor; }
+:is(.ds, .vs) .mk.warn { color: var(--warn); }
+:is(.ds, .vs) .mk.info { color: var(--info); }
+:is(.ds, .vs) .mk.plain { color: var(--fg-muted); }
+:is(.ds, .vs) .mk.win { color: var(--fg); }
+
+/* ---------- command-line blocks ---------- */
+:is(.ds, .vs) .cli { background: var(--surface); border: 1px dotted var(--hair); color: var(--fg-muted); font-family: var(--mono); font-size: 12.5px; line-height: 1.65; padding: 12px 14px; margin: 0; overflow-x: auto; white-space: pre; }
+:is(.ds, .vs) .cli .pr { color: var(--fg-subtle); user-select: none; }
+:is(.ds, .vs) .cli .g { color: var(--green); }
+:is(.ds, .vs) .cli .r { color: var(--fail); }
+:is(.ds, .vs) .cli .w { color: var(--warn); }
+:is(.ds, .vs) .cli .f { color: var(--fg); }

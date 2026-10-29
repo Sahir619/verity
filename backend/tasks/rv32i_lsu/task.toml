@@ -1,0 +1,78 @@
+schema = "verity.task/1"
+id = "rv32i_lsu"
+title = "RV32I load/store aligner"
+summary = "byte, half and word loads and stores, with a misaligned flag"
+spec_text = "A combinational RV32I load/store aligner with no clock and no reset. addr_lo is address bits [1:0]. size is funct3[1:0]: 0 byte, 1 half, 2 word, 3 invalid. misaligned is 1 when a halfword has addr_lo[0] = 1, a word has addr_lo not equal to 0, or the size is invalid. ld takes the addressed byte or halfword out of rdata. funct3[2] = 0 sign-extends and funct3[2] = 1 zero-extends. A word load is rdata itself. funct3 values 011, 110 and 111 produce ld = 0. A misaligned access produces ld = 0. wstrb is 0001 shifted by addr_lo for a byte, 0011 shifted by addr_lo for a halfword, and 1111 for a word. wstrb is 0 when the access is misaligned or funct3[2] is 1. sdata repeats wdata[7:0] in all four byte lanes for a byte, repeats wdata[15:0] in both halfword lanes for a halfword, and is wdata for a word. An invalid size produces sdata = 0. Those lane values are fixed even on lanes wstrb does not enable."
+top = "rv32i_lsu"
+family = "cpu"
+element_type = "none"
+latency_cycles = 0
+max_lines = 120
+test_count = 65
+default_priority = "area"
+priorities = ["area", "speed", "power"]
+target_clock_ns = 10.0
+max_plan_blocks = 6
+eval_only = true
+is_custom = false
+coding_rules = [
+  "No clock and no reset. ld, wstrb, sdata and misaligned follow the inputs in the same step.",
+  "size = funct3[1:0]. misaligned = (size is 1 and addr_lo[0] is 1) or (size is 2 and addr_lo is not 0) or (size is 3).",
+  "ld: byte is rdata shifted right by 8*addr_lo, low 8 bits; half is that shift, low 16 bits; word is rdata. funct3[2] = 0 sign-extends, funct3[2] = 1 zero-extends. funct3 011, 110 and 111 give ld = 0. misaligned gives ld = 0.",
+  "wstrb: byte is 4'b0001 << addr_lo, half is 4'b0011 << addr_lo, word is 4'b1111. wstrb is 0 when misaligned or funct3[2] is 1.",
+  "sdata: byte repeats wdata[7:0] in all four lanes, half repeats wdata[15:0] twice, word is wdata. size 3 gives sdata = 0. This pattern does not depend on misaligned or wstrb.",
+]
+
+[clock]
+name = ""
+
+[reset]
+name = ""
+
+[sim]
+seed = 1
+max_cycles_per_case = 4096
+
+[eqy]
+enabled = true
+depth = 4
+
+[[ports]]
+name = "addr_lo"
+dir = "in"
+width = 2
+
+[[ports]]
+name = "funct3"
+dir = "in"
+width = 3
+
+[[ports]]
+name = "rdata"
+dir = "in"
+width = 32
+
+[[ports]]
+name = "wdata"
+dir = "in"
+width = 32
+
+[[ports]]
+name = "ld"
+dir = "out"
+width = 32
+
+[[ports]]
+name = "wstrb"
+dir = "out"
+width = 4
+
+[[ports]]
+name = "sdata"
+dir = "out"
+width = 32
+
+[[ports]]
+name = "misaligned"
+dir = "out"
+width = 1

@@ -1,0 +1,42 @@
+{
+  "recordedAt": "2026-10-28T19:56:47.514022+00:00",
+  "provider": "nebius",
+  "jobIds": [
+    "cpu_61db1cf54e704619b53f1f1840df2419",
+    "cpu_7c33f67bc04f49c9aed669af16eb1e4d"
+  ],
+  "realSeconds": 2489,
+  "videoSeconds": 54.5,
+  "width": 1440,
+  "height": 900,
+  "chapters": [
+    {
+      "t": 0,
+      "label": "You ask for a CPU"
+    },
+    {
+      "t": 4.8,
+      "label": "A block repairs its code"
+    },
+    {
+      "t": 16.3,
+      "label": "The core joins the blocks"
+    },
+    {
+      "t": 27.5,
+      "label": "Programs and riscv-formal"
+    },
+    {
+      "t": 47,
+      "label": "The CPU passes"
+    },
+    {
+      "t": 49.3,
+      "label": "You upgrade it"
+    },
+    {
+      "t": 53.8,
+      "label": "The upgrade passes"
+    }
+  ]
+}

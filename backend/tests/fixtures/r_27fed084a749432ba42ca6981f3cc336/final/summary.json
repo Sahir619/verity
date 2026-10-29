@@ -1,0 +1,148 @@
+{
+  "runId": "r_27fed084a749432ba42ca6981f3cc336",
+  "presetId": "cnt8",
+  "priority": "speed",
+  "mode": "full",
+  "packSha256": "88117b73e7b30cfeb70356fa38b89325a5a8c1bf229281698fc1ca323975139c",
+  "outcome": "done",
+  "budgetLimit": null,
+  "winnerId": "c1",
+  "baselineId": "c1",
+  "spend": {
+    "llm_calls": 7,
+    "input_tokens": 8799,
+    "output_tokens": 7527,
+    "usd": 0.0179876,
+    "candidates": 4,
+    "repairs": 0,
+    "rounds": 1,
+    "wall_s": 120.4
+  },
+  "humanInputs": 1,
+  "versions": [
+    {
+      "id": "c1",
+      "label": "v1",
+      "round": 0,
+      "parentId": null,
+      "createdBy": "INIT",
+      "status": "measured",
+      "fixCount": 0,
+      "isElite": true,
+      "ppa": {
+        "areaUm2": 72.62,
+        "cellCount": 35,
+        "clockPeriodNs": 0.389,
+        "powerMw": 0.0084,
+        "tools": [
+          "Yosys 0.69+190",
+          "OpenSTA 3.1.0"
+        ],
+        "pdk": "Nangate45"
+      },
+      "fitness": {
+        "score": 0.0,
+        "priority": "speed",
+        "weights": {
+          "area": 0.25,
+          "timing": 0.6,
+          "power": 0.15
+        },
+        "gains": {
+          "area": 0.0,
+          "timing": 0.0,
+          "power": 0.0
+        },
+        "baselineId": "c1"
+      },
+      "eqy": null
+    },
+    {
+      "id": "c2",
+      "label": "v2",
+      "round": 1,
+      "parentId": "c1",
+      "createdBy": "SIMPLIFY",
+      "status": "measured",
+      "fixCount": 0,
+      "isElite": true,
+      "ppa": {
+        "areaUm2": 72.62,
+        "cellCount": 35,
+        "clockPeriodNs": 0.389,
+        "powerMw": 0.0084,
+        "tools": [
+          "Yosys 0.69+190",
+          "OpenSTA 3.1.0"
+        ],
+        "pdk": "Nangate45"
+      },
+      "fitness": {
+        "score": 0.0,
+        "priority": "speed",
+        "weights": {
+          "area": 0.25,
+          "timing": 0.6,
+          "power": 0.15
+        },
+        "gains": {
+          "area": 0.0,
+          "timing": 0.0,
+          "power": 0.0
+        },
+        "baselineId": "c1"
+      },
+      "eqy": null
+    },
+    {
+      "id": "c3",
+      "label": "v3",
+      "round": 1,
+      "parentId": "c1",
+      "createdBy": "OPTIMIZE",
+      "status": "measured",
+      "fixCount": 0,
+      "isElite": false,
+      "ppa": {
+        "areaUm2": 72.62,
+        "cellCount": 35,
+        "clockPeriodNs": 0.389,
+        "powerMw": 0.0084,
+        "tools": [
+          "Yosys 0.69+190",
+          "OpenSTA 3.1.0"
+        ],
+        "pdk": "Nangate45"
+      },
+      "fitness": {
+        "score": 0.0,
+        "priority": "speed",
+        "weights": {
+          "area": 0.25,
+          "timing": 0.6,
+          "power": 0.15
+        },
+        "gains": {
+          "area": 0.0,
+          "timing": 0.0,
+          "power": 0.0
+        },
+        "baselineId": "c1"
+      },
+      "eqy": null
+    },
+    {
+      "id": "c4",
+      "label": "v4",
+      "round": 1,
+      "parentId": "c1",
+      "createdBy": "EXPLORE",
+      "status": "rejected",
+      "fixCount": 0,
+      "isElite": false,
+      "ppa": null,
+      "fitness": null,
+      "eqy": null
+    }
+  ]
+}

@@ -1,0 +1,136 @@
+schema = "verity.task/1"
+id = "rv32i_ctl"
+title = "RV32I multicycle control"
+summary = "FETCH, DECODE, EXEC, MEM, WB and HALT"
+spec_text = "A clocked multicycle controller for RV32I. state is a 3-bit register: 0 FETCH, 1 DECODE, 2 EXEC, 3 MEM, 4 WB, 5 HALT. rst_n low on a rising edge of clk sets state to FETCH. Outputs are combinational from the current state and the current inputs, and the test samples them after the rising edge, so they describe the state just entered. FETCH drives mem_valid = 1 and ir_we = mem_ready, and the next state is DECODE when mem_ready is 1, otherwise FETCH. DECODE drives no control outputs. Its next state is HALT when trap is 1, otherwise EXEC. EXEC drives no control outputs. Its next state is HALT when (is_load or is_store) and misaligned are both 1, MEM when (is_load or is_store) and misaligned is 0, and WB otherwise. MEM drives mem_valid = 1 and mem_we = is_store. Its next state is WB when mem_ready is 1, otherwise MEM. WB drives rf_wen = 1, pc_we = 1, and pc_sel = 1 when is_jal or is_jalr or (is_branch and taken). Its next state is FETCH. HALT drives halted = 1 and stays in HALT until reset. State codes 6 and 7 behave as HALT: halted is 1, every other control output is 0, the state output shows 6 or 7, and the next state is HALT (5). No transition from reset produces code 6 or 7."
+top = "rv32i_ctl"
+family = "cpu"
+element_type = "none"
+latency_cycles = 1
+max_lines = 160
+test_count = 15
+default_priority = "area"
+priorities = ["area", "speed", "power"]
+target_clock_ns = 10.0
+max_plan_blocks = 6
+eval_only = true
+is_custom = false
+coding_rules = [
+  "One clock, clk, rising edge. rst_n is active low and synchronous. Reset sets state to FETCH (0) and wins over the state table.",
+  "The test samples outputs after the rising edge with the inputs still held. state and the control outputs describe the state just entered, using those inputs. They do not describe the state that was left.",
+  "FETCH: mem_valid = 1, ir_we = mem_ready, next = mem_ready ? DECODE : FETCH. DECODE: all control outputs 0, next = trap ? HALT : EXEC.",
+  "EXEC: all control outputs 0. Next = HALT when (is_load or is_store) and misaligned, MEM when (is_load or is_store) and not misaligned, otherwise WB.",
+  "MEM: mem_valid = 1, mem_we = is_store, next = mem_ready ? WB : MEM. WB: rf_wen = 1, pc_we = 1, pc_sel = is_jal or is_jalr or (is_branch and taken), next = FETCH.",
+  "HALT (5): halted = 1, every other control output 0, next = HALT, until reset. Codes 6 and 7 use that same halted behavior, the state output shows 6 or 7, and the next state is HALT (5).",
+]
+
+[clock]
+name = "clk"
+
+[reset]
+name = "rst_n"
+active_low = true
+synchronous = true
+
+[sim]
+seed = 1
+max_cycles_per_case = 4096
+
+[eqy]
+enabled = true
+depth = 16
+
+[[ports]]
+name = "clk"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "rst_n"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "mem_ready"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "is_load"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "is_store"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "is_branch"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "is_jal"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "is_jalr"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "trap"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "taken"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "misaligned"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "state"
+dir = "out"
+width = 3
+
+[[ports]]
+name = "mem_valid"
+dir = "out"
+width = 1
+
+[[ports]]
+name = "mem_we"
+dir = "out"
+width = 1
+
+[[ports]]
+name = "ir_we"
+dir = "out"
+width = 1
+
+[[ports]]
+name = "rf_wen"
+dir = "out"
+width = 1
+
+[[ports]]
+name = "pc_we"
+dir = "out"
+width = 1
+
+[[ports]]
+name = "pc_sel"
+dir = "out"
+width = 1
+
+[[ports]]
+name = "halted"
+dir = "out"
+width = 1

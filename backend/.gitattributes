@@ -1,0 +1,3 @@
+# Task packs are hashed (MANIFEST.sha256). Keep LF everywhere so hashes match across Windows and Linux.
+tasks/** text eol=lf
+sandbox/** text eol=lf

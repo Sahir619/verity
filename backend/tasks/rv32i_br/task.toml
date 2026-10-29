@@ -1,0 +1,58 @@
+schema = "verity.task/1"
+id = "rv32i_br"
+title = "RV32I branch comparator"
+summary = "six branch predicates and two invalid funct3 codes"
+spec_text = "Compute taken for every 3-bit funct3 using the RV32I branch predicates in CPU_CONTRACT section 3."
+top = "rv32i_br"
+family = "cpu"
+element_type = "none"
+latency_cycles = 0
+max_lines = 150
+test_count = 9
+default_priority = "area"
+priorities = ["area", "speed", "power"]
+target_clock_ns = 10.0
+max_plan_blocks = 8
+eval_only = true
+is_custom = false
+coding_rules = [
+  "Purely combinational, no clock and no reset. All ports are unsigned logic. Outputs settle in the same step as inputs.",
+  "funct3 000 means equal, 001 means not equal, 100 means signed less than, 101 means signed greater than or equal, 110 means unsigned less than, 111 means unsigned greater than or equal.",
+  "Signed comparisons interpret a and b as 32-bit two's-complement values. funct3 010 and 011 return taken = 0.",
+]
+
+[clock]
+name = ""
+
+[reset]
+name = ""
+active_low = true
+synchronous = true
+
+[sim]
+seed = 1
+max_cycles_per_case = 512
+
+[eqy]
+enabled = true
+depth = 4
+
+[[ports]]
+name = "a"
+dir = "in"
+width = 32
+
+[[ports]]
+name = "b"
+dir = "in"
+width = 32
+
+[[ports]]
+name = "funct3"
+dir = "in"
+width = 3
+
+[[ports]]
+name = "taken"
+dir = "out"
+width = 1

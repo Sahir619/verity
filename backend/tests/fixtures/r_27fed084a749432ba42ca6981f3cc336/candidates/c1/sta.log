@@ -1,0 +1,40 @@
+Tool: OpenSTA 3.1.0
+Library: Nangate45, post-synthesis timing estimate (no wires)
+Minimum clock period: 0.389 ns (clock)
+Target period 10.000 ns, worst setup slack 9.611 ns
+Power estimate: 0.0084 mW at 10.0 ns reference clock (vectorless, input activity 0.1; internal 0.0069, switching 0.0003, leakage 0.0013 mW; not signoff)
+
+--- log (tail) ---
+Startpoint: _61_ (rising edge-triggered flip-flop clocked by clk)
+Endpoint: _69_ (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock clk (rise edge)
+   0.000    0.000   clock network delay (ideal)
+   0.000    0.000 ^ _61_/CK (DFF_X1)
+   0.096    0.096 ^ _61_/Q (DFF_X1)
+   0.070    0.166 ^ _47_/ZN (AND4_X1)
+   0.078    0.244 ^ _54_/ZN (AND4_X1)
+   0.054    0.298 ^ _55_/ZN (AND3_X1)
+   0.040    0.339 ^ _56_/ZN (XNOR2_X1)
+   0.011    0.350 v _57_/ZN (NOR2_X1)
+   0.000    0.350 v _69_/D (DFF_X1)
+            0.350   data arrival time
+
+  10.000   10.000   clock clk (rise edge)
+   0.000   10.000   clock network delay (ideal)
+   0.000   10.000   clock reconvergence pessimism
+           10.000 ^ _69_/CK (DFF_X1)
+  -0.039    9.961   library setup time
+            9.961   data required time
+-----------------------------------------------------------
+            9.961   data required time
+           -0.350   data arrival time
+-----------------------------------------------------------
+            9.611   slack (MET)
+
+
+worst slack max 9.6110

@@ -1,0 +1,77 @@
+schema = "verity.task/1"
+id = "alu8"                         # == folder name == web presetId (presets.ts)
+title = "8-bit ALU"
+summary = "an 8-bit ALU with eight operations and registered outputs"
+spec_text = "An 8-bit arithmetic logic unit. A 3-bit opcode selects add, subtract, and, or, xor, shift left, shift right or compare. It sets a zero flag and a carry flag. The result is combinational and registered on the clock edge. Smallest area matters most."
+top = "alu8"
+family = "alu"
+element_type = "uint8"
+latency_cycles = 1                  # outputs show the result one clock edge after the inputs
+max_lines = 200
+test_count = 24
+default_priority = "area"
+priorities = ["area", "speed", "power"]
+target_clock_ns = 10.0
+max_plan_blocks = 8
+eval_only = false
+coding_rules = [
+  "y, zero and carry are registers: on each rising edge they load the result computed from a, b and op as sampled at that edge. They show that result right after the edge (latency 1) and must not change between clock edges.",
+  "Opcodes, all unsigned: 0 add (y = a + b, carry = carry out of bit 7); 1 subtract (y = a - b, carry = 1 when a < b); 2 and; 3 or; 4 xor (carry = 0 for opcodes 2, 3 and 4); 5 shift left (y = a << b[2:0], carry = last bit shifted out, 0 when the amount is 0); 6 shift right (logical, y = a >> b[2:0], carry = last bit shifted out, 0 when the amount is 0); 7 compare (y = 0, zero = 1 when a == b, carry = 1 when a < b).",
+  "For opcodes 0 to 6, zero is 1 exactly when y is 0. Reset (rst_n low) clears y, zero and carry to 0.",
+]
+
+[clock]
+name = "clk"
+
+[reset]
+name = "rst_n"
+active_low = true
+synchronous = true
+
+[sim]
+seed = 1
+max_cycles_per_case = 64
+
+[eqy]
+enabled = true
+depth = 8
+
+[[ports]]
+name = "clk"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "rst_n"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "a"
+dir = "in"
+width = 8
+
+[[ports]]
+name = "b"
+dir = "in"
+width = 8
+
+[[ports]]
+name = "op"
+dir = "in"
+width = 3
+
+[[ports]]
+name = "y"
+dir = "out"
+width = 8
+
+[[ports]]
+name = "zero"
+dir = "out"
+width = 1
+
+[[ports]]
+name = "carry"
+dir = "out"
+width = 1

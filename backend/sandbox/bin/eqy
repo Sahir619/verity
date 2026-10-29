@@ -1,0 +1,266 @@
+#!/usr/bin/env python3
+"""/verity/bin/eqy: prove the candidate (gate, /work/b.v) equal to v1 (gold, /work/dut.v) with Yosys EQY.
+
+Contract: backend/CONTRACTS.md section 3.7 (stdout is one JSON object, schema verity.eqy/1).
+Status: proven | not_equivalent | inconclusive | timeout | error. Only an EQY PASS marker becomes "proven".
+"""
+
+from __future__ import annotations
+
+import os
+import re
+import sys
+import time
+import traceback
+from pathlib import Path
+from typing import Any
+
+LIB_DIR = Path(__file__).resolve().parent.parent / "lib"
+sys.path.insert(0, str(LIB_DIR))
+import verity_common as vc  # noqa: E402
+
+LOG_CAP = 8_000
+MARKERS = (("PASS", "proven"), ("FAIL", "not_equivalent"), ("UNKNOWN", "inconclusive"), ("TIMEOUT", "timeout"), ("ERROR", "error"))
+
+
+# EQY partitions the two designs on signal names. A candidate that restructures its internal wires (the whole point of
+# an optimization) would then fail on same-named nets that no longer compute the same function. Keep only the ports
+# and the register outputs as comparable names (pattern from the EQY nerv_synth example), applied to both designs.
+HIDE_INTERNAL = "rename -hide t:$dff %co x:* %% w:* %D"
+
+
+def eqy_config(top: str, gold: Path, gate: Path, depth: int, engine: str) -> str:
+    return "\n".join(
+        [
+            "[options]",
+            "",
+            "[gold]",
+            f"read_verilog -sv {gold}",
+            f"prep -top {top}",
+            HIDE_INTERNAL,
+            "",
+            "[gate]",
+            f"read_verilog -sv {gate}",
+            f"prep -top {top}",
+            HIDE_INTERNAL,
+            "",
+            "[strategy sby]",
+            "use sby",
+            f"depth {depth}",
+            *[f"engine {e.strip()}" for e in engine.split(";")],
+            "",
+        ]
+    )
+
+
+def _width(port: dict[str, Any]) -> int:
+    return int(port["width"]) * int(port.get("count", 1))
+
+
+def miter_sources(task: dict[str, Any], gold_text: str, gate_text: str) -> tuple[str, str, str] | None:
+    """Gold, gate (top module renamed) and a miter that starts both from their synchronous reset state.
+
+    EQY (and k-induction) start from ANY register state, so a candidate that re-encodes its state (a down counter
+    for an up counter, a merged done flag) gets a counterexample from a state the design can never reach. This miter
+    assumes the reset is asserted in cycle 0 and compares the outputs from cycle 1 on, so a proof or a counterexample
+    is about reachable behaviour only. None when the task has no reset or a module name cannot be rewritten.
+    """
+    reset = task.get("reset") or {}
+    clock = str((task.get("clock") or {}).get("name", "clk"))
+    top = task["top"]
+    if not reset.get("name") or not reset.get("synchronous", True):
+        return None
+    pattern = re.compile(r"(?m)^(\s*module\s+)" + re.escape(top) + r"\b")
+    if len(pattern.findall(gold_text)) != 1 or len(pattern.findall(gate_text)) != 1:
+        return None
+    gold = pattern.sub(lambda m: m.group(1) + "gold_top", gold_text)
+    gate = pattern.sub(lambda m: m.group(1) + "gate_top", gate_text)
+    ports = [p for p in task["ports"] if p["name"] != clock]
+    ins = [p for p in ports if p["dir"] == "in"]
+    outs = [p for p in ports if p["dir"] == "out"]
+    if not outs:
+        return None
+    rst = reset["name"]
+    asserted = "1'b0" if reset.get("active_low", True) else "1'b1"
+    lines = [f"module verity_miter(input {clock}" + "".join(f", input [{_width(p) - 1}:0] {p['name']}" if p["name"] != rst else f", input {rst}" for p in ins) + ");"]
+    lines += ["  reg first = 1'b1;", f"  always @(posedge {clock}) first <= 1'b0;"]
+    for side in ("g", "t"):
+        lines += [f"  wire [{_width(p) - 1}:0] {side}_{p['name']};" for p in outs]
+    for side, module in (("g", "gold_top"), ("t", "gate_top")):
+        conns = [f".{clock}({clock})"] + [f".{p['name']}({p['name']})" for p in ins] + [f".{p['name']}({side}_{p['name']})" for p in outs]
+        lines.append(f"  {module} {side}_inst({', '.join(conns)});")
+    g_cat = ", ".join(f"g_{p['name']}" for p in outs)
+    t_cat = ", ".join(f"t_{p['name']}" for p in outs)
+    lines += [
+        "  always @* begin",
+        f"    if (first) assume ({rst} == {asserted});",
+        f"    if (!first) assert ({{{g_cat}}} == {{{t_cat}}});",
+        "  end",
+        "endmodule",
+    ]
+    return gold, gate, "\n".join(lines) + "\n"
+
+
+def run_reset_miter(task: dict[str, Any], gold: Path, gate: Path, timeout: float, result: dict[str, Any]) -> str | None:
+    """Unbounded proof (abc pdr) that gold and gate agree on every trace that starts with a reset. None = not applicable."""
+    sources = miter_sources(task, gold.read_text(encoding="utf-8", errors="replace"), gate.read_text(encoding="utf-8", errors="replace"))
+    if sources is None:
+        return None
+    base = vc.fresh_dir(vc.scratch_dir() / "miter")
+    for name, text in zip(("gold.v", "gate.v", "miter.v"), sources):
+        (base / name).write_text(text, encoding="ascii", errors="replace")
+    (base / "miter.sby").write_text(
+        "\n".join(
+            [
+                "[options]",
+                "mode prove",
+                "depth 40",
+                "",
+                "[engines]",
+                "abc pdr",
+                "smtbmc yices",
+                "",
+                "[script]",
+                "read_verilog -sv -formal gold.v",
+                "read_verilog -sv -formal gate.v",
+                "read_verilog -sv -formal miter.v",
+                "prep -top verity_miter",
+                "",
+                "[files]",
+                "gold.v",
+                "gate.v",
+                "miter.v",
+                "",
+            ]
+        ),
+        encoding="ascii",
+    )
+    workdir = base / "out"
+    proc = vc.run(["sby", "-f", "-d", str(workdir), str(base / "miter.sby")], timeout_s=max(timeout, 1), cwd=base)
+    text = vc.scrub_paths(proc.output)
+    result["log"] = vc.tail("reset-aware miter (sby, abc pdr)\n" + text, LOG_CAP)
+    if proc.timed_out:
+        result["message"] = f"reset-aware miter timed out after {timeout:.0f} s"
+        return "timeout"
+    status = read_status(workdir, text)
+    if status == "proven":
+        result["message"] = "proven from reset (abc pdr)"
+    elif status == "not_equivalent":
+        result["message"] = "outputs differ on a trace that starts from reset"
+    elif status == "error":
+        result["message"] = vc.first_line_matching(text, r"error", "reset-aware miter reported an error")
+    return status
+
+
+def read_status(workdir: Path, log_text: str) -> str | None:
+    """EQY writes one marker file (PASS, FAIL, UNKNOWN, TIMEOUT or ERROR) into the work dir; the log says DONE (...)."""
+    for marker, status in MARKERS:
+        if (workdir / marker).is_file():
+            return status
+    match = re.search(r"DONE \((PASS|FAIL|UNKNOWN|TIMEOUT|ERROR)", log_text)
+    if match:
+        return dict(MARKERS)[match.group(1)]
+    return None
+
+
+def run_eqy(task: dict[str, Any], gold: Path, gate: Path, result: dict[str, Any]) -> str:
+    """Prove gate equal to gold. Order: a reset-aware miter first (settles state re-encodings, and its counterexamples
+    are real), then EQY with `abc pdr` and `smtbmc yices` (a strategy takes one engine, so one after the other). EQY
+    only ever upgrades the answer to proven: it starts from any register state, so its FAIL can be a state the design
+    cannot reach and is reported as inconclusive. A third of the budget each, the last engine gets what is left."""
+    versions = vc.tool_versions(("yosys", "eqy"))
+    result["tool_versions"] = {"yosys": versions["yosys"], "eqy": versions["eqy"]}
+    top = task["top"]
+    depth = int(task.get("eqy", {}).get("depth", 24))
+    engines = [e.strip() for e in os.environ.get("VERITY_EQY_ENGINE", "abc pdr;smtbmc yices").split(";") if e.strip()]
+    timeout = vc.env_float("VERITY_EQY_TIMEOUT_S", 180)
+    deadline = time.monotonic() + timeout
+
+    stateful = bool((task.get("reset") or {}).get("name"))
+    status = run_reset_miter(task, gold, gate, min(deadline - time.monotonic(), timeout / 3), result)
+    if status in ("proven", "not_equivalent"):
+        return status
+    notes = [f"reset-aware miter: {status or 'not applicable'}"]
+
+    saw_counterexample = False
+    status = "error"
+    for index, engine in enumerate(engines):
+        last = index == len(engines) - 1
+        left = deadline - time.monotonic()
+        budget = left if last else min(left, timeout / 3)
+        status = run_engine(top, gold, gate, depth, engine, budget, result)
+        if status == "proven":
+            return status
+        if status == "not_equivalent":
+            if not stateful:
+                return status  # no registers: an arbitrary start state is no state at all, the counterexample is real
+            saw_counterexample = True
+        notes.append(f"EQY {engine}: {status}")
+    if saw_counterexample:
+        # EQY found a counterexample, but from an arbitrary register state that the design may never reach; without
+        # a reset-aware counterexample that is not proof of a difference.
+        status = "inconclusive"
+        result["message"] = "not proven; EQY's counterexample starts from an arbitrary register state"
+    result["message"] = (result.get("message") or "") + " [" + "; ".join(notes) + "]"
+    return status
+
+
+def run_engine(top: str, gold: Path, gate: Path, depth: int, engine: str, timeout: float, result: dict[str, Any]) -> str:
+    base = vc.fresh_dir(vc.scratch_dir() / "eqy")
+    workdir = base / "out"
+    cfg = base / "verity.eqy"
+    cfg.write_text(eqy_config(top, gold, gate, depth, engine), encoding="ascii")
+    proc = vc.run(["eqy", "-f", "-d", str(workdir), str(cfg)], timeout_s=max(timeout, 1), cwd=base)
+    text = vc.scrub_paths(proc.output)
+    result["log"] = vc.tail(text, LOG_CAP)
+    if proc.timed_out:
+        result["message"] = f"EQY ({engine}) timed out after {timeout:.0f} s"
+        return "timeout"
+    status = read_status(workdir, text)
+    # EQY writes FAIL when ANY partition is not proved. "partitions not equivalent" is a counterexample; "equivalence
+    # unknown" is the solver giving up (typical when the candidate re-encodes its state), which is not a difference.
+    if status == "not_equivalent" and "partitions not equivalent" not in text and "equivalence unknown" in text:
+        status = "inconclusive"
+    # Anything not a PASS marker is never "proven".
+    if status is None:
+        result["message"] = vc.first_line_matching(text, r"error", "EQY finished without a result")
+        return "error"
+    if status == "error":
+        result["message"] = vc.first_line_matching(text, r"error", "EQY reported an error")
+    elif status == "inconclusive":
+        result["message"] = "EQY could not decide within the depth or time limit"
+    elif status == "not_equivalent":
+        result["message"] = "EQY found a counterexample"
+    return status
+
+
+def main() -> None:
+    started = time.monotonic()
+    result: dict[str, Any] = {
+        "schema": "verity.eqy/1",
+        "status": "error",
+        "log": "",
+        "duration_ms": 0,
+        "message": "",
+        "tool": "yosys-eqy",
+        "tool_versions": {},
+    }
+    code = vc.EXIT_OK
+    try:
+        task = vc.load_task()
+        gold = vc.require_file(vc.work_dir() / "dut.v")
+        gate = vc.require_file(vc.work_dir() / "b.v")
+        result["status"] = run_eqy(task, gold, gate, result)
+    except vc.InputError as exc:
+        result.update(status="error", message=str(exc))
+        code = vc.EXIT_INPUT
+    except Exception as exc:  # noqa: BLE001  (tool missing or crash: reported as error, exit 3)
+        traceback.print_exc(file=sys.stderr)
+        result.update(status="error", message=f"{type(exc).__name__}: {exc}"[:300])
+        code = vc.EXIT_INTERNAL
+    result["duration_ms"] = int((time.monotonic() - started) * 1000)
+    vc.emit(result, code)
+
+
+if __name__ == "__main__":
+    main()

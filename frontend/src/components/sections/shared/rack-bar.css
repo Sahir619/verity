@@ -1,0 +1,58 @@
+/* The rack top bar, shared by the landing, studio, /try, /results and the 404 page.
+   Scoped to .rkbar and built only from the --rk-* tokens in globals.css, so it looks the same under every page root. */
+
+.rkbar {
+  display: flex; align-items: center; gap: 28px; height: 56px; flex: none; min-width: 0;
+  padding: 0 var(--rkbar-gut, 32px); border-bottom: 1px solid var(--rk-rule-2); background: var(--rk-panel);
+  color: var(--rk-ink); font-family: var(--font-body);
+}
+.rkbar a { color: inherit; text-decoration: none; }
+.rkbar a:focus-visible { outline: 2px solid var(--rk-a); outline-offset: 3px; }
+
+/* The logo: the Trace V in amber, the Register cut wordmark in the bar's ivory ink. The amber sits on the
+   symbol's svg, because the link itself inherits the bar's ink (.rkbar a). */
+.rkbar-brand { display: flex; align-items: center; gap: 11px; flex: none; }
+.rkbar-brand svg { display: block; width: auto; }
+.rkbar-brand .logo-sym { height: 26px; color: var(--rk-a); }
+.rkbar-brand .logo-word { height: 17px; }
+
+.rkbar-nav ul { display: flex; gap: 26px; list-style: none; margin: 0 0 0 12px; padding: 0; }
+.rkbar-nav a {
+  font-family: var(--font-data); font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--rk-ink-2); padding: 6px 0; border-bottom: 1px solid transparent; white-space: nowrap;
+}
+.rkbar-nav a:hover { color: var(--rk-ink); border-color: var(--rk-rule-2); }
+.rkbar-nav a[aria-current="page"] { color: var(--rk-ink); border-color: var(--rk-a); }
+
+.rkbar-ctx { display: flex; align-items: center; gap: 12px; min-width: 0; flex: 1 1 auto; overflow: hidden; }
+.rkbar-r { margin-left: auto; display: flex; align-items: center; gap: 20px; flex: none; }
+.rkbar-ctx + .rkbar-r { margin-left: 0; }
+
+.rkbar-btn {
+  display: inline-flex; align-items: center; gap: 10px; height: 36px; padding: 0 16px; border: 1px solid var(--rk-ink-3);
+  font-family: var(--font-data); font-weight: 500; font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+  white-space: nowrap; color: var(--rk-ink); transition: background-color .15s, border-color .15s;
+}
+.rkbar-btn:hover { border-color: var(--rk-ink); background: var(--rk-panel-2); }
+.rkbar-btn.p { background: var(--rk-a); border-color: var(--rk-a); color: var(--rk-on-a); }
+.rkbar-btn.p:hover { background: var(--rk-run); border-color: var(--rk-run); }
+.rkbar-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: square; }
+
+/* Opt-in reveal on scroll up (RackBar revealOnScrollUp, set as data-rv): pinned with sticky, slid away with a transform so
+   nothing in the page moves. "top" is the bar as drawn; "show" and "hide" are solid over content. Focus inside keeps it shown. */
+.rkbar[data-rv] { position: sticky; top: 0; z-index: 30; transition: transform .2s ease-out; }
+.rkbar[data-rv="show"], .rkbar[data-rv="hide"] { background: var(--rk-panel); border-bottom: 1px solid var(--rk-rule-2); }
+.rkbar[data-rv="hide"] { transform: translateY(-100%); }
+.rkbar[data-rv="hide"]:focus-within { transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .rkbar[data-rv] { transition: none; }
+}
+
+@media (max-width: 1100px) {
+  .rkbar-nav { display: none; }
+}
+@media (max-width: 640px) {
+  .rkbar { --rkbar-gut: 16px; height: auto; min-height: 56px; padding-block: 10px; gap: 10px; flex-wrap: wrap; }
+  .rkbar-r { margin-left: 0; width: 100%; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+  .rkbar-ctx { flex-basis: 100%; order: 3; }
+}

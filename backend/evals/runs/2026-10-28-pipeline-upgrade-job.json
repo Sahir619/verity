@@ -1,0 +1,341 @@
+{
+  "id": "cpu_7c33f67bc04f49c9aed669af16eb1e4d",
+  "specId": "rv32i_pipe2",
+  "goal": "area",
+  "status": "passed",
+  "message": "riscv-formal: 1 of 44 checks not proven within the time limit.",
+  "createdAt": "2026-10-28T22:34:03.237218+00:00",
+  "finishedAt": "2026-10-28T22:43:00.226189+00:00",
+  "spentUsd": 0.151295,
+  "parentJobId": "cpu_61db1cf54e704619b53f1f1840df2419",
+  "upgradeId": "pipeline_2",
+  "blocks": [
+    {
+      "id": "rv32i_imm",
+      "title": "RV32I immediate generator",
+      "status": "passed",
+      "runId": "r_857cc63f49d742a083292b98141b5bd2",
+      "attempts": 0,
+      "reused": true,
+      "winner": {
+        "label": "v1",
+        "areaUm2": 82.19,
+        "clockPeriodNs": 0.407,
+        "versionsTried": 4,
+        "areaVsV1": 1
+      },
+      "evidence": {
+        "eqyVsV1": "v1_is_winner",
+        "testsPassed": 10,
+        "testsTotal": 10,
+        "seedsPassed": 9,
+        "seedsRun": 9,
+        "mutantsKilled": 12,
+        "mutantsTotal": 16,
+        "repairs": 0,
+        "techniques": [
+          "imm_parallel_sign"
+        ],
+        "rvfiPassed": null,
+        "rvfiTotal": null,
+        "rvfiTimeouts": null
+      }
+    },
+    {
+      "id": "rv32i_dec",
+      "title": "RV32I instruction decoder",
+      "status": "passed",
+      "runId": "r_7b19d9df99c94302ba6c437ba1b350cd",
+      "attempts": 0,
+      "reused": true,
+      "winner": {
+        "label": "v1",
+        "areaUm2": 86.45,
+        "clockPeriodNs": 0.344,
+        "versionsTried": 4,
+        "areaVsV1": 1
+      },
+      "evidence": {
+        "eqyVsV1": "v1_is_winner",
+        "testsPassed": 27,
+        "testsTotal": 27,
+        "seedsPassed": 9,
+        "seedsRun": 9,
+        "mutantsKilled": 20,
+        "mutantsTotal": 20,
+        "repairs": 3,
+        "techniques": [],
+        "rvfiPassed": null,
+        "rvfiTotal": null,
+        "rvfiTimeouts": null
+      }
+    },
+    {
+      "id": "rv32i_alu",
+      "title": "RV32I ALU",
+      "status": "passed",
+      "runId": "r_31cbe26cd70d434186f51dc2049af6f5",
+      "attempts": 0,
+      "reused": true,
+      "winner": {
+        "label": "v1",
+        "areaUm2": 1090.33,
+        "clockPeriodNs": 1.524,
+        "versionsTried": 4,
+        "areaVsV1": 1
+      },
+      "evidence": {
+        "eqyVsV1": "v1_is_winner",
+        "testsPassed": 33,
+        "testsTotal": 33,
+        "seedsPassed": 9,
+        "seedsRun": 9,
+        "mutantsKilled": 20,
+        "mutantsTotal": 20,
+        "repairs": 1,
+        "techniques": [],
+        "rvfiPassed": null,
+        "rvfiTotal": null,
+        "rvfiTimeouts": null
+      }
+    },
+    {
+      "id": "rv32i_br",
+      "title": "RV32I branch comparator",
+      "status": "passed",
+      "runId": "r_9daefd10a5664b2cbd8233e09090c139",
+      "attempts": 0,
+      "reused": true,
+      "winner": {
+        "label": "v6",
+        "areaUm2": 134.33,
+        "clockPeriodNs": 0.422,
+        "versionsTried": 6,
+        "areaVsV1": 0.9564
+      },
+      "evidence": {
+        "eqyVsV1": "proven",
+        "testsPassed": 9,
+        "testsTotal": 9,
+        "seedsPassed": 9,
+        "seedsRun": 9,
+        "mutantsKilled": 12,
+        "mutantsTotal": 14,
+        "repairs": 1,
+        "techniques": [],
+        "rvfiPassed": null,
+        "rvfiTotal": null,
+        "rvfiTimeouts": null
+      }
+    },
+    {
+      "id": "rv32i_lsu",
+      "title": "RV32I load/store aligner",
+      "status": "passed",
+      "runId": "r_60867ec56810488dbb2ea95aa8ea8aae",
+      "attempts": 0,
+      "reused": true,
+      "winner": {
+        "label": "v5",
+        "areaUm2": 184.07,
+        "clockPeriodNs": 0.351,
+        "versionsTried": 6,
+        "areaVsV1": 0.9558
+      },
+      "evidence": {
+        "eqyVsV1": "proven",
+        "testsPassed": 65,
+        "testsTotal": 65,
+        "seedsPassed": 9,
+        "seedsRun": 9,
+        "mutantsKilled": 19,
+        "mutantsTotal": 20,
+        "repairs": 4,
+        "techniques": [],
+        "rvfiPassed": null,
+        "rvfiTotal": null,
+        "rvfiTimeouts": null
+      }
+    },
+    {
+      "id": "rv32i_rf",
+      "title": "RV32I register file",
+      "status": "passed",
+      "runId": "r_13a68d95ce944917877a7e417adff0dd",
+      "attempts": 0,
+      "reused": true,
+      "winner": {
+        "label": "v1",
+        "areaUm2": 9988.57,
+        "clockPeriodNs": 0.994,
+        "versionsTried": 6,
+        "areaVsV1": 1
+      },
+      "evidence": {
+        "eqyVsV1": "v1_is_winner",
+        "testsPassed": 8,
+        "testsTotal": 8,
+        "seedsPassed": 9,
+        "seedsRun": 9,
+        "mutantsKilled": 20,
+        "mutantsTotal": 20,
+        "repairs": 1,
+        "techniques": [],
+        "rvfiPassed": null,
+        "rvfiTotal": null,
+        "rvfiTimeouts": null
+      }
+    },
+    {
+      "id": "rv32i_pctl",
+      "title": "RV32I pipeline control",
+      "status": "passed",
+      "runId": "r_bb9b9acd6ec540a7814cf6744b16d3e9",
+      "attempts": 1,
+      "reused": false,
+      "winner": {
+        "label": "v1",
+        "areaUm2": 25.8,
+        "clockPeriodNs": 0.269,
+        "versionsTried": 4,
+        "areaVsV1": 1
+      },
+      "evidence": {
+        "eqyVsV1": "v1_is_winner",
+        "testsPassed": 17,
+        "testsTotal": 17,
+        "seedsPassed": 9,
+        "seedsRun": 9,
+        "mutantsKilled": 20,
+        "mutantsTotal": 20,
+        "repairs": 2,
+        "techniques": [],
+        "rvfiPassed": null,
+        "rvfiTotal": null,
+        "rvfiTimeouts": null
+      }
+    }
+  ],
+  "core": {
+    "title": "RV32I 2-stage pipelined core",
+    "status": "passed",
+    "runId": "r_a6a25e4b66d64b09b968acca678b365f",
+    "winner": {
+      "label": "v1",
+      "areaUm2": 13309.58,
+      "clockPeriodNs": 8.354,
+      "versionsTried": 1,
+      "areaVsV1": 1
+    },
+    "evidence": {
+      "eqyVsV1": "v1_is_winner",
+      "testsPassed": 18,
+      "testsTotal": 18,
+      "seedsPassed": 9,
+      "seedsRun": 9,
+      "mutantsKilled": 20,
+      "mutantsTotal": 20,
+      "repairs": 0,
+      "techniques": [],
+      "rvfiPassed": 43,
+      "rvfiTotal": 44,
+      "rvfiTimeouts": 1
+    }
+  },
+  "versions": [
+    {
+      "version": 1,
+      "changedBlock": null,
+      "totals": {
+        "areaUm2": 11591.74,
+        "clockNs": 1.524,
+        "powerMw": 1.0874
+      },
+      "rvfiPassed": 43,
+      "rvfiTotal": 44,
+      "rvfiTimeouts": 1,
+      "rvfiFailed": [],
+      "profile": {
+        "cpi": 1.238858975394925,
+        "benchTimeUs": 1019135.6204199999,
+        "clockNs": 8.354,
+        "waitCycles": 0,
+        "bench": [
+          {
+            "name": "crc32",
+            "instructions": 5746546,
+            "cycles": 6269130,
+            "cpi": 1.0909388004550908,
+            "passed": true
+          },
+          {
+            "name": "matmult-int",
+            "instructions": 24112967,
+            "cycles": 30186910,
+            "cpi": 1.2518952976628717,
+            "passed": true
+          },
+          {
+            "name": "edn",
+            "instructions": 68613140,
+            "cycles": 85537690,
+            "cpi": 1.2466663091063899,
+            "passed": true
+          }
+        ]
+      }
+    }
+  ],
+  "comparison": {
+    "parentAreaUm2": 11606.109999999999,
+    "areaUm2": 11591.74,
+    "areaDeltaPct": -0.12381409447264069,
+    "parentClockNs": 7.968,
+    "clockNs": 8.354,
+    "clockDeltaPct": 4.844377510040143,
+    "fast": {
+      "waitCycles": 0,
+      "parent": {
+        "benchTimeUs": 3158480.6109120003,
+        "cpi": 4.025439011986404
+      },
+      "child": {
+        "benchTimeUs": 1019135.6204199999,
+        "cpi": 1.238858975394925
+      },
+      "benchTimeRatio": 0.32266641653555317,
+      "cpiDeltaPct": -69.22425177214164,
+      "bench": [
+        {
+          "name": "crc32",
+          "parentCycles": 23508612,
+          "cycles": 6269130,
+          "cyclesDeltaPct": -73.33262380611836,
+          "parentCpi": 4.090911653713379,
+          "cpi": 1.0909388004550908
+        },
+        {
+          "name": "matmult-int",
+          "parentCycles": 97466906,
+          "cycles": 30186910,
+          "cyclesDeltaPct": -69.02855416381023,
+          "parentCpi": 4.04209511007086,
+          "cpi": 1.2518952976628717
+        },
+        {
+          "name": "edn",
+          "parentCycles": 275420141,
+          "cycles": 85537690,
+          "cyclesDeltaPct": -68.94283414080454,
+          "parentCpi": 4.014101978134217,
+          "cpi": 1.2466663091063899
+        }
+      ]
+    }
+  },
+  "source": {
+    "api": "GET /cpu-jobs/cpu_7c33f67bc04f49c9aed669af16eb1e4d",
+    "via": "data-raw/cpu-jobs_cpu_7c33f67bc04f49c9aed669af16eb1e4d.json (an earlier GET of /cpu-jobs/cpu_7c33f67bc04f49c9aed669af16eb1e4d, saved 2026-10-28T23:38:13.850Z; live GET returned 401)",
+    "exportedAt": "2026-10-28T23:38:27.967Z"
+  }
+}

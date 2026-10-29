@@ -1,0 +1,56 @@
+schema = "verity.task/1"
+id = "fsm_seq"
+title = "Sequence detector 1011"
+summary = "a serial detector for the bit pattern 1011, overlaps allowed"
+spec_text = "A serial sequence detector. One bit arrives on din each clock edge. detect goes high for one cycle after the edge that receives the last bit of the pattern 1011 (first bit 1, last bit 1). Overlapping patterns count, so 1011011 is detected twice. A synchronous active-low reset forgets all bits received so far."
+top = "fsm_seq"
+family = "fsm"
+element_type = "none"
+latency_cycles = 1
+max_lines = 100
+test_count = 12
+default_priority = "area"
+priorities = ["area", "speed", "power"]
+target_clock_ns = 10.0
+max_plan_blocks = 4
+eval_only = false
+coding_rules = [
+  "detect is a register: at each rising clock edge it becomes 1 exactly when the last four bits received on din (including the bit sampled at this edge) are 1, 0, 1, 1 in arrival order, otherwise 0. It changes only on a clock edge.",
+  "rst_n low at the edge clears detect to 0 and forgets all earlier bits. The first bit received after reset is the first bit of any pattern.",
+]
+
+[clock]
+name = "clk"
+
+[reset]
+name = "rst_n"
+active_low = true
+synchronous = true
+
+[sim]
+seed = 1
+max_cycles_per_case = 256
+
+[eqy]
+enabled = true
+depth = 10
+
+[[ports]]
+name = "clk"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "rst_n"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "din"
+dir = "in"
+width = 1
+
+[[ports]]
+name = "detect"
+dir = "out"
+width = 1

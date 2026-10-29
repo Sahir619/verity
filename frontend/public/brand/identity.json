@@ -1,0 +1,24 @@
+{
+  "selectedOn": "2026-10-23",
+  "symbol": {
+    "concept": "24-trace-v",
+    "name": "Trace V",
+    "file": "/brand/verity-symbol.png",
+    "vector": "/brand/verity-symbol.svg"
+  },
+  "wordmark": {
+    "concept": "12-register-cut",
+    "name": "Register cut",
+    "file": "/brand/verity-wordmark.png",
+    "vector": "/brand/verity-wordmark.svg"
+  },
+  "format": "PNG",
+  "background": "opaque warm black",
+  "applicationPlacement": "rack bar, bench and workspace sidebar, favicon (V amber, wordmark ivory, 2026-10-23)",
+  "websiteArtwork": [
+    "/brand/artwork/circuit-moth.png",
+    "/brand/artwork/lithography-bloom.png",
+    "/brand/artwork/bond-weaver.png",
+    "/brand/artwork/silicon-strata.png"
+  ]
+}
