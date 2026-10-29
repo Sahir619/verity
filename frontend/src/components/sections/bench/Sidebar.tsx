@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useState, type RefObject } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { CirclePlay, House, PanelLeftClose, Plus, UserPlus, Users, X } from "lucide-react";
 import { cpuJobActive, cpuSpecName, UPGRADE_LABELS, type CpuJobView } from "@/lib/contracts/cpu";
 import type { LiveHealth } from "@/lib/contracts/view-types";
@@ -162,6 +162,7 @@ export function Sidebar({
   /** Closes the drawer: a link was followed, or its close button pressed. */
   onNavigate(): void;
 }) {
+  const router = useRouter();
   const wide = useMediaQuery("(min-width: 900px)");
   const account = useAccount();
   const signedIn = account.status === "signed_in";
@@ -173,6 +174,7 @@ export function Sidebar({
     await signOut();
     clearThreads();
     clearRecentRuns();
+    router.replace("/signin");
     onNewChip(); // the account's open chat leaves the screen too (a code session in this tab starts a fresh thread)
   };
   return (
